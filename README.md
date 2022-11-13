@@ -1,6 +1,6 @@
 # Diary (for Rimworld)
 
-![Alt text](https://github.com/AamuLumi/Rimworld-Diary/About/Preview.png)
+![Alt text](https://github.com/AamuLumi/Rimworld-Diary/blob/master/About/Preview.png)
 
 Write, read and export your colony's tales.
 	
