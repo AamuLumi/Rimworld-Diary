@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <Diary_No_Entry_Found>No entry found</Diary_No_Entry_Found>
+  <Diary_Export>Export</Diary_Export>
+  <Diary_Export_Folder_Path>Diary export folder path</Diary_Export_Folder_Path>
+  <Diary_Export_Successful>Export successful!</Diary_Export_Successful>
+  <Diary_Directory_Not_Found>Error during export : folder path doesn't exist.
+  
+Please create the folder or edit folder path in mod settings.</Diary_Directory_Not_Found>
+  <Diary_Error_During_Export>Error during export : an error happened.
+  
+Please check write access to the folder are correct au dossier or edit folder path in mod settings.</Diary_Error_During_Export>
+</LanguageData>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <Diary_No_Entry_Found>Pas d'entrée trouvée</Diary_No_Entry_Found>
+  <Diary_Export>Exporter</Diary_Export>
+  <Diary_Export_Folder_Path>Chemin du dossier pour l'export du journal</Diary_Export_Folder_Path>
+  <Diary_Export_Successful>Export réussi !</Diary_Export_Successful>
+  <Diary_Directory_Not_Found>Erreur pendant l'export : le chemin du dossier n'existe pas.
+  
+Veuillez créer le dossier ou modifier le chemin dans les réglages du mod.</Diary_Directory_Not_Found>
+  <Diary_Error_During_Export>Erreur pendant l'export : une erreur est survenue.
+  
+Veuillez vérifier que les droits d'accès au dossier sont corrects ou modifier le chemin dans les réglages du mod.</Diary_Error_During_Export>
+</LanguageData>

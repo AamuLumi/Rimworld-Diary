@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <MainButtonDef>
+    <defName>Diary</defName>
+    <label>diary</label>
+    <description>Write and read the colony's diary.</description>
+    <workerClass>Diary.MainButtonWorker_ToggleDiaryTab</workerClass>
+    <tabWindowClass>Diary.MainTabWindow_Diary</tabWindowClass>
+    <order>75</order>
+  </MainButtonDef>
+
+</Defs>
