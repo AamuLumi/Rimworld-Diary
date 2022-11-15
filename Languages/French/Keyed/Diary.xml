@@ -10,4 +10,12 @@ Veuillez créer le dossier ou modifier le chemin dans les réglages du mod.</Dia
   <Diary_Error_During_Export>Erreur pendant l'export : une erreur est survenue.
   
 Veuillez vérifier que les droits d'accès au dossier sont corrects ou modifier le chemin dans les réglages du mod.</Diary_Error_During_Export>
+  <Diary_Export_Format>Format du fichier d'export</Diary_Export_Format>
+  <Diary_Format_Text>Texte (.txt)</Diary_Format_Text>
+  <Diary_Format_RTF>Rich Text File (.rtf)</Diary_Format_RTF>
+  <Diary_Default_Entry_Message>Message d'une entrée par défaut</Diary_Default_Entry_Message>
+  <Diary_No_Entry_Found_Message>Message "Pas d'entrée trouvée"</Diary_No_Entry_Found_Message>
+  <Diary_Empty>Vide</Diary_Empty>
+  <Diary_File_Created_Available_At>Le fichier est disponible à l'endroit suivant</Diary_File_Created_Available_At>
+  <Diary_Reset_To_Default_Path>Réinitialiser le chemin d'export</Diary_Reset_To_Default_Path>
 </LanguageData>

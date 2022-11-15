@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-
-using UnityEngine;
+using System.IO.Packaging;
+using System.Xml;
 using RimWorld;
+using RTFExporter;
 using Verse;
 
 namespace Diary
@@ -17,7 +18,7 @@ namespace Diary
             entries = new Dictionary<string, string>();
         }
 
-        private string[] GetEntriesToExport()
+        private string[] GetTextEntriesToExport()
         {
             int currentItem = 0;
             string[] entriesToExport = new string[entries.Count];
@@ -37,6 +38,54 @@ namespace Diary
             return entriesToExport;
         }
 
+        private void ExportToText(string filePath)
+        {
+            File.WriteAllLines(filePath, GetTextEntriesToExport());
+        }
+
+        private void ExportToRTF(string filePath)
+        {
+            using (RTFDocument doc = new RTFDocument(filePath))
+            {
+                var p = doc.AppendParagraph();
+
+                p.style.alignment = Alignment.Center;
+                p.style.spaceAfter = 600;
+                p.style.indent = new Indent(0, 0, 0);
+
+                var title = p.AppendText($"{Faction.OfPlayer.Name}");
+
+                title.style.bold = true;
+                title.style.fontFamily = "Times New Roman";
+                title.style.fontSize = 18;
+
+                foreach (KeyValuePair<string, string> item in entries)
+                {
+                    string[] strings = item.Key.Split('-');
+                    int day = int.Parse(strings[0]);
+                    Quadrum quadrum = (Quadrum)Quadrum.Parse(typeof(Quadrum), strings[1]);
+                    int year = int.Parse(strings[2]);
+
+                    var entryParagraph = doc.AppendParagraph();
+
+                    entryParagraph.style.alignment = Alignment.Left;
+                    entryParagraph.style.spaceAfter = 600;
+                    entryParagraph.style.indent = new Indent(0, 0, 0);
+
+                    var t = entryParagraph.AppendText($"{Find.ActiveLanguageWorker.OrdinalNumber(day + 1)} {QuadrumUtility.Label(quadrum)} {year}");
+
+                    t.style.bold = true;
+                    t.style.fontFamily = "Times New Roman";
+                    t.style.fontSize = 16;
+
+                    var t2 = entryParagraph.AppendText($"\n\n{item.Value}");
+
+                    t2.style.fontFamily = "Times New Roman";
+                    t2.style.fontSize = 12;
+                }
+            }
+        }
+
         private string GetDictionaryKey(int day, Quadrum quadrum, int year)
         {
             return day.ToString() + '-' + quadrum.ToString() + '-' + year.ToString();
@@ -44,7 +93,16 @@ namespace Diary
 
         public string ReadEntry(int day, Quadrum quadrum, int year)
         {
-            return entries.TryGetValue(GetDictionaryKey(day, quadrum, year), "Diary_No_Entry_Found".Translate());
+            DefaultMessage defaultMessageSetting = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().DefaultMessage;
+
+            string defaultMessage = "";
+
+            if (defaultMessageSetting == DefaultMessage.NoEntryFound)
+            {
+                defaultMessage = "Diary_No_Entry_Found".Translate();
+            }
+
+            return entries.TryGetValue(GetDictionaryKey(day, quadrum, year), defaultMessage);
         }
         public void WriteEntry(string data, int day, Quadrum quadrum, int year)
         {
@@ -53,14 +111,29 @@ namespace Diary
 
         public void Export()
         {
-            string savename = Faction.OfPlayer.Name;
             string folder = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().FolderPath;
+            ExportFormat format = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().ExportFormat;
+
+            Log.Message($"{folder} {format}");
+
+            string savename = Faction.OfPlayer.Name;
+            string savePath = Path.Combine(folder, "diary-" + savename + "-" + DateTime.Now.Ticks);
 
             try
             {
-                File.WriteAllLines(Path.Combine(folder, "diary-" + savename + "-" + DateTime.Now.Ticks + ".txt"), GetEntriesToExport());
+                switch (format)
+                {
+                    case ExportFormat.Text:
+                        savePath += ".txt";
+                        ExportToText(savePath);
+                        break;
+                    case ExportFormat.RTF:
+                        savePath += ".rtf";
+                        ExportToRTF(savePath);
+                        break;
+                }
 
-                Find.WindowStack.Add(new Dialog_ExportDiary("Diary_Export_Successful".Translate()));
+                Find.WindowStack.Add(new Dialog_ExportDiary("Diary_Export_Successful".Translate(), savePath));
             }
             catch (DirectoryNotFoundException)
             {
@@ -82,6 +155,8 @@ namespace Diary
             base.ExposeData();
 
             Scribe_Collections.Look(ref entries, "entries", LookMode.Value, LookMode.Value);
+
+            Log.Message(entries.ToStringFullContents());
         }
 
         public override void FinalizeInit()

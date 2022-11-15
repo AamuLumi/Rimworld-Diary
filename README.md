@@ -11,7 +11,7 @@ You can write freely what happened during these days, and export the whole diary
 
 - Read and write your diary for each day of your colony.
 - Check events that happen for each day.
-- Export to a single .txt file.
+- Export to a single .txt or .rtf file.
 
 ## Compatibility
 
@@ -21,3 +21,6 @@ You can write freely what happened during these days, and export the whole diary
 ## Suggestions / Issues
 
 Fill an issue [on the project repository on Github](https://github.com/AamuLumi/Rimworld-Diary/issues).
+
+## Thanks to :
+- [brunurd for RTFExporter library](https://github.com/brunurd/RTFExporter)

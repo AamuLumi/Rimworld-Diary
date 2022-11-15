@@ -10,4 +10,12 @@ Please create the folder or edit folder path in mod settings.</Diary_Directory_N
   <Diary_Error_During_Export>Error during export : an error happened.
   
 Please check write access to the folder are correct au dossier or edit folder path in mod settings.</Diary_Error_During_Export>
+  <Diary_Export_Format>Export file format</Diary_Export_Format>
+  <Diary_Format_Text>Text (.txt)</Diary_Format_Text>
+  <Diary_Format_RTF>Rich Text File (.rtf)</Diary_Format_RTF>
+  <Diary_Default_Entry_Message>Default entry message</Diary_Default_Entry_Message>
+  <Diary_No_Entry_Found_Message>"No entry found" message</Diary_No_Entry_Found_Message>
+  <Diary_Empty>Empty</Diary_Empty>
+  <Diary_File_Created_Available_At>File is available at this path</Diary_File_Created_Available_At>
+  <Diary_Reset_To_Default_Path>Reset to default path</Diary_Reset_To_Default_Path>
 </LanguageData>
