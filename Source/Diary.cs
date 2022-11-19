@@ -22,7 +22,9 @@ namespace Diary
 
         public Diary(ModContentPack content) : base(content)
         {
-            this.settings = GetSettings<DiarySettings>();
+            settings = GetSettings<DiarySettings>();
+
+            new Harmony("aamulumi.diary").PatchAll();
         }
 
         public override void DoSettingsWindowContents(Rect inRect)

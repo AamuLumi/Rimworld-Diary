@@ -12,6 +12,8 @@ namespace Diary
         private string folderPath;
         private ExportFormat exportFormat;
         private DefaultMessage defaultMessage;
+        private LogWriterFilter logWriterFilter;
+        private LogFilter defaultLogFilter;
 
         public string FolderPath
         {
@@ -28,6 +30,16 @@ namespace Diary
             get { return defaultMessage; }
         }
 
+        public LogWriterFilter LogWriterFilter
+        {
+            get { return logWriterFilter; }
+        }
+
+        public LogFilter DefaultLogFilter
+        {
+            get { return defaultLogFilter; }
+        }
+
         public override void ExposeData()
         {
             base.ExposeData();
@@ -35,26 +47,8 @@ namespace Diary
             Scribe_Values.Look(ref folderPath, "folderPath", Application.dataPath);
             Scribe_Values.Look(ref exportFormat, "exportFormat", ExportFormat.Text);
             Scribe_Values.Look(ref defaultMessage, "defaultMessage", DefaultMessage.Empty);
-        }
-
-        public string GetFormatName(ExportFormat format)
-        {
-            switch (format)
-            {
-                case ExportFormat.Text: return "Diary_Format_Text".Translate();
-                case ExportFormat.RTF: return "Diary_Format_RTF".Translate();
-                default: return "";
-            }
-        }
-
-        public string GetDefaultMessageName(DefaultMessage m)
-        {
-            switch (m)
-            {
-                case DefaultMessage.Empty: return "Diary_Empty".Translate();
-                case DefaultMessage.NoEntryFound: return "Diary_No_Entry_Found_Message".Translate();
-                default: return "";
-            }
+            Scribe_Values.Look(ref logWriterFilter, "logWriterFilter", LogWriterFilter.None);
+            Scribe_Values.Look(ref defaultLogFilter, "defaultLogFilter", LogFilter.Events);
         }
 
         public void SetFormat(ExportFormat f)
@@ -65,6 +59,15 @@ namespace Diary
         public void SetDefaultMessage(DefaultMessage m)
         {
             defaultMessage = m;
+        }
+        public void SetDefaultLogFilter(LogFilter f)
+        {
+            defaultLogFilter = f;
+        }
+
+        public void SetLogWriterFilter(LogWriterFilter f)
+        {
+            logWriterFilter = f;
         }
 
         public void DoSettingsWindowContents(Rect inRect)
@@ -81,13 +84,13 @@ namespace Diary
             }
 
             listingStandard.Label("Diary_Export_Format".Translate());
-            if (listingStandard.ButtonText(GetFormatName(exportFormat)))
+            if (listingStandard.ButtonText(DiaryTypeTools.GetFormatName(exportFormat)))
             {
                 List<FloatMenuOption> list = new List<FloatMenuOption>();
                 foreach (int i in Enum.GetValues(typeof(ExportFormat)))
                 {
                     int current = i;
-                    list.Add(new FloatMenuOption(GetFormatName((ExportFormat)i), delegate
+                    list.Add(new FloatMenuOption(DiaryTypeTools.GetFormatName((ExportFormat)i), delegate
                     {
                         SetFormat((ExportFormat)current);
                     }));
@@ -95,16 +98,33 @@ namespace Diary
                 Find.WindowStack.Add(new FloatMenu(list));
             }
 
-            listingStandard.Label("Diary_Default_Entry_Message".Translate());
-            if (listingStandard.ButtonText(GetDefaultMessageName(defaultMessage)))
+            listingStandard.Label("Diary_Default_Log_Filter".Translate());
+            if (listingStandard.ButtonText(DiaryTypeTools.GetLogFilterName(defaultLogFilter)))
             {
                 List<FloatMenuOption> list = new List<FloatMenuOption>();
-                foreach (int i in Enum.GetValues(typeof(DefaultMessage)))
+                foreach (int i in Enum.GetValues(typeof(LogFilter)))
                 {
                     int current = i;
-                    list.Add(new FloatMenuOption(GetDefaultMessageName((DefaultMessage)i), delegate
+                    list.Add(new FloatMenuOption(DiaryTypeTools.GetLogFilterName((LogFilter)i), delegate
                     {
-                        SetDefaultMessage((DefaultMessage)current);
+                        SetDefaultLogFilter((LogFilter)current);
+                    }));
+                }
+                Find.WindowStack.Add(new FloatMenu(list));
+            }
+
+            listingStandard.Label("Diary_Log_Writer_Filter_Explanation".Translate());
+
+            listingStandard.Label("Diary_Log_Writer_Filter".Translate());
+            if (listingStandard.ButtonText(DiaryTypeTools.GetLogWriterFilterName(logWriterFilter)))
+            {
+                List<FloatMenuOption> list = new List<FloatMenuOption>();
+                foreach (int i in Enum.GetValues(typeof(LogWriterFilter)))
+                {
+                    int current = i;
+                    list.Add(new FloatMenuOption(DiaryTypeTools.GetLogWriterFilterName((LogWriterFilter)i), delegate
+                    {
+                        SetLogWriterFilter((LogWriterFilter)current);
                     }));
                 }
                 Find.WindowStack.Add(new FloatMenu(list));

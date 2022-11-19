@@ -18,4 +18,11 @@ Please check write access to the folder are correct au dossier or edit folder pa
   <Diary_Empty>Empty</Diary_Empty>
   <Diary_File_Created_Available_At>File is available at this path</Diary_File_Created_Available_At>
   <Diary_Reset_To_Default_Path>Reset to default path</Diary_Reset_To_Default_Path>
+  <Diary_Default_Log_Filter>Default log filter in Diary tab</Diary_Default_Log_Filter>
+  <Diary_All>All</Diary_All>
+  <Diary_Chats>Chats</Diary_Chats>
+  <Diary_Events>Events</Diary_Events>
+  <Diary_None>None</Diary_None>
+  <Diary_Log_Writer_Filter_Explanation>Diary can write automatically logs in the Diary. You just have to set the next option to the logs which must be written automatically.</Diary_Log_Writer_Filter_Explanation>
+  <Diary_Log_Writer_Filter>Automatic log writer filter</Diary_Log_Writer_Filter>
 </LanguageData>

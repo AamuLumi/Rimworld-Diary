@@ -109,6 +109,27 @@ namespace Diary
             entries.SetOrAdd(GetDictionaryKey(day, quadrum, year), data);
         }
 
+        public void WriteEntryNow(string data)
+        {
+            entries.SetOrAdd(GetDictionaryKey(TimeTools.GetCurrentDay(), TimeTools.GetCurrentQuadrum(), TimeTools.GetCurrentYear()), data);
+        }
+
+        public void AppendEntryNow(string data, bool onNewLine = true, bool writeCurrentHour = true)
+        {
+            string key = GetDictionaryKey(TimeTools.GetCurrentDay(), TimeTools.GetCurrentQuadrum(), TimeTools.GetCurrentYear());
+
+            if (writeCurrentHour)
+            {
+                data = $"[{TimeTools.GetCurrentHour()}{"LetterHour".Translate()}] {data}";
+            }
+            if (onNewLine)
+            {
+                data = $"\n{data}";
+            }
+
+            entries.SetOrAdd(key, $"{entries[key]}{data}");
+        }
+
         public void Export()
         {
             string folder = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().FolderPath;

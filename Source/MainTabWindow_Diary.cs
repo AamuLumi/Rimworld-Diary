@@ -25,6 +25,7 @@ namespace Diary
         private Vector2 messagesScrollPos;
         private int displayedMessageIndex = -1;
         private float messageLastHeight = 0f;
+        private LogFilter logFilter;
 
         private readonly List<string> fastHourStrings;
         private Dictionary<string, string> truncationCache = new Dictionary<string, string>();
@@ -64,9 +65,9 @@ namespace Diary
 
         public MainTabWindow_Diary()
         {
-            this.day = GetCurrentDay();
-            this.quadrum = GetCurrentQuadrum();
-            this.year = GetCurrentYear();
+            this.day = TimeTools.GetCurrentDay();
+            this.quadrum = TimeTools.GetCurrentQuadrum();
+            this.year = TimeTools.GetCurrentYear();
 
             fastHourStrings = new List<string>();
 
@@ -76,104 +77,20 @@ namespace Diary
             }
 
             this.closeOnAccept = false;
+
+            DiarySettings settings = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>();
+
+            logFilter = settings.DefaultLogFilter;
         }
 
-        public Vector2 GetCurrentLocation()
-        {
-            Vector2 vector;
-
-            if (WorldRendererUtility.WorldRenderedNow && Find.WorldSelector.selectedTile >= 0)
-            {
-                vector = Find.WorldGrid.LongLatOf(Find.WorldSelector.selectedTile);
-            }
-            else if (WorldRendererUtility.WorldRenderedNow && Find.WorldSelector.NumSelectedObjects > 0)
-            {
-                vector = Find.WorldGrid.LongLatOf(Find.WorldSelector.FirstSelectedObject.Tile);
-            }
-            else
-            {
-                if (Find.CurrentMap == null)
-                {
-                    return new Vector2();
-                }
-                vector = Find.WorldGrid.LongLatOf(Find.CurrentMap.Tile);
-            }
-
-            return vector;
-        }
-
-        public int GetCurrentDay()
-        {
-            return GenDate.DayOfQuadrum(Find.TickManager.TicksAbs, GetCurrentLocation().x);
-        }
-
-        public Quadrum GetCurrentQuadrum()
-        {
-            return GenDate.Quadrum(Find.TickManager.TicksAbs, GetCurrentLocation().x);
-        }
-
-        public int GetCurrentYear()
-        {
-            return GenDate.Year(Find.TickManager.TicksAbs, GetCurrentLocation().x);
-        }
-
-        public int GetMinimumDay()
-        {
-            if (this.quadrum != GenDate.Quadrum(Find.TickManager.gameStartAbsTick, GetCurrentLocation().x) || this.year != GenDate.Year(Find.TickManager.gameStartAbsTick, GetCurrentLocation().x))
-            {
-                return 0;
-            }
-
-            return GenDate.DayOfQuadrum(Find.TickManager.gameStartAbsTick, GetCurrentLocation().x);
-        }
-
-        public Quadrum GetMinimumQuadrum()
-        {
-            if (this.year != GenDate.Year(Find.TickManager.gameStartAbsTick, GetCurrentLocation().x))
-            {
-                return Quadrum.Aprimay;
-            }
-
-            return GenDate.Quadrum(Find.TickManager.gameStartAbsTick, GetCurrentLocation().x);
-        }
-
-        public int GetMinimumYear()
-        {
-            return GenDate.Year(Find.TickManager.gameStartAbsTick, GetCurrentLocation().x);
-        }
-
-        public int GetMaximumDay()
-        {
-            if (this.quadrum != GetCurrentQuadrum() || this.year != GetCurrentYear())
-            {
-                return GenDate.DaysPerQuadrum - 1;
-            }
-
-            return GetCurrentDay();
-        }
-
-        public Quadrum GetMaximumQuadrum()
-        {
-            if (this.year != GetCurrentYear())
-            {
-                return Quadrum.Undefined - 1;
-            }
-
-            return GetCurrentQuadrum();
-        }
-
-        public int GetMaximumYear()
-        {
-            return GetCurrentYear();
-        }
         public bool CanAccessToPreviousDay()
         {
-            return this.day != GetMinimumDay() || this.quadrum != GetMinimumQuadrum() || this.year != GetMinimumYear();
+            return day != TimeTools.GetMinimumDay(quadrum, year) || quadrum != TimeTools.GetMinimumQuadrum(year) || year != TimeTools.GetMinimumYear();
         }
 
         public bool CanAccessToNextDay()
         {
-            return this.day != GetMaximumDay() || this.quadrum != GetMaximumQuadrum() || this.year != GetMaximumYear();
+            return day != TimeTools.GetMaximumDay(quadrum, year) || quadrum != TimeTools.GetMaximumQuadrum(year) || year != TimeTools.GetMaximumYear();
         }
 
         public void SetCurrentDateToPreviousDay()
@@ -185,24 +102,24 @@ namespace Diary
 
             displayedMessageIndex = -1;
 
-            if (this.day > GetMinimumDay())
+            if (day > TimeTools.GetMinimumDay(quadrum, year))
             {
-                this.day--;
+                day--;
 
                 return;
             }
 
-            this.day = GenDate.DaysPerQuadrum - 1;
+            day = GenDate.DaysPerQuadrum - 1;
 
-            if (this.quadrum > Quadrum.Aprimay)
+            if (quadrum > Quadrum.Aprimay)
             {
-                this.quadrum--;
+                quadrum--;
 
                 return;
             }
 
-            this.year--;
-            this.quadrum = Quadrum.Decembary;
+            year--;
+            quadrum = Quadrum.Decembary;
         }
 
         public void SetCurrentDateToNextDay()
@@ -214,24 +131,24 @@ namespace Diary
 
             displayedMessageIndex = -1;
 
-            if (this.day < GenDate.DaysPerQuadrum - 1)
+            if (day < GenDate.DaysPerQuadrum - 1)
             {
-                this.day++;
+                day++;
 
                 return;
             }
 
-            this.day = 0;
+            day = 0;
 
-            if (this.quadrum < Quadrum.Decembary)
+            if (quadrum < Quadrum.Decembary)
             {
-                this.quadrum++;
+                quadrum++;
 
                 return;
             }
 
-            this.year++;
-            this.quadrum = Quadrum.Aprimay;
+            year++;
+            quadrum = Quadrum.Aprimay;
         }
 
         public void SetCurrentDay(int day)
@@ -245,13 +162,13 @@ namespace Diary
         {
             this.quadrum = q;
 
-            if (this.day > GetMaximumDay())
+            if (this.day > TimeTools.GetMaximumDay(quadrum, year))
             {
-                this.day = GetMaximumDay();
+                this.day = TimeTools.GetMaximumDay(quadrum, year);
             }
-            else if (this.day < GetMinimumDay())
+            else if (this.day < TimeTools.GetMinimumDay(quadrum, year))
             {
-                this.day = GetMinimumDay();
+                this.day = TimeTools.GetMinimumDay(quadrum, year);
             }
 
             displayedMessageIndex = -1;
@@ -261,32 +178,79 @@ namespace Diary
         {
             this.year = year;
 
-            if (this.quadrum > GetMaximumQuadrum())
+            if (this.quadrum > TimeTools.GetMaximumQuadrum(year))
             {
-                this.quadrum = GetMaximumQuadrum();
+                this.quadrum = TimeTools.GetMaximumQuadrum(year);
             }
-            else if (this.quadrum < GetMinimumQuadrum())
+            else if (this.quadrum < TimeTools.GetMinimumQuadrum(year))
             {
-                this.quadrum = GetMinimumQuadrum();
+                this.quadrum = TimeTools.GetMinimumQuadrum(year);
             }
 
-            if (this.day > GetMaximumDay())
+            if (this.day > TimeTools.GetMaximumDay(quadrum, year))
             {
-                this.day = GetMaximumDay();
+                this.day = TimeTools.GetMaximumDay(quadrum, year);
             }
-            else if (this.day < GetMinimumDay())
+            else if (this.day < TimeTools.GetMinimumDay(quadrum, year))
             {
-                this.day = GetMinimumDay();
+                this.day = TimeTools.GetMinimumDay(quadrum, year);
             }
 
             displayedMessageIndex = -1;
         }
 
-        public bool IsCurrentDate(int ticks)
+        public bool IsCurrentDate(int ticks, bool convertToAbs = false)
         {
-            int absTicks = GenDate.TickGameToAbs(ticks);
+            if (convertToAbs)
+            {
+                ticks = GenDate.TickGameToAbs(ticks);
+            }
 
-            return this.day == GenDate.DayOfQuadrum(absTicks, GetCurrentLocation().x) && this.quadrum == GenDate.Quadrum(absTicks, GetCurrentLocation().x) && this.year == GenDate.Year(absTicks, GetCurrentLocation().x);
+            return this.day == GenDate.DayOfQuadrum(ticks, TimeTools.GetCurrentLocation().x) && this.quadrum == GenDate.Quadrum(ticks, TimeTools.GetCurrentLocation().x) && this.year == GenDate.Year(ticks, TimeTools.GetCurrentLocation().x);
+        }
+
+        private List<object> GetLogsToDisplay()
+        {
+            List<object> logs = new List<object>();
+
+            if (logFilter == LogFilter.Events || logFilter == LogFilter.All)
+            {
+                logs = logs.Concat(Find.Archive.ArchivablesListForReading).ToList();
+            }
+
+            if (logFilter == LogFilter.Chats || logFilter == LogFilter.All)
+            {
+                logs = logs.Concat(Find.PlayLog.AllEntries).ToList();
+            }
+
+            logs.Sort(delegate (object a, object b)
+            {
+                int aTime = 0;
+                int bTime = 0;
+
+                if (a is IArchivable)
+                {
+                    aTime = GenDate.TickGameToAbs(((IArchivable)a).CreatedTicksGame);
+                }
+                else
+                {
+                    aTime = ((LogEntry)a).Timestamp;
+                }
+
+
+                if (b is IArchivable)
+                {
+                    bTime = GenDate.TickGameToAbs(((IArchivable)b).CreatedTicksGame);
+                }
+                else
+                {
+                    bTime = ((LogEntry)b).Timestamp;
+                }
+
+                return aTime - bTime;
+            });
+
+            return logs;
         }
 
         private void DoArchivableRow(Rect rect, IArchivable archivable, int index)
@@ -318,7 +282,7 @@ namespace Diary
             rect2.xMin += 45f;
             Vector2 location = ((Find.CurrentMap != null) ? Find.WorldGrid.LongLatOf(Find.CurrentMap.Tile) : default(Vector2));
             GUI.color = new Color(0.75f, 0.75f, 0.75f);
-            Widgets.Label(label: fastHourStrings[GenDate.HourOfDay(GenDate.TickGameToAbs(archivable.CreatedTicksGame), GetCurrentLocation().x)], rect: rect5);
+            Widgets.Label(label: fastHourStrings[GenDate.HourOfDay(GenDate.TickGameToAbs(archivable.CreatedTicksGame), TimeTools.GetCurrentLocation().x)], rect: rect5);
             GUI.color = Color.white;
             Rect rect6 = rect2;
             Widgets.Label(rect6, archivable.ArchivedLabel.Truncate(rect6.width));
@@ -348,6 +312,57 @@ namespace Diary
             }
         }
 
+        private void DoLogEntryRow(Rect rect, LogEntry logEntry, int index)
+        {
+            if (index % 2 == 1)
+            {
+                Widgets.DrawLightHighlight(rect);
+            }
+            Widgets.DrawHighlightIfMouseover(rect);
+            Text.Font = GameFont.Small;
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Text.WordWrap = false;
+            Rect rect2 = rect;
+            rect2.xMin += 35f;
+            GUI.color = Color.white;
+            Rect rect4 = rect2;
+            Rect outerRect = rect2;
+            outerRect.width = 30f;
+            rect2.xMin += 35f;
+
+            Texture icon = logEntry.IconFromPOV(logEntry.GetConcerns().First());
+            Color? iconColor = logEntry.IconColorFromPOV(logEntry.GetConcerns().First());
+            if (iconColor != null)
+            {
+                GUI.color = (Color)iconColor;
+            }
+            Widgets.DrawTextureFitted(outerRect, icon, 0.8f);
+            GUI.color = Color.white;
+
+            Rect rect5 = rect2;
+            rect5.width = 40f;
+            rect2.xMin += 45f;
+            Vector2 location = ((Find.CurrentMap != null) ? Find.WorldGrid.LongLatOf(Find.CurrentMap.Tile) : default(Vector2));
+            GUI.color = new Color(0.75f, 0.75f, 0.75f);
+            Widgets.Label(label: fastHourStrings[GenDate.HourOfDay(logEntry.Timestamp, TimeTools.GetCurrentLocation().x)], rect: rect5);
+            GUI.color = Color.white;
+            Rect rect6 = rect2;
+
+            Widgets.Label(rect6, logEntry.ToGameStringFromPOV(logEntry.GetConcerns().First()));
+
+            GenUI.ResetLabelAlign();
+            Text.WordWrap = true;
+            GUI.color = Color.white;
+            if (Mouse.IsOver(rect4))
+            {
+                displayedMessageIndex = index;
+            }
+            if (!Widgets.ButtonInvisible(rect4))
+            {
+                return;
+            }
+        }
+
         public override void DoWindowContents(Rect inRect)
         {
             Rect dateRect = new Rect(0f, 0f, inRect.width, 40f);
@@ -366,7 +381,7 @@ namespace Diary
             if (Widgets.ButtonText(new Rect(widthPerButton * 1, dateRect.yMin, widthPerButton, dateRect.yMax), Find.ActiveLanguageWorker.OrdinalNumber(this.day + 1)))
             {
                 List<FloatMenuOption> list = new List<FloatMenuOption>();
-                for (int i = GetMinimumDay(); i <= GetMaximumDay(); i++)
+                for (int i = TimeTools.GetMinimumDay(quadrum, year); i <= TimeTools.GetMaximumDay(quadrum, year); i++)
                 {
                     int current = i;
                     list.Add(new FloatMenuOption(Find.ActiveLanguageWorker.OrdinalNumber(current + 1), delegate
@@ -380,7 +395,7 @@ namespace Diary
             if (Widgets.ButtonText(new Rect(widthPerButton * 2, dateRect.yMin, widthPerButton, dateRect.yMax), QuadrumUtility.Label(this.quadrum)))
             {
                 List<FloatMenuOption> list = new List<FloatMenuOption>();
-                for (Quadrum q = GetMinimumQuadrum(); q <= GetMaximumQuadrum(); q++)
+                for (Quadrum q = TimeTools.GetMinimumQuadrum(year); q <= TimeTools.GetMaximumQuadrum(year); q++)
                 {
                     Quadrum current = q;
                     list.Add(new FloatMenuOption(QuadrumUtility.Label(current), delegate
@@ -395,7 +410,7 @@ namespace Diary
             if (Widgets.ButtonText(new Rect(widthPerButton * 3, dateRect.yMin, widthPerButton, dateRect.yMax), this.year.ToString()))
             {
                 List<FloatMenuOption> list = new List<FloatMenuOption>();
-                for (int year = GetMinimumYear(); year <= GetMaximumYear(); year++)
+                for (int year = TimeTools.GetMinimumYear(); year <= TimeTools.GetMaximumYear(); year++)
                 {
                     int current = year;
                     list.Add(new FloatMenuOption(current.ToString(), delegate
@@ -417,20 +432,47 @@ namespace Diary
             Rect entryWritingRect = new Rect(0f, dateRect.yMax + 10f, inRect.width, 300f);
             Current.Game.GetComponent<DiaryService>().WriteEntry(Widgets.TextArea(entryWritingRect, Current.Game.GetComponent<DiaryService>().ReadEntry(this.day, this.quadrum, this.year)), this.day, this.quadrum, this.year);
 
-            List<IArchivable> archivablesListForReading = Find.Archive.ArchivablesListForReading;
-            Rect messagesRect = new Rect(0f, 0f, inRect.width / 2 - 10f, messageLastHeight);
-            Rect fullMessagesRect = new Rect(0f, entryWritingRect.yMax + 10f, inRect.width / 2 - 10f, inRect.height - entryWritingRect.yMax - 50f);
-            Rect messageDetailsRect = new Rect(fullMessagesRect.xMax + 20f, entryWritingRect.yMax + 10f, inRect.width / 2 - 10f, inRect.height - entryWritingRect.yMax - 50f);
+            Rect actionsRect = new Rect(0f, entryWritingRect.yMax + 10f, inRect.width, 30f);
+
+            if (Widgets.ButtonText(new Rect(0, actionsRect.yMin, widthPerButton, 30f), DiaryTypeTools.GetLogFilterName(logFilter)))
+            {
+                List<FloatMenuOption> list = new List<FloatMenuOption>();
+                foreach (int i in Enum.GetValues(typeof(LogFilter)))
+                {
+                    int current = i;
+                    list.Add(new FloatMenuOption(DiaryTypeTools.GetLogFilterName((LogFilter)i), delegate
+                    {
+                        logFilter = (LogFilter)current;
+                    }));
+                }
+                Find.WindowStack.Add(new FloatMenu(list));
+            }
+
+            if (Widgets.ButtonText(new Rect(widthPerButton * 4f, actionsRect.yMin, widthPerButton, 30f), "Diary_Export".Translate()))
+            {
+                Current.Game.GetComponent<DiaryService>().Export();
+            }
+
+            List<object> logToDisplay = GetLogsToDisplay();
+            Rect messagesRect = new Rect(0f, 0f, inRect.width / 2 - 25f, messageLastHeight);
+            Rect fullMessagesRect = new Rect(0f, actionsRect.yMax + 10f, inRect.width / 2 - 10f, inRect.height - actionsRect.yMax - 50f);
+            Rect messageDetailsRect = new Rect(fullMessagesRect.xMax + 20f, actionsRect.yMax + 10f, inRect.width / 2 - 10f, inRect.height - actionsRect.yMax - 50f);
             float num = 0f;
 
             Widgets.BeginScrollView(fullMessagesRect, ref messagesScrollPos, messagesRect);
 
-            for (int num2 = archivablesListForReading.Count - 1; num2 >= 0; num2--)
+            for (int num2 = logToDisplay.Count - 1; num2 >= 0; num2--)
             {
-                IArchivable message = archivablesListForReading[num2];
+                object message = logToDisplay[num2];
 
-                if (IsCurrentDate(message.CreatedTicksGame))
+                if (message is IArchivable)
                 {
+                    IArchivable archivable = (IArchivable)message;
+                    if (!IsCurrentDate(archivable.CreatedTicksGame, true))
+                    {
+                        continue;
+                    }
+
                     if (num2 > displayedMessageIndex && displayedMessageIndex == -1)
                     {
                         displayedMessageIndex = num2;
@@ -438,7 +480,27 @@ namespace Diary
 
                     if (num + 30f >= messagesScrollPos.y && num <= messagesScrollPos.y + inRect.height)
                     {
-                        DoArchivableRow(new Rect(0f, num, messagesRect.width - 5f, 30f), message, num2);
+                        DoArchivableRow(new Rect(0f, num, messagesRect.width - 5f, 30f), archivable, num2);
+                    }
+
+                    num += 30f;
+                }
+                else if (message is LogEntry)
+                {
+                    LogEntry logEntry = (LogEntry)message;
+                    if (!IsCurrentDate(logEntry.Timestamp))
+                    {
+                        continue;
+                    }
+
+                    if (num2 > displayedMessageIndex && displayedMessageIndex == -1)
+                    {
+                        displayedMessageIndex = num2;
+                    }
+
+                    if (num + 30f >= messagesScrollPos.y && num <= messagesScrollPos.y + inRect.height)
+                    {
+                        DoLogEntryRow(new Rect(0f, num, messagesRect.width - 5f, 30f), logEntry, num2);
                     }
 
                     num += 30f;
@@ -447,21 +509,24 @@ namespace Diary
             messageLastHeight = num;
             Widgets.EndScrollView();
 
-            if (displayedMessageIndex >= 0 && archivablesListForReading.Count > 0)
+            if (displayedMessageIndex >= 0 && logToDisplay.Count > 0)
             {
-                TaggedString label = archivablesListForReading[displayedMessageIndex].ArchivedTooltip.TruncateHeight(messageDetailsRect.width - 10f, messageDetailsRect.height - 10f, truncationCache);
-                Widgets.Label(messageDetailsRect.ContractedBy(5f), label);
+                if (logToDisplay[displayedMessageIndex] is IArchivable)
+                {
+                    IArchivable archivable = (IArchivable)logToDisplay[displayedMessageIndex];
+                    TaggedString label = archivable.ArchivedTooltip.TruncateHeight(messageDetailsRect.width - 10f, messageDetailsRect.height - 10f, truncationCache);
+                    Widgets.Label(messageDetailsRect.ContractedBy(5f), label);
+                }
+                else if (logToDisplay[displayedMessageIndex] is LogEntry)
+                {
+                    LogEntry logEntry = (LogEntry)logToDisplay[displayedMessageIndex];
+                    TaggedString label = logEntry.ToGameStringFromPOV(logEntry.GetConcerns().First()).TruncateHeight(messageDetailsRect.width - 10f, messageDetailsRect.height - 10f, truncationCache);
+                    Widgets.Label(messageDetailsRect.ContractedBy(5f), label);
+                }
             }
             else
             {
                 Widgets.NoneLabel(messageDetailsRect.yMin + 3f, messageDetailsRect.width, "(" + "NoMessages".Translate() + ")");
-            }
-
-            Rect actionsRect = new Rect(0f, fullMessagesRect.yMax + 10f, inRect.width, 30f);
-
-            if (Widgets.ButtonText(new Rect(widthPerButton * 4f, actionsRect.yMin, widthPerButton, 30f), "Diary_Export".Translate()))
-            {
-                Current.Game.GetComponent<DiaryService>().Export();
             }
 
             Widgets.EndGroup();

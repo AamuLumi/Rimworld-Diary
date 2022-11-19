@@ -84,6 +84,9 @@
   <ItemGroup>
     <Compile Include="DiaryService.cs" />
     <Compile Include="DiaryTypes.cs" />
+    <Compile Include="DiaryTimeTools.cs" />
+    <Compile Include="Patches\ListenArchive_Add.cs" />
+    <Compile Include="Patches\ListenPlayLog_Add.cs" />
     <Compile Include="MainButtonWorker_ToggleDiaryTab.cs" />
     <Compile Include="MainTabWindow_Diary.cs" />
     <Compile Include="Dialog_ExportDiary.cs" />

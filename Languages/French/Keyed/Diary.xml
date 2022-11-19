@@ -18,4 +18,11 @@ Veuillez vérifier que les droits d'accès au dossier sont corrects ou modifier 
   <Diary_Empty>Vide</Diary_Empty>
   <Diary_File_Created_Available_At>Le fichier est disponible à l'endroit suivant</Diary_File_Created_Available_At>
   <Diary_Reset_To_Default_Path>Réinitialiser le chemin d'export</Diary_Reset_To_Default_Path>
+  <Diary_Default_Log_Filter>Filtre par défaut des informations dans l'onglet Journal</Diary_Default_Log_Filter>
+  <Diary_All>Tout</Diary_All>
+  <Diary_Chats>Discussions</Diary_Chats>
+  <Diary_Events>Evénements</Diary_Events>
+  <Diary_None>Aucun</Diary_None>
+  <Diary_Log_Writer_Filter_Explanation>Diary peut écrire automatiquement les informations dans votre Journal. Vous devez simplement sélectionner via la prochaine option ce que vous voulez que le mod écrive automatiquement.</Diary_Log_Writer_Filter_Explanation>
+  <Diary_Log_Writer_Filter>Filtre d'écriture automatique des informations</Diary_Log_Writer_Filter>
 </LanguageData>
