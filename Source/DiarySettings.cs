@@ -15,6 +15,8 @@ namespace Diary
         private LogWriterFilter logWriterFilter;
         private LogFilter defaultLogFilter;
 
+        public bool ConnectedToProgressRenderer;
+
         public string FolderPath
         {
             get { return folderPath; }
@@ -43,6 +45,8 @@ namespace Diary
         public override void ExposeData()
         {
             base.ExposeData();
+
+            ConnectedToProgressRenderer = false;
 
             Scribe_Values.Look(ref folderPath, "folderPath", Application.dataPath);
             Scribe_Values.Look(ref exportFormat, "exportFormat", ExportFormat.Text);
@@ -128,6 +132,15 @@ namespace Diary
                     }));
                 }
                 Find.WindowStack.Add(new FloatMenu(list));
+            }
+
+            if (ConnectedToProgressRenderer)
+            {
+                listingStandard.Label("Diary_Connected_To_Progress_Renderer".Translate());
+            }
+            else
+            {
+                listingStandard.Label("Diary_Not_Connected_To_Progress_Renderer".Translate());
             }
 
             listingStandard.End();

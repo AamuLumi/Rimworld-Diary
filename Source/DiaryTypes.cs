@@ -86,15 +86,34 @@ namespace Diary
         }
     }
 
-    public class DiaryImageEntry
+    public class DiaryImageEntry : IExposable
     {
         public string Path;
         public int Hours;
+        public int Days;
+        public Quadrum Quadrum;
+        public int Year;
 
-        public DiaryImageEntry(string path, int hours)
+        public DiaryImageEntry()
+        {
+        }
+
+        public DiaryImageEntry(string path, int hours, int day, Quadrum quadrum, int year)
         {
             Path = path;
             Hours = hours;
+            Days = day;
+            Quadrum = quadrum;
+            Year = year;
+        }
+
+        public void ExposeData()
+        {
+            Scribe_Values.Look(ref Path, "Path");
+            Scribe_Values.Look(ref Hours, "Hours");
+            Scribe_Values.Look(ref Days, "Days");
+            Scribe_Values.Look(ref Quadrum, "Quadrum");
+            Scribe_Values.Look(ref Year, "Year");
         }
     }
 }

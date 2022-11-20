@@ -13,12 +13,14 @@ namespace Diary
     public class DiaryService : GameComponent
     {
         private Dictionary<string, string> entries;
-        private Dictionary<string, List<DiaryImageEntry>> images;
+        private Dictionary<string, List<DiaryImageEntry>> imagesPerDay;
+        private List<DiaryImageEntry> allImages;
 
         public DiaryService(Game game)
         {
             entries = new Dictionary<string, string>();
-            images = new Dictionary<string, List<DiaryImageEntry>>();
+            imagesPerDay = new Dictionary<string, List<DiaryImageEntry>>();
+            allImages = new List<DiaryImageEntry>();
         }
 
         private string[] GetTextEntriesToExport()
@@ -120,6 +122,8 @@ namespace Diary
         public void AppendEntryNow(string data, bool onNewLine = true, bool writeCurrentHour = true)
         {
             string key = GetDictionaryKey(TimeTools.GetCurrentDay(), TimeTools.GetCurrentQuadrum(), TimeTools.GetCurrentYear());
+            string currentEntry = entries.TryGetValue(key);
+
 
             if (writeCurrentHour)
             {
@@ -129,30 +133,55 @@ namespace Diary
             {
                 data = $"\n{data}";
             }
+            if (currentEntry != null)
+            {
+                data = $"{currentEntry}{data}";
+            }
 
-            entries.SetOrAdd(key, $"{entries[key]}{data}");
+            entries.SetOrAdd(key, data);
+        }
+
+        public List<DiaryImageEntry> GetAllImages()
+        {
+            return allImages;
+        }
+
+        public int GetIndexForAllImages(int day, Quadrum quadrum, int year)
+        {
+            for (int i = 0; i < allImages.Count; i++)
+            {
+                DiaryImageEntry entry = allImages[i];
+
+                if (entry.Year > year || (entry.Year == year && (entry.Quadrum > quadrum || (entry.Quadrum == quadrum && entry.Days >= day))))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
         }
 
         public List<DiaryImageEntry> ReadImages(int day, Quadrum quadrum, int year)
         {
-            DefaultMessage defaultMessageSetting = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().DefaultMessage;
-
-            return images.TryGetValue(GetDictionaryKey(day, quadrum, year));
+            return imagesPerDay.TryGetValue(GetDictionaryKey(day, quadrum, year));
         }
 
         public void AddImageNow(string path)
         {
             string key = GetDictionaryKey(TimeTools.GetCurrentDay(), TimeTools.GetCurrentQuadrum(), TimeTools.GetCurrentYear());
-            List<DiaryImageEntry> currentImages = images.TryGetValue(key);
+            List<DiaryImageEntry> currentImages = imagesPerDay.TryGetValue(key);
 
             if (currentImages == null)
             {
                 currentImages = new List<DiaryImageEntry>();
             }
 
-            currentImages.Add(new DiaryImageEntry(path, TimeTools.GetCurrentHour()));
+            DiaryImageEntry entryToAdd = new DiaryImageEntry(path, TimeTools.GetCurrentHour(), TimeTools.GetCurrentDay(), TimeTools.GetCurrentQuadrum(), TimeTools.GetCurrentYear());
 
-            images.SetOrAdd(key, currentImages);
+            currentImages.Add(entryToAdd);
+
+            imagesPerDay.SetOrAdd(key, currentImages);
+            allImages.Add(entryToAdd);
         }
 
         public void Export()
@@ -201,8 +230,36 @@ namespace Diary
             base.ExposeData();
 
             Scribe_Collections.Look(ref entries, "entries", LookMode.Value, LookMode.Value);
+            Scribe_Collections.Look(ref allImages, "allImages", LookMode.Deep);
 
-            Log.Message(entries.ToStringFullContents());
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                if (entries == null)
+                {
+                    entries = new Dictionary<string, string>();
+                }
+                if (allImages == null)
+                {
+                    allImages = new List<DiaryImageEntry>();
+                    imagesPerDay = new Dictionary<string, List<DiaryImageEntry>>();
+                }
+
+                foreach (DiaryImageEntry entry in allImages)
+                {
+                    string key = GetDictionaryKey(entry.Days, entry.Quadrum, entry.Year);
+
+                    List<DiaryImageEntry> currentImages = imagesPerDay.TryGetValue(key);
+
+                    if (currentImages == null)
+                    {
+                        currentImages = new List<DiaryImageEntry>();
+                    }
+
+                    currentImages.Add(entry);
+
+                    imagesPerDay.SetOrAdd(key, currentImages);
+                }
+            }
         }
 
         public override void FinalizeInit()

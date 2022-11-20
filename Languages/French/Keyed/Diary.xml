@@ -25,4 +25,8 @@ Veuillez vérifier que les droits d'accès au dossier sont corrects ou modifier 
   <Diary_None>Aucun</Diary_None>
   <Diary_Log_Writer_Filter_Explanation>Diary peut écrire automatiquement les informations dans votre Journal. Vous devez simplement sélectionner via la prochaine option ce que vous voulez que le mod écrive automatiquement.</Diary_Log_Writer_Filter_Explanation>
   <Diary_Log_Writer_Filter>Filtre d'écriture automatique des informations</Diary_Log_Writer_Filter>
+  <Diary>Journal</Diary>
+  <Diary_Images>Images</Diary_Images>
+  <Diary_Connected_To_Progress_Renderer>Diary est correctement connecté à Progress Renderer.</Diary_Connected_To_Progress_Renderer>
+  <Diary_Not_Connected_To_Progress_Renderer>Diary n'est pas connecté à Progress Renderer. Si Progress Renderer est activé, veuillez le placer avant Diary.</Diary_Not_Connected_To_Progress_Renderer>
 </LanguageData>

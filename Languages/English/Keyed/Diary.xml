@@ -25,4 +25,8 @@ Please check write access to the folder are correct au dossier or edit folder pa
   <Diary_None>None</Diary_None>
   <Diary_Log_Writer_Filter_Explanation>Diary can write automatically logs in the Diary. You just have to set the next option to the logs which must be written automatically.</Diary_Log_Writer_Filter_Explanation>
   <Diary_Log_Writer_Filter>Automatic log writer filter</Diary_Log_Writer_Filter>
+  <Diary>Journal</Diary>
+  <Diary_Images>Images</Diary_Images>
+  <Diary_Connected_To_Progress_Renderer>Diary is correctly connected to Progress Renderer.</Diary_Connected_To_Progress_Renderer>
+  <Diary_Not_Connected_To_Progress_Renderer>Diary is not connected to Progress Renderer. If Progress Renderer is enabled, you have to place it before Diary.</Diary_Not_Connected_To_Progress_Renderer>
 </LanguageData>

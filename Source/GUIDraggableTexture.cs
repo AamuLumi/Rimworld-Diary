@@ -35,6 +35,7 @@ namespace Diary
         private Rect outerRect;
         private Rect initialOuterRect;
         private bool mustRecomputeOuterRect;
+        private bool firstLoading;
 
         public GUIDraggableTexture()
         {
@@ -42,6 +43,7 @@ namespace Diary
 
             imageRect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
             mustRecomputeOuterRect = false;
+            firstLoading = true;
         }
 
         public bool HasImageLoaded()
@@ -56,7 +58,6 @@ namespace Diary
 
         public void LoadTexture(string path)
         {
-            Log.Message($"Laod {path}");
             imageLoading = true;
             imageLoadRequest = UnityWebRequestTexture.GetTexture($"file://{path}");
 
@@ -68,7 +69,11 @@ namespace Diary
                 imageHeight = currentImageDisplayed.height;
 
                 imageLoading = false;
-                mustRecomputeOuterRect = true;
+                if (firstLoading)
+                {
+                    mustRecomputeOuterRect = true;
+                }
+                firstLoading = false;
             };
         }
 

@@ -30,7 +30,8 @@ namespace Diary
         private bool imageDisplayMode;
         private GUIDraggableTexture draggableImage;
         private List<DiaryImageEntry> dayImages;
-        private int selectedDayImagesIndex;
+        private List<DiaryImageEntry> allImages;
+        private int selectedAllImagesIndex;
 
         private readonly List<string> fastHourStrings;
         private Dictionary<string, string> truncationCache = new Dictionary<string, string>();
@@ -88,6 +89,8 @@ namespace Diary
             imageDisplayMode = false;
             logFilter = settings.DefaultLogFilter;
             draggableImage = new GUIDraggableTexture();
+            selectedAllImagesIndex = -1;
+            allImages = Current.Game.GetComponent<DiaryService>().GetAllImages();
         }
 
         public bool CanAccessToPreviousDay()
@@ -95,9 +98,19 @@ namespace Diary
             return day != TimeTools.GetMinimumDay(quadrum, year) || quadrum != TimeTools.GetMinimumQuadrum(year) || year != TimeTools.GetMinimumYear();
         }
 
+        public bool CanAccessToPreviousEntry()
+        {
+            return allImages != null && (selectedAllImagesIndex > 0);
+        }
+
         public bool CanAccessToNextDay()
         {
             return day != TimeTools.GetMaximumDay(quadrum, year) || quadrum != TimeTools.GetMaximumQuadrum(year) || year != TimeTools.GetMaximumYear();
+        }
+
+        public bool CanAccessToNextEntry()
+        {
+            return allImages != null && (selectedAllImagesIndex < allImages.Count - 1);
         }
 
         public void SetCurrentDateToPreviousDay()
@@ -260,6 +273,55 @@ namespace Diary
             return logs;
         }
 
+        private void SetSelectedAllImagesIndex(int index)
+        {
+            if (allImages == null || index >= allImages.Count)
+            {
+                return;
+            }
+
+            int previousSelectedAllImagesIndex = selectedAllImagesIndex;
+
+            selectedAllImagesIndex = index;
+
+            if (previousSelectedAllImagesIndex == -1)
+            {
+                dayImages = Current.Game.GetComponent<DiaryService>().ReadImages(this.day, this.quadrum, this.year);
+            }
+
+            if (selectedAllImagesIndex != -1)
+            {
+                draggableImage.LoadTexture(allImages[selectedAllImagesIndex].Path);
+
+                DiaryImageEntry entry = allImages[selectedAllImagesIndex];
+
+                bool dateChanged = false;
+
+                if (day != entry.Days)
+                {
+                    day = entry.Days;
+                    dateChanged = true;
+                }
+
+                if (quadrum != entry.Quadrum)
+                {
+                    quadrum = entry.Quadrum;
+                    dateChanged = true;
+                }
+
+                if (year != entry.Year)
+                {
+                    year = entry.Year;
+                    dateChanged = true;
+                }
+
+                if (dateChanged)
+                {
+                    dayImages = Current.Game.GetComponent<DiaryService>().ReadImages(this.day, this.quadrum, this.year);
+                }
+            }
+        }
+
         private void DoArchivableRow(Rect rect, IArchivable archivable, int index)
         {
             if (index % 2 == 1)
@@ -388,27 +450,36 @@ namespace Diary
             Text.Font = GameFont.Small;
             Widgets.BeginGroup(inRect);
 
-
-            if (Widgets.ButtonText(new Rect(0.0f, dateRect.yMin, widthPerButton / 2, dateRect.yMax), "IMG"))
+            if (allImages.Count > 0 && Widgets.ButtonText(new Rect(0.0f, dateRect.yMin, widthPerButton / 2, dateRect.yMax), imageDisplayMode ? "Diary".Translate() : "Diary_Images".Translate()))
             {
                 imageDisplayMode = !imageDisplayMode;
-                dayImages = Current.Game.GetComponent<DiaryService>().ReadImages(this.day, this.quadrum, this.year);
-                selectedDayImagesIndex = 0;
-                if (dayImages.Count > 0)
-                {
-                    draggableImage.LoadTexture(dayImages[0].Path);
-                }
+
+                SetSelectedAllImagesIndex(Current.Game.GetComponent<DiaryService>().GetIndexForAllImages(this.day, this.quadrum, this.year));
             }
 
-            if (CanAccessToPreviousDay())
+            if (imageDisplayMode)
             {
-                if (Widgets.ButtonText(new Rect(widthPerButton * 0.5f, dateRect.yMin, widthPerButton / 2, dateRect.yMax), "<"))
+                if (CanAccessToPreviousEntry())
                 {
-                    SetCurrentDateToPreviousDay();
+                    if (Widgets.ButtonText(new Rect(widthPerButton * 0.5f, dateRect.yMin, widthPerButton / 2, dateRect.yMax), "<"))
+                    {
+                        SetSelectedAllImagesIndex(selectedAllImagesIndex - 1);
+                    }
                 }
             }
+            else
+            {
+                if (CanAccessToPreviousDay())
+                {
+                    if (Widgets.ButtonText(new Rect(widthPerButton * 0.5f, dateRect.yMin, widthPerButton / 2, dateRect.yMax), "<"))
+                    {
+                        SetCurrentDateToPreviousDay();
+                    }
+                }
 
-            if (Widgets.ButtonText(new Rect(widthPerButton * 1, dateRect.yMin, widthPerButton, dateRect.yMax), Find.ActiveLanguageWorker.OrdinalNumber(this.day + 1)))
+            }
+
+            if (Widgets.ButtonText(new Rect(imageDisplayMode ? widthPerButton * 1.5f : widthPerButton * 1f, dateRect.yMin, imageDisplayMode ? widthPerButton / 2 : widthPerButton, dateRect.yMax), Find.ActiveLanguageWorker.OrdinalNumber(this.day + 1)))
             {
                 List<FloatMenuOption> list = new List<FloatMenuOption>();
                 for (int i = TimeTools.GetMinimumDay(quadrum, year); i <= TimeTools.GetMaximumDay(quadrum, year); i++)
@@ -451,32 +522,54 @@ namespace Diary
                 Find.WindowStack.Add(new FloatMenu(list));
             }
 
-            if (CanAccessToNextDay())
+            if (imageDisplayMode)
             {
-                if (Widgets.ButtonText(new Rect(widthPerButton * 4f, dateRect.yMin, widthPerButton / 2, dateRect.yMax), ">"))
+                if (CanAccessToNextEntry())
                 {
-                    SetCurrentDateToNextDay();
+                    if (Widgets.ButtonText(new Rect(widthPerButton * 4f, dateRect.yMin, widthPerButton / 2, dateRect.yMax), ">"))
+                    {
+                        SetSelectedAllImagesIndex(selectedAllImagesIndex + 1);
+                    }
+                }
+            }
+            else
+            {
+                if (CanAccessToNextDay())
+                {
+                    if (Widgets.ButtonText(new Rect(widthPerButton * 4f, dateRect.yMin, widthPerButton / 2, dateRect.yMax), ">"))
+                    {
+                        SetCurrentDateToNextDay();
+                    }
                 }
             }
 
+
             if (imageDisplayMode)
             {
-                DiaryImageEntry d = dayImages[selectedDayImagesIndex];
-
-                if (d != null && Widgets.ButtonText(new Rect(widthPerButton * 4.5f, dateRect.yMin, widthPerButton / 2, dateRect.yMax), fastHourStrings[d.Hours]))
+                if (dayImages != null && dayImages.Count > 0)
                 {
+                    DiaryImageEntry d = allImages[selectedAllImagesIndex];
 
-                    List<FloatMenuOption> list = new List<FloatMenuOption>();
-                    for (int i = 0; i < dayImages.Count; i++)
+                    if (d != null && Widgets.ButtonText(new Rect(widthPerButton * 1f, dateRect.yMin, widthPerButton / 2, dateRect.yMax), fastHourStrings[d.Hours]))
                     {
-                        int current = i;
-                        list.Add(new FloatMenuOption(fastHourStrings[dayImages[current].Hours], delegate
+
+                        List<FloatMenuOption> list = new List<FloatMenuOption>();
+                        for (int i = 0; i < dayImages.Count; i++)
                         {
-                            selectedDayImagesIndex = current;
-                            draggableImage.LoadTexture(dayImages[current].Path);
-                        }));
+                            int current = i;
+                            list.Add(new FloatMenuOption(fastHourStrings[dayImages[current].Hours], delegate
+                            {
+                                int newIndex = allImages.IndexOf(dayImages[current]);
+
+                                if (newIndex != -1)
+                                {
+                                    selectedAllImagesIndex = newIndex;
+                                    draggableImage.LoadTexture(allImages[newIndex].Path);
+                                }
+                            }));
+                        }
+                        Find.WindowStack.Add(new FloatMenu(list));
                     }
-                    Find.WindowStack.Add(new FloatMenu(list));
                 }
 
                 DoImageDisplayContents(new Rect(0f, dateRect.yMax + 10f, inRect.width, inRect.height - dateRect.yMax));

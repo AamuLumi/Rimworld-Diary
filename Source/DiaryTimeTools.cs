@@ -42,6 +42,11 @@ namespace Diary
             return vector;
         }
 
+        public static int GetCurrentTicks()
+        {
+            return Find.TickManager.TicksAbs;
+        }
+
         public static int GetCurrentHour()
         {
             return GenDate.HourOfDay(Find.TickManager.TicksAbs, TimeTools.GetCurrentLocation().x);
