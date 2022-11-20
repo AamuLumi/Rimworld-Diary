@@ -13,7 +13,8 @@ using Verse;
 using Verse.AI;
 using Verse.Sound;
 using RimWorld.Planet;
-using static HarmonyLib.Code;
+using UnityEngine.Networking;
+using Verse.Noise;
 
 namespace Diary
 {
@@ -26,6 +27,10 @@ namespace Diary
         private int displayedMessageIndex = -1;
         private float messageLastHeight = 0f;
         private LogFilter logFilter;
+        private bool imageDisplayMode;
+        private GUIDraggableTexture draggableImage;
+        private List<DiaryImageEntry> dayImages;
+        private int selectedDayImagesIndex;
 
         private readonly List<string> fastHourStrings;
         private Dictionary<string, string> truncationCache = new Dictionary<string, string>();
@@ -80,7 +85,9 @@ namespace Diary
 
             DiarySettings settings = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>();
 
+            imageDisplayMode = false;
             logFilter = settings.DefaultLogFilter;
+            draggableImage = new GUIDraggableTexture();
         }
 
         public bool CanAccessToPreviousDay()
@@ -363,12 +370,35 @@ namespace Diary
             }
         }
 
+        public void DoImageDisplayContents(Rect inRect)
+        {
+            if (draggableImage.HasImageLoaded())
+            {
+                draggableImage.Draw(inRect);
+            }
+
+            Widgets.EndGroup();
+        }
+
         public override void DoWindowContents(Rect inRect)
         {
             Rect dateRect = new Rect(0f, 0f, inRect.width, 40f);
             float widthPerButton = inRect.width / 5;
 
+            Text.Font = GameFont.Small;
             Widgets.BeginGroup(inRect);
+
+
+            if (Widgets.ButtonText(new Rect(0.0f, dateRect.yMin, widthPerButton / 2, dateRect.yMax), "IMG"))
+            {
+                imageDisplayMode = !imageDisplayMode;
+                dayImages = Current.Game.GetComponent<DiaryService>().ReadImages(this.day, this.quadrum, this.year);
+                selectedDayImagesIndex = 0;
+                if (dayImages.Count > 0)
+                {
+                    draggableImage.LoadTexture(dayImages[0].Path);
+                }
+            }
 
             if (CanAccessToPreviousDay())
             {
@@ -427,6 +457,31 @@ namespace Diary
                 {
                     SetCurrentDateToNextDay();
                 }
+            }
+
+            if (imageDisplayMode)
+            {
+                DiaryImageEntry d = dayImages[selectedDayImagesIndex];
+
+                if (d != null && Widgets.ButtonText(new Rect(widthPerButton * 4.5f, dateRect.yMin, widthPerButton / 2, dateRect.yMax), fastHourStrings[d.Hours]))
+                {
+
+                    List<FloatMenuOption> list = new List<FloatMenuOption>();
+                    for (int i = 0; i < dayImages.Count; i++)
+                    {
+                        int current = i;
+                        list.Add(new FloatMenuOption(fastHourStrings[dayImages[current].Hours], delegate
+                        {
+                            selectedDayImagesIndex = current;
+                            draggableImage.LoadTexture(dayImages[current].Path);
+                        }));
+                    }
+                    Find.WindowStack.Add(new FloatMenu(list));
+                }
+
+                DoImageDisplayContents(new Rect(0f, dateRect.yMax + 10f, inRect.width, inRect.height - dateRect.yMax));
+
+                return;
             }
 
             Rect entryWritingRect = new Rect(0f, dateRect.yMax + 10f, inRect.width, 300f);

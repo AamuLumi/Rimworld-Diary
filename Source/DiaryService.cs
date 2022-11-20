@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Packaging;
 using System.Xml;
+using HarmonyLib;
 using RimWorld;
 using RTFExporter;
 using Verse;
@@ -12,10 +13,12 @@ namespace Diary
     public class DiaryService : GameComponent
     {
         private Dictionary<string, string> entries;
+        private Dictionary<string, List<DiaryImageEntry>> images;
 
         public DiaryService(Game game)
         {
             entries = new Dictionary<string, string>();
+            images = new Dictionary<string, List<DiaryImageEntry>>();
         }
 
         private string[] GetTextEntriesToExport()
@@ -128,6 +131,28 @@ namespace Diary
             }
 
             entries.SetOrAdd(key, $"{entries[key]}{data}");
+        }
+
+        public List<DiaryImageEntry> ReadImages(int day, Quadrum quadrum, int year)
+        {
+            DefaultMessage defaultMessageSetting = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().DefaultMessage;
+
+            return images.TryGetValue(GetDictionaryKey(day, quadrum, year));
+        }
+
+        public void AddImageNow(string path)
+        {
+            string key = GetDictionaryKey(TimeTools.GetCurrentDay(), TimeTools.GetCurrentQuadrum(), TimeTools.GetCurrentYear());
+            List<DiaryImageEntry> currentImages = images.TryGetValue(key);
+
+            if (currentImages == null)
+            {
+                currentImages = new List<DiaryImageEntry>();
+            }
+
+            currentImages.Add(new DiaryImageEntry(path, TimeTools.GetCurrentHour()));
+
+            images.SetOrAdd(key, currentImages);
         }
 
         public void Export()

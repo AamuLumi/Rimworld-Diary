@@ -85,4 +85,16 @@ namespace Diary
             }
         }
     }
+
+    public class DiaryImageEntry
+    {
+        public string Path;
+        public int Hours;
+
+        public DiaryImageEntry(string path, int hours)
+        {
+            Path = path;
+            Hours = hours;
+        }
+    }
 }
