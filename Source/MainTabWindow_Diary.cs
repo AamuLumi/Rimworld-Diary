@@ -32,6 +32,8 @@ namespace Diary
         private List<DiaryImageEntry> dayImages;
         private List<DiaryImageEntry> allImages;
         private int selectedAllImagesIndex;
+        private TextEditor currentTextEditor;
+        private bool moveCursorToEndAtNextFrame;
 
         private readonly List<string> fastHourStrings;
         private Dictionary<string, string> truncationCache = new Dictionary<string, string>();
@@ -91,6 +93,7 @@ namespace Diary
             draggableImage = new GUIDraggableTexture();
             selectedAllImagesIndex = -1;
             allImages = Current.Game.GetComponent<DiaryService>().GetAllImages();
+            moveCursorToEndAtNextFrame = false;
         }
 
         public bool CanAccessToPreviousDay()
@@ -328,12 +331,14 @@ namespace Diary
             {
                 Widgets.DrawLightHighlight(rect);
             }
+
             Widgets.DrawHighlightIfMouseover(rect);
             Text.Font = GameFont.Small;
             Text.Anchor = TextAnchor.MiddleLeft;
             Text.WordWrap = false;
+
             Rect rect2 = rect;
-            rect2.xMin += 35f;
+            rect2.xMin += 5f;
             GUI.color = Color.white;
             Rect rect4 = rect2;
             Rect outerRect = rect2;
@@ -346,6 +351,7 @@ namespace Diary
                 Widgets.DrawTextureFitted(outerRect, archivedIcon, 0.8f);
                 GUI.color = Color.white;
             }
+
             Rect rect5 = rect2;
             rect5.width = 40f;
             rect2.xMin += 45f;
@@ -354,10 +360,21 @@ namespace Diary
             Widgets.Label(label: fastHourStrings[GenDate.HourOfDay(GenDate.TickGameToAbs(archivable.CreatedTicksGame), TimeTools.GetCurrentLocation().x)], rect: rect5);
             GUI.color = Color.white;
             Rect rect6 = rect2;
+            rect6.xMax -= 40f;
             Widgets.Label(rect6, archivable.ArchivedLabel.Truncate(rect6.width));
             GenUI.ResetLabelAlign();
             Text.WordWrap = true;
             GUI.color = Color.white;
+
+            Rect buttonRect = new Rect(rect2.xMax - 35f, rect2.y, 35f, rect2.height);
+            if (Widgets.ButtonText(buttonRect, "+"))
+            {
+                Current.Game.GetComponent<DiaryService>().AppendEntry(archivable.ArchivedLabel, day, quadrum, year, true);
+                GUI.FocusControl("DiaryTextArea");
+                // We need to wait the refresh of the area with the new text to move the cursor
+                moveCursorToEndAtNextFrame = true;
+            }
+
             if (Mouse.IsOver(rect4))
             {
                 displayedMessageIndex = index;
@@ -392,7 +409,7 @@ namespace Diary
             Text.Anchor = TextAnchor.MiddleLeft;
             Text.WordWrap = false;
             Rect rect2 = rect;
-            rect2.xMin += 35f;
+            rect2.xMin += 5f;
             GUI.color = Color.white;
             Rect rect4 = rect2;
             Rect outerRect = rect2;
@@ -416,12 +433,23 @@ namespace Diary
             Widgets.Label(label: fastHourStrings[GenDate.HourOfDay(logEntry.Timestamp, TimeTools.GetCurrentLocation().x)], rect: rect5);
             GUI.color = Color.white;
             Rect rect6 = rect2;
+            rect6.xMax -= 40f;
 
             Widgets.Label(rect6, logEntry.ToGameStringFromPOV(logEntry.GetConcerns().First()));
 
             GenUI.ResetLabelAlign();
             Text.WordWrap = true;
             GUI.color = Color.white;
+
+            Rect buttonRect = new Rect(rect2.xMax - 35f, rect2.y, 35f, rect2.height);
+            if (Widgets.ButtonText(buttonRect, "+"))
+            {
+                Current.Game.GetComponent<DiaryService>().AppendEntry(ColoredText.StripTags(logEntry.ToGameStringFromPOV(logEntry.GetConcerns().First())), day, quadrum, year, true);
+                GUI.FocusControl("DiaryTextArea");
+                // We need to wait the refresh of the area with the new text to move the cursor
+                moveCursorToEndAtNextFrame = true;
+            }
+
             if (Mouse.IsOver(rect4))
             {
                 displayedMessageIndex = index;
@@ -578,7 +606,24 @@ namespace Diary
             }
 
             Rect entryWritingRect = new Rect(0f, dateRect.yMax + 10f, inRect.width, 300f);
-            Current.Game.GetComponent<DiaryService>().WriteEntry(Widgets.TextArea(entryWritingRect, Current.Game.GetComponent<DiaryService>().ReadEntry(this.day, this.quadrum, this.year)), this.day, this.quadrum, this.year);
+            GUI.SetNextControlName("DiaryTextArea");
+            string newEntry = Widgets.TextArea(entryWritingRect, Current.Game.GetComponent<DiaryService>().ReadEntry(this.day, this.quadrum, this.year));
+            Current.Game.GetComponent<DiaryService>().WriteEntry(newEntry, this.day, this.quadrum, this.year);
+            int controlID = GUIUtility.GetControlID(entryWritingRect.GetHashCode(), FocusType.Keyboard);
+            currentTextEditor = (TextEditor)GUIUtility.GetStateObject(typeof(TextEditor), controlID - 1);
+
+            if (moveCursorToEndAtNextFrame)
+            {
+                if (currentTextEditor != null)
+                {
+                    currentTextEditor.MoveTextEnd();
+                    Event e = new Event();
+                    e.type = EventType.KeyDown;
+                    currentTextEditor.UpdateScrollOffsetIfNeeded(e);
+                }
+
+                moveCursorToEndAtNextFrame = false;
+            }
 
             Rect actionsRect = new Rect(0f, entryWritingRect.yMax + 10f, inRect.width, 30f);
 

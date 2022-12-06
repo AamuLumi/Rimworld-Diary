@@ -119,6 +119,27 @@ namespace Diary
             entries.SetOrAdd(GetDictionaryKey(TimeTools.GetCurrentDay(), TimeTools.GetCurrentQuadrum(), TimeTools.GetCurrentYear()), data);
         }
 
+        public void AppendEntry(string data, int day, Quadrum quadrum, int year, bool onNewLine = true, bool writeCurrentHour = true)
+        {
+            string key = GetDictionaryKey(day, quadrum, year);
+            string currentEntry = entries.TryGetValue(key);
+
+            if (writeCurrentHour)
+            {
+                data = $"[{TimeTools.GetCurrentHour()}{"LetterHour".Translate()}] {data}";
+            }
+            if (onNewLine)
+            {
+                data = $"\n{data}";
+            }
+            if (currentEntry != null)
+            {
+                data = $"{currentEntry}{data}";
+            }
+
+            entries.SetOrAdd(key, data);
+        }
+
         public void AppendEntryNow(string data, bool onNewLine = true, bool writeCurrentHour = true)
         {
             string key = GetDictionaryKey(TimeTools.GetCurrentDay(), TimeTools.GetCurrentQuadrum(), TimeTools.GetCurrentYear());
