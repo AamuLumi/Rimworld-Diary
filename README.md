@@ -11,7 +11,9 @@ You can write freely what happened during these days, and export the whole diary
 
 - Read and write your diary for each day of your colony.
 - Check events that happen for each day.
-- Export to a single .txt or .rtf file.
+- Export to a single .txt or .rtf file, with automatic and configurable export.
+- Fully optional integration of [Progress Renderer](https://github.com/Lanilor/Progress-Renderer) : you can consult each map capture directly in your Diary. Captures are zoomable and movable.
+- Can automatically write social interactions or events in your Diary (see mod settings).
 
 ## Compatibility
 

@@ -1,0 +1,17 @@
+# 1.1.1 (03/03/2023)
+
+- Add automatic export and associated settings
+
+# 1.1.0 (11/20/2022)
+
+- Add social interactions logs and auto writing of logs in Diary
+- Add Progress Renderer integration
+
+# 1.0.1 (11/15/2022)
+
+- Add RTF file export (with RTFExporter)
+- Add new settings "Default entry message" and "Export format"
+
+# 1.0.0 (11/15/2022)
+
+Initial release
