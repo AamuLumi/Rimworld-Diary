@@ -29,4 +29,10 @@ Please check write access to the folder are correct au dossier or edit folder pa
   <Diary_Images>Images</Diary_Images>
   <Diary_Connected_To_Progress_Renderer>Diary is correctly connected to Progress Renderer.</Diary_Connected_To_Progress_Renderer>
   <Diary_Not_Connected_To_Progress_Renderer>Diary is not connected to Progress Renderer. If Progress Renderer is enabled, you have to place it before Diary.</Diary_Not_Connected_To_Progress_Renderer>
+  <Diary_Automatic_Export>Diary automatic export</Diary_Automatic_Export>
+  <Diary_Automatic_Export_Enabled>Auto export enabled</Diary_Automatic_Export_Enabled>
+  <Diary_Automatic_Export_Period>Export automatically the diary :</Diary_Automatic_Export_Period>
+  <Diary_Every_Day>Everyday</Diary_Every_Day>
+  <Diary_Every_Week>Every week</Diary_Every_Week>
+  <Diary_Every_Month>Every month</Diary_Every_Month>
 </LanguageData>

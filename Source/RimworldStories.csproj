@@ -106,6 +106,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameComponent_AutomaticExport.cs" />
     <Compile Include="DiaryService.cs" />
     <Compile Include="DiaryTypes.cs" />
     <Compile Include="DiaryTimeTools.cs" />

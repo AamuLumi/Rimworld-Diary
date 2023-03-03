@@ -29,4 +29,10 @@ Veuillez vérifier que les droits d'accès au dossier sont corrects ou modifier 
   <Diary_Images>Images</Diary_Images>
   <Diary_Connected_To_Progress_Renderer>Diary est correctement connecté à Progress Renderer.</Diary_Connected_To_Progress_Renderer>
   <Diary_Not_Connected_To_Progress_Renderer>Diary n'est pas connecté à Progress Renderer. Si Progress Renderer est activé, veuillez le placer avant Diary.</Diary_Not_Connected_To_Progress_Renderer>
+  <Diary_Automatic_Export>Export automatique du Journal</Diary_Automatic_Export>
+  <Diary_Automatic_Export_Enabled>Export automatique activé</Diary_Automatic_Export_Enabled>
+  <Diary_Automatic_Export_Period>Exporter le journal automatiquement :</Diary_Automatic_Export_Period>
+  <Diary_Every_Day>Tous les jours</Diary_Every_Day>
+  <Diary_Every_Week>Toutes les semaines</Diary_Every_Week>
+  <Diary_Every_Month>Tous les mois</Diary_Every_Month>
 </LanguageData>

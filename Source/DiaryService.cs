@@ -205,12 +205,12 @@ namespace Diary
             allImages.Add(entryToAdd);
         }
 
-        public void Export()
+        public void Export(bool silent = false)
         {
             string folder = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().FolderPath;
             ExportFormat format = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().ExportFormat;
 
-            Log.Message($"{folder} {format}");
+            //Log.Message($"Export Diary in {folder} - Format : {format}");
 
             string savename = Faction.OfPlayer.Name;
             string savePath = Path.Combine(folder, "diary-" + savename + "-" + DateTime.Now.Ticks);
@@ -229,7 +229,10 @@ namespace Diary
                         break;
                 }
 
-                Find.WindowStack.Add(new Dialog_ExportDiary("Diary_Export_Successful".Translate(), savePath));
+                if (!silent)
+                {
+                    Find.WindowStack.Add(new Dialog_ExportDiary("Diary_Export_Successful".Translate(), savePath));
+                }
             }
             catch (DirectoryNotFoundException)
             {

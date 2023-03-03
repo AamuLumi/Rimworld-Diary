@@ -40,6 +40,13 @@ namespace Diary
         None,
     }
 
+    public enum AutomaticExportPeriod
+    {
+        Day,
+        Week,
+        Month,
+    }
+
     public class DiaryTypeTools
     {
         public static string GetFormatName(ExportFormat format)
@@ -81,6 +88,17 @@ namespace Diary
                 case LogWriterFilter.Chats: return "Diary_Chats".Translate();
                 case LogWriterFilter.Events: return "Diary_Events".Translate();
                 case LogWriterFilter.None: return "Diary_None".Translate();
+                default: return "";
+            }
+        }
+
+        public static string GetAutomaticExportPeriodName(AutomaticExportPeriod f)
+        {
+            switch (f)
+            {
+                case AutomaticExportPeriod.Day: return "Diary_Every_Day".Translate();
+                case AutomaticExportPeriod.Week: return "Diary_Every_Week".Translate();
+                case AutomaticExportPeriod.Month: return "Diary_Every_Month".Translate();
                 default: return "";
             }
         }
