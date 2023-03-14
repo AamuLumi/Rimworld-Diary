@@ -23,8 +23,7 @@ namespace Diary
 {
     public class GUIDraggableTexture
     {
-        private const float ZoomRatio = 0.2f;
-
+        private float zoomRatio = 0.2f;
         private float currentImageScale;
         private Rect imageRect;
         private int imageWidth;
@@ -36,6 +35,7 @@ namespace Diary
         private Rect initialOuterRect;
         private bool mustRecomputeOuterRect;
         private bool firstLoading;
+        private float maxImageScale;
 
         public GUIDraggableTexture()
         {
@@ -67,6 +67,11 @@ namespace Diary
 
                 imageWidth = currentImageDisplayed.width;
                 imageHeight = currentImageDisplayed.height;
+
+                maxImageScale = Math.Max(imageWidth, imageHeight) / 1500f;
+                zoomRatio = (maxImageScale - 1.0f) / 10;
+
+                Log.Message(maxImageScale.ToString());
 
                 imageLoading = false;
                 if (firstLoading)
@@ -120,21 +125,25 @@ namespace Diary
             if (Event.current.delta.y > 0 && currentImageScale > 1.00f)
             {
 
-                imageRect.xMin -= xRatio * ZoomRatio;
-                imageRect.xMax += xRatio * ZoomRatio;
-                imageRect.yMin -= yRatio * ZoomRatio;
-                imageRect.yMax += yRatio * ZoomRatio;
+                imageRect.xMin -= xRatio * zoomRatio;
+                imageRect.xMax += xRatio * zoomRatio;
+                imageRect.yMin -= yRatio * zoomRatio;
+                imageRect.yMax += yRatio * zoomRatio;
                 currentImageScale -= 0.1f;
 
                 TryFixImageCoordinates();
             }
             else if (Event.current.delta.y < 0 && currentImageScale < 2.0f)
             {
+                if (imageRect.xMin + xRatio * zoomRatio > imageRect.xMax - xRatio * zoomRatio || imageRect.yMin + yRatio * zoomRatio > imageRect.yMax - yRatio * zoomRatio)
+                {
+                    return;
+                }
 
-                imageRect.xMin += xRatio * ZoomRatio;
-                imageRect.xMax -= xRatio * ZoomRatio;
-                imageRect.yMin += yRatio * ZoomRatio;
-                imageRect.yMax -= yRatio * ZoomRatio;
+                imageRect.xMin += xRatio * zoomRatio;
+                imageRect.xMax -= xRatio * zoomRatio;
+                imageRect.yMin += yRatio * zoomRatio;
+                imageRect.yMax -= yRatio * zoomRatio;
                 currentImageScale += 0.1f;
 
                 TryFixImageCoordinates();
