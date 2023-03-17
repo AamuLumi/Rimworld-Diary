@@ -1,7 +1,5 @@
-﻿using System.Linq;
-
+﻿using HarmonyLib;
 using RimWorld;
-using HarmonyLib;
 using Verse;
 
 namespace Diary

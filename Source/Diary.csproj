@@ -106,30 +106,40 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameComponent_AutomaticExport.cs" />
-    <Compile Include="DiaryService.cs" />
-    <Compile Include="DiaryTypes.cs" />
-    <Compile Include="DiaryTimeTools.cs" />
-    <Compile Include="GUIDraggableTexture.cs" />
+    <Compile Include="Components\GameComponent_AutomaticExport.cs" />
+    <Compile Include="Core\DiaryService.cs" />
+    <Compile Include="Core\Events\BaseEvent.cs" />
+    <Compile Include="Core\Events\Event_OnPawnDie.cs" />
+    <Compile Include="Core\RandomTools.cs" />
+    <Compile Include="Core\Text\DefaultDictionary.cs" />
+    <Compile Include="Core\Text\RandomString.cs" />
+    <Compile Include="Core\Text\TextGenerator.cs" />
+    <Compile Include="Core\Text\TokenTranslation.cs" />
+    <Compile Include="Core\Text\TokensDictionary.cs" />
+    <Compile Include="Core\Types.cs" />
+    <Compile Include="Core\TimeTools.cs" />
+    <Compile Include="UI\GUIDraggableTexture.cs" />
+    <Compile Include="Patches\ActionTrackers\OnPawnDie.cs" />
     <Compile Include="Patches\ListenArchive_Add.cs" />
     <Compile Include="Patches\ListenProgressRenderer_CreateFilePath.cs" />
     <Compile Include="Patches\ListenPlayLog_Add.cs" />
-    <Compile Include="MainButtonWorker_ToggleDiaryTab.cs" />
-    <Compile Include="MainTabWindow_Diary.cs" />
-    <Compile Include="Dialog_ExportDiary.cs" />
-    <Compile Include="DiarySettings.cs" />
+    <Compile Include="UI\MainButtonWorker_ToggleDiaryTab.cs" />
+    <Compile Include="UI\MainTabWindow_Diary.cs" />
+    <Compile Include="UI\Dialog_ExportDiary.cs" />
+    <Compile Include="Settings\DiarySettings.cs" />
     <Compile Include="Diary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RTF\Color.cs" />
-    <Compile Include="RTF\RTFDocument.cs" />
-    <Compile Include="RTF\RTFParagraph.cs" />
-    <Compile Include="RTF\RTFParagraphStyle.cs" />
-    <Compile Include="RTF\RTFParser.cs" />
-    <Compile Include="RTF\RTFText.cs" />
-    <Compile Include="RTF\RTFTextStyle.cs" />
+    <Compile Include="Librairies\RTF\Color.cs" />
+    <Compile Include="Librairies\RTF\RTFDocument.cs" />
+    <Compile Include="Librairies\RTF\RTFParagraph.cs" />
+    <Compile Include="Librairies\RTF\RTFParagraphStyle.cs" />
+    <Compile Include="Librairies\RTF\RTFParser.cs" />
+    <Compile Include="Librairies\RTF\RTFText.cs" />
+    <Compile Include="Librairies\RTF\RTFTextStyle.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="RTF\README.md" />
+    <None Include="Librairies\RTF\README.md" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

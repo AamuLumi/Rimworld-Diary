@@ -1,19 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using RimWorld;
 using UnityEngine;
-using HarmonyLib;
-using RimWorld;
 using Verse;
-using Verse.AI;
-using Verse.Sound;
-using RimWorld.Planet;
-using Verse.Noise;
 
 namespace Diary
 {

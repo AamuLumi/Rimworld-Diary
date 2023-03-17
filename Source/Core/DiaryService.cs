@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Packaging;
-using System.Xml;
-using HarmonyLib;
 using RimWorld;
 using RTFExporter;
 using Verse;

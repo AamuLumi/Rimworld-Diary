@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RimWorld;
-using RimWorld.Planet;
-using UnityEngine.PlayerLoop;
+﻿using RimWorld;
 using Verse;
 
 namespace Diary

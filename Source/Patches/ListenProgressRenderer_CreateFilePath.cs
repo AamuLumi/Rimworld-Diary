@@ -1,7 +1,4 @@
-﻿using System.Linq;
-
-using HarmonyLib;
-using Verse;
+﻿using Verse;
 
 namespace Diary
 {
