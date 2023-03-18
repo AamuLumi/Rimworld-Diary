@@ -3,20 +3,14 @@
     internal class DefaultDictionary
     {
         private static DefaultDictionary _instance;
-        private TokensDictionary _dictionary;
-
-        public TokensDictionary Dictionary
-        {
-            get { return _dictionary; }
-        }
 
         private DefaultDictionary()
         {
-            _dictionary = new TokensDictionary
+            Dictionary = new TokensDictionary
             {
                 {
                     "NAME",
-                    new TokenTranslation()
+                    new TokenTranslation
                     {
                         {
                             "ANIMAL",
@@ -50,7 +44,7 @@
                 },
                 {
                     "ADJ",
-                    new TokenTranslation()
+                    new TokenTranslation
                     {
                         {
                             "DEATH_QUALIFICATION",
@@ -66,28 +60,42 @@
                                 "rough",
                                 "painful"
                             )
+                        },
+                        {
+                            "FALL_QUALIFICATION",
+                            new RandomString(
+                                "harmful",
+                                "tough",
+                                "severe",
+                                "brutal",
+                                "rough",
+                                "painful"
+                            )
                         }
                     }
                 },
                 {
                     "ADV",
-                    new TokenTranslation()
+                    new TokenTranslation
                     {
                         {
                             "DEATH_QUALIFICATION",
                             new RandomString("horribly", "harmfully", "badly", "wildly")
+                        },
+                        {
+                            "FALL_QUALIFICATION",
+                            new RandomString("harmfully", "badly", "wildly")
                         }
                     }
                 }
             };
         }
 
+        public TokensDictionary Dictionary { get; }
+
         public static DefaultDictionary GetInstance()
         {
-            if (_instance == null)
-            {
-                _instance = new DefaultDictionary();
-            }
+            if (_instance == null) _instance = new DefaultDictionary();
 
             return _instance;
         }

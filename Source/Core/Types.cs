@@ -6,32 +6,35 @@ namespace Diary
     public enum ExportFormat
     {
         Text,
-        RTF,
+        RTF
     }
+
     public enum DefaultMessage
     {
         NoEntryFound,
-        Empty,
+        Empty
     }
+
     public enum LogFilter
     {
         All,
         Events,
-        Chats,
+        Chats
     }
+
     public enum LogWriterFilter
     {
         All,
         Events,
         Chats,
-        None,
+        None
     }
 
     public enum AutomaticExportPeriod
     {
         Day,
         Week,
-        Month,
+        Month
     }
 
     public class DiaryTypeTools
@@ -93,9 +96,9 @@ namespace Diary
 
     public class DiaryImageEntry : IExposable
     {
-        public string Path;
-        public int Hours;
         public int Days;
+        public int Hours;
+        public string Path;
         public Quadrum Quadrum;
         public int Year;
 
@@ -120,5 +123,20 @@ namespace Diary
             Scribe_Values.Look(ref Quadrum, "Quadrum");
             Scribe_Values.Look(ref Year, "Year");
         }
+    }
+
+    public class PawnStatus
+    {
+        private bool _dead;
+        private bool _downed;
+
+        public PawnStatus(bool downed, bool dead)
+        {
+            _downed = downed;
+            _dead = dead;
+        }
+
+        public bool Downed { get; }
+        public bool Dead { get; }
     }
 }
