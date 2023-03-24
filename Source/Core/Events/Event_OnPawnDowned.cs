@@ -14,8 +14,9 @@ namespace Diary.Core.Events
 
         public Event_OnPawnDowned(Pawn p)
         {
-            Log.Message($"{p} {p.jobs.curJob} {p.jobs.jobQueue.Count}");
-            if (p.jobs.curDriver is JobDriver_Hunt) CreatePawnDownedDuringHuntingSentence(p);
+            Log.Message($"{p} {p.jobs.curDriver} {p.jobs.jobQueue.Count}");
+            if (p.jobs.curDriver is JobDriver_Hunt)
+                CreatePawnDownedDuringHuntingSentence(p);
         }
 
         private void CreatePawnDownedDuringHuntingSentence(Pawn p)
@@ -28,7 +29,8 @@ namespace Diary.Core.Events
                 { "HUNTER", TokenTranslation.FromPawn(p) }
             };
 
-            if (target != null) currentDictionary.Add("VICTIM", TokenTranslation.FromPawn(target));
+            if (target != null)
+                currentDictionary.Add("VICTIM", TokenTranslation.FromPawn(target));
 
             _diaryEntry = TextGenerator.Generate(_huntingSentences.ToString(), currentDictionary);
         }

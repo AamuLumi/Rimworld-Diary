@@ -110,6 +110,7 @@
     <Compile Include="Core\DiaryService.cs" />
     <Compile Include="Core\Events\BaseEvent.cs" />
     <Compile Include="Core\Events\Event_OnPawnDie.cs" />
+    <Compile Include="Core\Events\Event_OnPawnDowned.cs" />
     <Compile Include="Core\RandomTools.cs" />
     <Compile Include="Core\Text\DefaultDictionary.cs" />
     <Compile Include="Core\Text\RandomString.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="Core\Text\TokensDictionary.cs" />
     <Compile Include="Core\Types.cs" />
     <Compile Include="Core\TimeTools.cs" />
+    <Compile Include="Patches\ActionTrackers\OnPawnDowned.cs" />
     <Compile Include="UI\GUIDraggableTexture.cs" />
     <Compile Include="Patches\ActionTrackers\OnPawnDie.cs" />
     <Compile Include="Patches\ListenArchive_Add.cs" />
