@@ -21,7 +21,8 @@ namespace Diary
     {
         DiarySettings settings;
 
-        public Diary(ModContentPack content) : base(content)
+        public Diary(ModContentPack content)
+            : base(content)
         {
             var harmony = new Harmony("aamulumi.diary");
 
@@ -42,14 +43,23 @@ namespace Diary
 
         public void InitWithProgressRenderer(Harmony harmony)
         {
-
-            var PR_RenderManager = System.Type.GetType("ProgressRenderer.MapComponent_RenderManager, Progress-Renderer");
+            var PR_RenderManager = System.Type.GetType(
+                "ProgressRenderer.MapComponent_RenderManager, Progress-Renderer"
+            );
 
             if (PR_RenderManager != null)
             {
                 var createFilePath = PR_RenderManager.GetMethod("CreateFilePath", AccessTools.all);
 
-                harmony.Patch(createFilePath, postfix: new HarmonyMethod(typeof(ListenProgressRenderer_CreateFilePath).GetMethod("Postfix", AccessTools.all)));
+                harmony.Patch(
+                    createFilePath,
+                    postfix: new HarmonyMethod(
+                        typeof(ListenProgressRenderer_CreateFilePath).GetMethod(
+                            "Postfix",
+                            AccessTools.all
+                        )
+                    )
+                );
 
                 settings.ConnectedToProgressRenderer = true;
             }

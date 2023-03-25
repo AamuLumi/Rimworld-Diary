@@ -10,7 +10,7 @@
 	<description>Write, read and export your colony's tales.
 	
 Diary adds a new tab to keep a trace of each of your colony's days.
-You can write freely what happened during these days, and export the whole diary to a simple text file to share with anyone.</description>
+You can write freely what happened during these days, and export the whole diary to a text file or a web page to share with anyone.</description>
 	<modDependencies>
 		<li>
 			<packageId>brrainz.harmony</packageId>

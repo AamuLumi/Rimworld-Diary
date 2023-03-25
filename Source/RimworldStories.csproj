@@ -111,6 +111,8 @@
     <Compile Include="DiaryTypes.cs" />
     <Compile Include="DiaryTimeTools.cs" />
     <Compile Include="GUIDraggableTexture.cs" />
+    <Compile Include="HTML\FileTools.cs" />
+    <Compile Include="HTML\HTMLBuilder.cs" />
     <Compile Include="Patches\ListenArchive_Add.cs" />
     <Compile Include="Patches\ListenProgressRenderer_CreateFilePath.cs" />
     <Compile Include="Patches\ListenPlayLog_Add.cs" />
@@ -122,14 +124,25 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RTF\Color.cs" />
     <Compile Include="RTF\RTFDocument.cs" />
+    <Compile Include="RTF\RTFElement.cs" />
     <Compile Include="RTF\RTFParagraph.cs" />
     <Compile Include="RTF\RTFParagraphStyle.cs" />
     <Compile Include="RTF\RTFParser.cs" />
+    <Compile Include="RTF\RTFImage.cs" />
     <Compile Include="RTF\RTFText.cs" />
+    <Compile Include="RTF\RTFImageStyle.cs" />
     <Compile Include="RTF\RTFTextStyle.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="RTF\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="HTML\DiaryExport\diary-default.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HTML\DiaryExport\index.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

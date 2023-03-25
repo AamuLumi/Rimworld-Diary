@@ -20,18 +20,22 @@ namespace Diary
     {
         Text,
         RTF,
+        HTML,
     }
+
     public enum DefaultMessage
     {
         NoEntryFound,
         Empty,
     }
+
     public enum LogFilter
     {
         All,
         Events,
         Chats,
     }
+
     public enum LogWriterFilter
     {
         All,
@@ -53,9 +57,14 @@ namespace Diary
         {
             switch (format)
             {
-                case ExportFormat.Text: return "Diary_Format_Text".Translate();
-                case ExportFormat.RTF: return "Diary_Format_RTF".Translate();
-                default: return "";
+                case ExportFormat.Text:
+                    return "Diary_Format_Text".Translate();
+                case ExportFormat.RTF:
+                    return "Diary_Format_RTF".Translate();
+                case ExportFormat.HTML:
+                    return "Diary_Format_HTML".Translate();
+                default:
+                    return "";
             }
         }
 
@@ -63,9 +72,12 @@ namespace Diary
         {
             switch (m)
             {
-                case DefaultMessage.Empty: return "Diary_Empty".Translate();
-                case DefaultMessage.NoEntryFound: return "Diary_No_Entry_Found_Message".Translate();
-                default: return "";
+                case DefaultMessage.Empty:
+                    return "Diary_Empty".Translate();
+                case DefaultMessage.NoEntryFound:
+                    return "Diary_No_Entry_Found_Message".Translate();
+                default:
+                    return "";
             }
         }
 
@@ -73,10 +85,14 @@ namespace Diary
         {
             switch (f)
             {
-                case LogFilter.All: return "Diary_All".Translate();
-                case LogFilter.Chats: return "Diary_Chats".Translate();
-                case LogFilter.Events: return "Diary_Events".Translate();
-                default: return "";
+                case LogFilter.All:
+                    return "Diary_All".Translate();
+                case LogFilter.Chats:
+                    return "Diary_Chats".Translate();
+                case LogFilter.Events:
+                    return "Diary_Events".Translate();
+                default:
+                    return "";
             }
         }
 
@@ -84,11 +100,16 @@ namespace Diary
         {
             switch (f)
             {
-                case LogWriterFilter.All: return "Diary_All".Translate();
-                case LogWriterFilter.Chats: return "Diary_Chats".Translate();
-                case LogWriterFilter.Events: return "Diary_Events".Translate();
-                case LogWriterFilter.None: return "Diary_None".Translate();
-                default: return "";
+                case LogWriterFilter.All:
+                    return "Diary_All".Translate();
+                case LogWriterFilter.Chats:
+                    return "Diary_Chats".Translate();
+                case LogWriterFilter.Events:
+                    return "Diary_Events".Translate();
+                case LogWriterFilter.None:
+                    return "Diary_None".Translate();
+                default:
+                    return "";
             }
         }
 
@@ -96,10 +117,14 @@ namespace Diary
         {
             switch (f)
             {
-                case AutomaticExportPeriod.Day: return "Diary_Every_Day".Translate();
-                case AutomaticExportPeriod.Week: return "Diary_Every_Week".Translate();
-                case AutomaticExportPeriod.Month: return "Diary_Every_Month".Translate();
-                default: return "";
+                case AutomaticExportPeriod.Day:
+                    return "Diary_Every_Day".Translate();
+                case AutomaticExportPeriod.Week:
+                    return "Diary_Every_Week".Translate();
+                case AutomaticExportPeriod.Month:
+                    return "Diary_Every_Month".Translate();
+                default:
+                    return "";
             }
         }
     }
@@ -112,9 +137,7 @@ namespace Diary
         public Quadrum Quadrum;
         public int Year;
 
-        public DiaryImageEntry()
-        {
-        }
+        public DiaryImageEntry() { }
 
         public DiaryImageEntry(string path, int hours, int day, Quadrum quadrum, int year)
         {

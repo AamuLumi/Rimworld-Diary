@@ -13,6 +13,7 @@ Veuillez vérifier que les droits d'accès au dossier sont corrects ou modifier 
   <Diary_Export_Format>Format du fichier d'export</Diary_Export_Format>
   <Diary_Format_Text>Texte (.txt)</Diary_Format_Text>
   <Diary_Format_RTF>Rich Text File (.rtf)</Diary_Format_RTF>
+  <Diary_Format_HTML>Page HTML (.html)</Diary_Format_HTML>
   <Diary_Default_Entry_Message>Message d'une entrée par défaut</Diary_Default_Entry_Message>
   <Diary_No_Entry_Found_Message>Message "Pas d'entrée trouvée"</Diary_No_Entry_Found_Message>
   <Diary_Empty>Vide</Diary_Empty>
