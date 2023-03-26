@@ -13,6 +13,7 @@ Please check write access to the folder are correct au dossier or edit folder pa
   <Diary_Export_Format>Export file format</Diary_Export_Format>
   <Diary_Format_Text>Text (.txt)</Diary_Format_Text>
   <Diary_Format_RTF>Rich Text File (.rtf)</Diary_Format_RTF>
+  <Diary_Format_HTML>HTML Page (.html)</Diary_Format_HTML>
   <Diary_Default_Entry_Message>Default entry message</Diary_Default_Entry_Message>
   <Diary_No_Entry_Found_Message>"No entry found" message</Diary_No_Entry_Found_Message>
   <Diary_Empty>Empty</Diary_Empty>

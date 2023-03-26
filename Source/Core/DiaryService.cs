@@ -1,6 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Packaging;
+using System.Linq;
+using System.Reflection;
+using System.Xml;
+using Diary.HTML;
+using HarmonyLib;
 using RimWorld;
 using RTFExporter;
 using Verse;
@@ -32,7 +38,8 @@ namespace Diary
                 Quadrum quadrum = (Quadrum)Quadrum.Parse(typeof(Quadrum), strings[1]);
                 int year = int.Parse(strings[2]);
 
-                entriesToExport[currentItem] = $"{Find.ActiveLanguageWorker.OrdinalNumber(day + 1)} {QuadrumUtility.Label(quadrum)} {year}\n\n{item.Value}\n";
+                entriesToExport[currentItem] =
+                    $"{Find.ActiveLanguageWorker.OrdinalNumber(day + 1)} {QuadrumUtility.Label(quadrum)} {year}\n\n{item.Value}\n";
 
                 currentItem++;
             }
@@ -74,7 +81,9 @@ namespace Diary
                     entryParagraph.style.spaceAfter = 600;
                     entryParagraph.style.indent = new Indent(0, 0, 0);
 
-                    var t = entryParagraph.AppendText($"{Find.ActiveLanguageWorker.OrdinalNumber(day + 1)} {QuadrumUtility.Label(quadrum)} {year}");
+                    var t = entryParagraph.AppendText(
+                        $"{Find.ActiveLanguageWorker.OrdinalNumber(day + 1)} {QuadrumUtility.Label(quadrum)} {year}"
+                    );
 
                     t.style.bold = true;
                     t.style.fontFamily = "Times New Roman";
@@ -88,6 +97,44 @@ namespace Diary
             }
         }
 
+        private void ExportToHTML(string outFolderPath)
+        {
+            Log.Message(
+                $"{AppDomain.CurrentDomain.BaseDirectory} ////// {LoadedModManager.GetMod<Diary>().Content.RootDir} //// {LoadedModManager.GetMod<Diary>().Content.RootDir} ////// {Assembly.GetExecutingAssembly().FullName}"
+            );
+            var projectPath = LoadedModManager.GetMod<Diary>().Content.RootDir;
+            string templateFolder = Path.Combine(projectPath, "Assemblies", "HTML", "DiaryExport");
+            var builder = new HTMLBuilder(templateFolder, outFolderPath);
+
+            builder.SetTitle(Faction.OfPlayer.Name);
+
+            foreach (KeyValuePair<string, string> item in entries)
+            {
+                string[] strings = item.Key.Split('-');
+                int day = int.Parse(strings[0]);
+                Quadrum quadrum = (Quadrum)Quadrum.Parse(typeof(Quadrum), strings[1]);
+                int year = int.Parse(strings[2]);
+
+                builder.AddH2(
+                    $"{Find.ActiveLanguageWorker.OrdinalNumber(day + 1)} {QuadrumUtility.Label(quadrum)} {year}"
+                );
+
+                builder.AddParagraph($"{item.Value}");
+
+                var imagesForThisDay = imagesPerDay.TryGetValue(item.Key);
+
+                if (imagesForThisDay != null && imagesForThisDay.Count > 0)
+                {
+                    foreach (var entry in imagesForThisDay)
+                    {
+                        builder.AddImage(entry.Path);
+                    }
+                }
+            }
+
+            builder.Build();
+        }
+
         private string GetDictionaryKey(int day, Quadrum quadrum, int year)
         {
             return day.ToString() + '-' + quadrum.ToString() + '-' + year.ToString();
@@ -95,7 +142,10 @@ namespace Diary
 
         public string ReadEntry(int day, Quadrum quadrum, int year)
         {
-            DefaultMessage defaultMessageSetting = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().DefaultMessage;
+            DefaultMessage defaultMessageSetting = LoadedModManager
+                .GetMod<Diary>()
+                .GetSettings<DiarySettings>()
+                .DefaultMessage;
 
             string defaultMessage = "";
 
@@ -106,6 +156,7 @@ namespace Diary
 
             return entries.TryGetValue(GetDictionaryKey(day, quadrum, year), defaultMessage);
         }
+
         public void WriteEntry(string data, int day, Quadrum quadrum, int year)
         {
             entries.SetOrAdd(GetDictionaryKey(day, quadrum, year), data);
@@ -113,10 +164,24 @@ namespace Diary
 
         public void WriteEntryNow(string data)
         {
-            entries.SetOrAdd(GetDictionaryKey(TimeTools.GetCurrentDay(), TimeTools.GetCurrentQuadrum(), TimeTools.GetCurrentYear()), data);
+            entries.SetOrAdd(
+                GetDictionaryKey(
+                    TimeTools.GetCurrentDay(),
+                    TimeTools.GetCurrentQuadrum(),
+                    TimeTools.GetCurrentYear()
+                ),
+                data
+            );
         }
 
-        public void AppendEntry(string data, int day, Quadrum quadrum, int year, bool onNewLine = true, bool writeCurrentHour = true)
+        public void AppendEntry(
+            string data,
+            int day,
+            Quadrum quadrum,
+            int year,
+            bool onNewLine = true,
+            bool writeCurrentHour = true
+        )
         {
             string key = GetDictionaryKey(day, quadrum, year);
             string currentEntry = entries.TryGetValue(key);
@@ -139,9 +204,12 @@ namespace Diary
 
         public void AppendEntryNow(string data, bool onNewLine = true, bool writeCurrentHour = true)
         {
-            string key = GetDictionaryKey(TimeTools.GetCurrentDay(), TimeTools.GetCurrentQuadrum(), TimeTools.GetCurrentYear());
+            string key = GetDictionaryKey(
+                TimeTools.GetCurrentDay(),
+                TimeTools.GetCurrentQuadrum(),
+                TimeTools.GetCurrentYear()
+            );
             string currentEntry = entries.TryGetValue(key);
-
 
             if (writeCurrentHour)
             {
@@ -170,7 +238,16 @@ namespace Diary
             {
                 DiaryImageEntry entry = allImages[i];
 
-                if (entry.Year > year || (entry.Year == year && (entry.Quadrum > quadrum || (entry.Quadrum == quadrum && entry.Days >= day))))
+                if (
+                    entry.Year > year
+                    || (
+                        entry.Year == year
+                        && (
+                            entry.Quadrum > quadrum
+                            || (entry.Quadrum == quadrum && entry.Days >= day)
+                        )
+                    )
+                )
                 {
                     return i;
                 }
@@ -186,7 +263,11 @@ namespace Diary
 
         public void AddImageNow(string path)
         {
-            string key = GetDictionaryKey(TimeTools.GetCurrentDay(), TimeTools.GetCurrentQuadrum(), TimeTools.GetCurrentYear());
+            string key = GetDictionaryKey(
+                TimeTools.GetCurrentDay(),
+                TimeTools.GetCurrentQuadrum(),
+                TimeTools.GetCurrentYear()
+            );
             List<DiaryImageEntry> currentImages = imagesPerDay.TryGetValue(key);
 
             if (currentImages == null)
@@ -194,7 +275,13 @@ namespace Diary
                 currentImages = new List<DiaryImageEntry>();
             }
 
-            DiaryImageEntry entryToAdd = new DiaryImageEntry(path, TimeTools.GetCurrentHour(), TimeTools.GetCurrentDay(), TimeTools.GetCurrentQuadrum(), TimeTools.GetCurrentYear());
+            DiaryImageEntry entryToAdd = new DiaryImageEntry(
+                path,
+                TimeTools.GetCurrentHour(),
+                TimeTools.GetCurrentDay(),
+                TimeTools.GetCurrentQuadrum(),
+                TimeTools.GetCurrentYear()
+            );
 
             currentImages.Add(entryToAdd);
 
@@ -204,13 +291,24 @@ namespace Diary
 
         public void Export(bool silent = false)
         {
-            string folder = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().FolderPath;
-            ExportFormat format = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().ExportFormat;
+            string folder = Path.GetFullPath(
+                LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().FolderPath
+            );
+            ExportFormat format = LoadedModManager
+                .GetMod<Diary>()
+                .GetSettings<DiarySettings>()
+                .ExportFormat;
 
             //Log.Message($"Export Diary in {folder} - Format : {format}");
 
             string savename = Faction.OfPlayer.Name;
-            string savePath = Path.Combine(folder, "diary-" + savename + "-" + DateTime.Now.Ticks);
+            string savePath = Path.Combine(
+                folder,
+                "diary-"
+                    + string.Concat(savename.Where(c => !char.IsWhiteSpace(c)))
+                    + "-"
+                    + DateTime.Now.Ticks
+            );
 
             try
             {
@@ -224,20 +322,32 @@ namespace Diary
                         savePath += ".rtf";
                         ExportToRTF(savePath);
                         break;
+                    case ExportFormat.HTML:
+                        ExportToHTML(savePath);
+                        break;
                 }
 
                 if (!silent)
                 {
-                    Find.WindowStack.Add(new Dialog_ExportDiary("Diary_Export_Successful".Translate(), savePath));
+                    Find.WindowStack.Add(
+                        new Dialog_ExportDiary("Diary_Export_Successful".Translate(), savePath)
+                    );
                 }
             }
-            catch (DirectoryNotFoundException)
+            catch (DirectoryNotFoundException e)
             {
-                Find.WindowStack.Add(new Dialog_ExportDiary("Diary_Directory_Not_Found".Translate()));
+                Log.Message($"{e}");
+                Find.WindowStack.Add(
+                    new Dialog_ExportDiary("Diary_Directory_Not_Found".Translate())
+                );
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Find.WindowStack.Add(new Dialog_ExportDiary("Diary_Error_During_Export".Translate()));
+                Log.Message($"{e}");
+
+                Find.WindowStack.Add(
+                    new Dialog_ExportDiary("Diary_Error_During_Export".Translate())
+                );
             }
         }
 
