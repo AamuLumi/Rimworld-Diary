@@ -26,10 +26,7 @@ namespace Diary.Core.Text
             RegexOptions.IgnoreCase | RegexOptions.Compiled
         );
 
-        private static readonly string[] vowels =
-        {
-            "a", "e", "i", "o", "u"
-        };
+        private static readonly string[] vowels = { "a", "e", "i", "o", "u" };
 
         private static string ComputeTranslation(
             Match requiredMatch,
@@ -42,12 +39,14 @@ namespace Diary.Core.Text
             var optionGroup = requiredMatch.Groups["Option"];
             string option = null;
 
-            if (optionGroup != null) option = optionGroup.Value;
+            if (optionGroup != null)
+                option = optionGroup.Value;
 
             TokenTranslation translations;
             RandomString associatedStr = null;
 
-            if (dict.TryGetValue(key1, out translations)) translations.TryGetValue(key2, out associatedStr);
+            if (dict.TryGetValue(key1, out translations))
+                translations.TryGetValue(key2, out associatedStr);
 
             if (associatedStr == null)
             {
@@ -71,9 +70,9 @@ namespace Diary.Core.Text
             else if (option == "INDEF")
             {
                 if (vowels.Any(vowel => finalString.StartsWith(vowel)))
-                    finalString = $"an ${finalString}";
+                    finalString = $"an {finalString}";
                 else
-                    finalString = $"a ${finalString}";
+                    finalString = $"a {finalString}";
             }
 
             return finalString;

@@ -1,5 +1,6 @@
 ﻿using RimWorld;
 using Verse;
+using Verse.AI;
 
 namespace Diary
 {
@@ -43,9 +44,12 @@ namespace Diary
         {
             switch (format)
             {
-                case ExportFormat.Text: return "Diary_Format_Text".Translate();
-                case ExportFormat.RTF: return "Diary_Format_RTF".Translate();
-                default: return "";
+                case ExportFormat.Text:
+                    return "Diary_Format_Text".Translate();
+                case ExportFormat.RTF:
+                    return "Diary_Format_RTF".Translate();
+                default:
+                    return "";
             }
         }
 
@@ -53,9 +57,12 @@ namespace Diary
         {
             switch (m)
             {
-                case DefaultMessage.Empty: return "Diary_Empty".Translate();
-                case DefaultMessage.NoEntryFound: return "Diary_No_Entry_Found_Message".Translate();
-                default: return "";
+                case DefaultMessage.Empty:
+                    return "Diary_Empty".Translate();
+                case DefaultMessage.NoEntryFound:
+                    return "Diary_No_Entry_Found_Message".Translate();
+                default:
+                    return "";
             }
         }
 
@@ -63,10 +70,14 @@ namespace Diary
         {
             switch (f)
             {
-                case LogFilter.All: return "Diary_All".Translate();
-                case LogFilter.Chats: return "Diary_Chats".Translate();
-                case LogFilter.Events: return "Diary_Events".Translate();
-                default: return "";
+                case LogFilter.All:
+                    return "Diary_All".Translate();
+                case LogFilter.Chats:
+                    return "Diary_Chats".Translate();
+                case LogFilter.Events:
+                    return "Diary_Events".Translate();
+                default:
+                    return "";
             }
         }
 
@@ -74,11 +85,16 @@ namespace Diary
         {
             switch (f)
             {
-                case LogWriterFilter.All: return "Diary_All".Translate();
-                case LogWriterFilter.Chats: return "Diary_Chats".Translate();
-                case LogWriterFilter.Events: return "Diary_Events".Translate();
-                case LogWriterFilter.None: return "Diary_None".Translate();
-                default: return "";
+                case LogWriterFilter.All:
+                    return "Diary_All".Translate();
+                case LogWriterFilter.Chats:
+                    return "Diary_Chats".Translate();
+                case LogWriterFilter.Events:
+                    return "Diary_Events".Translate();
+                case LogWriterFilter.None:
+                    return "Diary_None".Translate();
+                default:
+                    return "";
             }
         }
 
@@ -86,10 +102,14 @@ namespace Diary
         {
             switch (f)
             {
-                case AutomaticExportPeriod.Day: return "Diary_Every_Day".Translate();
-                case AutomaticExportPeriod.Week: return "Diary_Every_Week".Translate();
-                case AutomaticExportPeriod.Month: return "Diary_Every_Month".Translate();
-                default: return "";
+                case AutomaticExportPeriod.Day:
+                    return "Diary_Every_Day".Translate();
+                case AutomaticExportPeriod.Week:
+                    return "Diary_Every_Week".Translate();
+                case AutomaticExportPeriod.Month:
+                    return "Diary_Every_Month".Translate();
+                default:
+                    return "";
             }
         }
     }
@@ -102,9 +122,7 @@ namespace Diary
         public Quadrum Quadrum;
         public int Year;
 
-        public DiaryImageEntry()
-        {
-        }
+        public DiaryImageEntry() { }
 
         public DiaryImageEntry(string path, int hours, int day, Quadrum quadrum, int year)
         {
@@ -129,6 +147,9 @@ namespace Diary
     {
         private bool _dead;
         private bool _downed;
+        private Pawn _pawn;
+        private Job _currentJob;
+        private JobDriver _currentJobDriver;
 
         public PawnStatus(bool downed, bool dead)
         {
@@ -136,7 +157,22 @@ namespace Diary
             _dead = dead;
         }
 
+        public void SavePawnStatus(Pawn p)
+        {
+            _pawn = p;
+            _currentJob = p.CurJob;
+            _currentJobDriver = p.CurJob.GetCachedDriver(p);
+        }
+
         public bool Downed { get; }
         public bool Dead { get; }
+        public Pawn Pawn { get; }
+        public Job CurrentJob { get; }
+        public JobDriver CurrentJobDriver { get; }
+
+        public override string ToString()
+        {
+            return $"PawnStatus dead:{_dead} downed:{_downed} _pawn:{_pawn} currentJob:{_currentJob} currentJobDriver:{_currentJobDriver}";
+        }
     }
 }
