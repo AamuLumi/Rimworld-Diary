@@ -1,39 +1,49 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
-  <Diary_No_Entry_Found>Pas d'entrée trouvée</Diary_No_Entry_Found>
-  <Diary_Export>Exporter</Diary_Export>
-  <Diary_Export_Folder_Path>Chemin du dossier pour l'export du journal</Diary_Export_Folder_Path>
-  <Diary_Export_Successful>Export réussi !</Diary_Export_Successful>
-  <Diary_Directory_Not_Found>Erreur pendant l'export : le chemin du dossier n'existe pas.
-  
-Veuillez créer le dossier ou modifier le chemin dans les réglages du mod.</Diary_Directory_Not_Found>
-  <Diary_Error_During_Export>Erreur pendant l'export : une erreur est survenue.
-  
-Veuillez vérifier que les droits d'accès au dossier sont corrects ou modifier le chemin dans les réglages du mod.</Diary_Error_During_Export>
-  <Diary_Export_Format>Format du fichier d'export</Diary_Export_Format>
-  <Diary_Format_Text>Texte (.txt)</Diary_Format_Text>
-  <Diary_Format_RTF>Rich Text File (.rtf)</Diary_Format_RTF>
-  <Diary_Format_HTML>Page HTML (.html)</Diary_Format_HTML>
-  <Diary_Default_Entry_Message>Message d'une entrée par défaut</Diary_Default_Entry_Message>
-  <Diary_No_Entry_Found_Message>Message "Pas d'entrée trouvée"</Diary_No_Entry_Found_Message>
-  <Diary_Empty>Vide</Diary_Empty>
-  <Diary_File_Created_Available_At>Le fichier est disponible à l'endroit suivant</Diary_File_Created_Available_At>
-  <Diary_Reset_To_Default_Path>Réinitialiser le chemin d'export</Diary_Reset_To_Default_Path>
-  <Diary_Default_Log_Filter>Filtre par défaut des informations dans l'onglet Journal</Diary_Default_Log_Filter>
-  <Diary_All>Tout</Diary_All>
-  <Diary_Chats>Discussions</Diary_Chats>
-  <Diary_Events>Evénements</Diary_Events>
-  <Diary_None>Aucun</Diary_None>
-  <Diary_Log_Writer_Filter_Explanation>Diary peut écrire automatiquement les informations dans votre Journal. Vous devez simplement sélectionner via la prochaine option ce que vous voulez que le mod écrive automatiquement.</Diary_Log_Writer_Filter_Explanation>
-  <Diary_Log_Writer_Filter>Filtre d'écriture automatique des informations</Diary_Log_Writer_Filter>
-  <Diary>Journal</Diary>
-  <Diary_Images>Images</Diary_Images>
-  <Diary_Connected_To_Progress_Renderer>Diary est correctement connecté à Progress Renderer.</Diary_Connected_To_Progress_Renderer>
-  <Diary_Not_Connected_To_Progress_Renderer>Diary n'est pas connecté à Progress Renderer. Si Progress Renderer est activé, veuillez le placer avant Diary.</Diary_Not_Connected_To_Progress_Renderer>
-  <Diary_Automatic_Export>Export automatique du Journal</Diary_Automatic_Export>
-  <Diary_Automatic_Export_Enabled>Export automatique activé</Diary_Automatic_Export_Enabled>
-  <Diary_Automatic_Export_Period>Exporter le journal automatiquement :</Diary_Automatic_Export_Period>
-  <Diary_Every_Day>Tous les jours</Diary_Every_Day>
-  <Diary_Every_Week>Toutes les semaines</Diary_Every_Week>
-  <Diary_Every_Month>Tous les mois</Diary_Every_Month>
+    <Diary_No_Entry_Found>Pas d'entrée trouvée</Diary_No_Entry_Found>
+    <Diary_Export>Exporter</Diary_Export>
+    <Diary_Export_Folder_Path>Chemin du dossier pour l'export du journal</Diary_Export_Folder_Path>
+    <Diary_Export_Successful>Export réussi !</Diary_Export_Successful>
+    <Diary_Directory_Not_Found>Erreur pendant l'export : le chemin du dossier n'existe pas.
+
+        Veuillez créer le dossier ou modifier le chemin dans les réglages du mod.
+    </Diary_Directory_Not_Found>
+    <Diary_Error_During_Export>Erreur pendant l'export : une erreur est survenue.
+
+        Veuillez vérifier que les droits d'accès au dossier sont corrects ou modifier le chemin dans les réglages du
+        mod.
+    </Diary_Error_During_Export>
+    <Diary_Export_Format>Format du fichier d'export</Diary_Export_Format>
+    <Diary_Format_Text>Texte (.txt)</Diary_Format_Text>
+    <Diary_Format_RTF>Rich Text File (.rtf)</Diary_Format_RTF>
+    <Diary_Format_HTML>Page HTML (.html)</Diary_Format_HTML>
+    <Diary_Default_Entry_Message>Message d'une entrée par défaut</Diary_Default_Entry_Message>
+    <Diary_No_Entry_Found_Message>Message "Pas d'entrée trouvée"</Diary_No_Entry_Found_Message>
+    <Diary_Empty>Vide</Diary_Empty>
+    <Diary_File_Created_Available_At>Le fichier est disponible à l'endroit suivant</Diary_File_Created_Available_At>
+    <Diary_Reset_To_Default_Path>Réinitialiser le chemin d'export</Diary_Reset_To_Default_Path>
+    <Diary_Default_Log_Filter>Filtre par défaut des informations dans l'onglet Journal</Diary_Default_Log_Filter>
+    <Diary_All>Tout</Diary_All>
+    <Diary_Chats>Discussions</Diary_Chats>
+    <Diary_Events>Evénements</Diary_Events>
+    <Diary_None>Aucun</Diary_None>
+    <Diary_Export_Description_With_Events>Exporter les descriptions avec les événements
+    </Diary_Export_Description_With_Events>
+    <Diary_Log_Writer_Filter_Explanation>Diary peut écrire automatiquement les informations dans votre Journal. Vous
+        devez simplement sélectionner via la prochaine option ce que vous voulez que le mod écrive automatiquement.
+    </Diary_Log_Writer_Filter_Explanation>
+    <Diary_Log_Writer_Filter>Filtre d'écriture automatique des informations</Diary_Log_Writer_Filter>
+    <Diary>Journal</Diary>
+    <Diary_Images>Images</Diary_Images>
+    <Diary_Connected_To_Progress_Renderer>Diary est correctement connecté à Progress Renderer.
+    </Diary_Connected_To_Progress_Renderer>
+    <Diary_Not_Connected_To_Progress_Renderer>Diary n'est pas connecté à Progress Renderer. Si Progress Renderer est
+        activé, veuillez le placer avant Diary.
+    </Diary_Not_Connected_To_Progress_Renderer>
+    <Diary_Automatic_Export>Export automatique du Journal</Diary_Automatic_Export>
+    <Diary_Automatic_Export_Enabled>Export automatique activé</Diary_Automatic_Export_Enabled>
+    <Diary_Automatic_Export_Period>Exporter le journal automatiquement :</Diary_Automatic_Export_Period>
+    <Diary_Every_Day>Tous les jours</Diary_Every_Day>
+    <Diary_Every_Week>Toutes les semaines</Diary_Every_Week>
+    <Diary_Every_Month>Tous les mois</Diary_Every_Month>
 </LanguageData>

@@ -8,6 +8,7 @@ namespace Diary
     public class DiarySettings : ModSettings
     {
         private bool _previousAutomaticExportEnabled;
+        private bool areDescriptionExportedWithEvents;
         private bool automaticExportEnabled;
         private AutomaticExportPeriod automaticExportPeriod;
 
@@ -32,6 +33,8 @@ namespace Diary
 
         public AutomaticExportPeriod AutomaticExportPeriod => automaticExportPeriod;
 
+        public bool AreDescriptionExportedWithEvents => areDescriptionExportedWithEvents;
+
         public override void ExposeData()
         {
             base.ExposeData();
@@ -45,6 +48,7 @@ namespace Diary
             Scribe_Values.Look(ref defaultLogFilter, "defaultLogFilter", LogFilter.Events);
             Scribe_Values.Look(ref automaticExportEnabled, "automaticExportEnabled");
             Scribe_Values.Look(ref automaticExportPeriod, "automaticExportPeriod");
+            Scribe_Values.Look(ref areDescriptionExportedWithEvents, "areDescriptionExportedWithEvents");
         }
 
         public void SetFormat(ExportFormat f)
@@ -164,6 +168,9 @@ namespace Diary
 
                 Find.WindowStack.Add(new FloatMenu(list));
             }
+
+            listingStandard.CheckboxLabeled("Diary_Export_Description_With_Events".Translate(),
+                ref areDescriptionExportedWithEvents);
 
             listingStandard.Gap();
 

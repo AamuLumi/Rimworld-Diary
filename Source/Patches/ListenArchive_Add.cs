@@ -7,16 +7,16 @@ namespace Diary
     [HarmonyPatch(typeof(Archive), nameof(Archive.Add))]
     public static class ListenArchive_Add
     {
-        static void Prefix(IArchivable archivable)
+        private static void Prefix(IArchivable archivable)
         {
-            LogWriterFilter currentFilter = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().LogWriterFilter;
+            var currentFilter = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().LogWriterFilter;
 
-            if (currentFilter != LogWriterFilter.All && currentFilter != LogWriterFilter.Events)
-            {
-                return;
-            }
+            if (currentFilter != LogWriterFilter.All && currentFilter != LogWriterFilter.Events) return;
 
-            string stringToWrite = ColoredText.StripTags(archivable.ArchivedLabel);
+            var stringToWrite = archivable.ArchivedLabel.StripTags();
+
+            if (LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().AreDescriptionExportedWithEvents)
+                stringToWrite += $"\n\n{archivable.ArchivedTooltip.StripTags()}\n";
 
             Current.Game.GetComponent<DiaryService>().AppendEntryNow(stringToWrite);
         }

@@ -26,6 +26,7 @@ namespace Diary
 
     public enum LogWriterFilter
     {
+        AllWithEventDescription,
         All,
         Events,
         Chats,
@@ -88,6 +89,8 @@ namespace Diary
         {
             switch (f)
             {
+                case LogWriterFilter.AllWithEventDescription:
+                    return "Diary_AllWithEventDescription".Translate();
                 case LogWriterFilter.All:
                     return "Diary_All".Translate();
                 case LogWriterFilter.Chats:
@@ -150,12 +153,12 @@ namespace Diary
 
     public class PawnStatus
     {
-        private Job _currentJob;
-        private JobDriver _currentJobDriver;
         private readonly bool _dead;
         private readonly bool _downed;
+        private Job _currentJob;
+        private JobDriver _currentJobDriver;
         private Pawn _pawn;
-        
+
         public PawnStatus(bool downed, bool dead)
         {
             _downed = downed;
