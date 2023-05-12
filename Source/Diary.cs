@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using UnityEngine;
 using Verse;
 
@@ -6,7 +7,7 @@ namespace Diary
 {
     public class Diary : Mod
     {
-        DiarySettings settings;
+        private DiarySettings settings;
 
         public Diary(ModContentPack content)
             : base(content)
@@ -16,9 +17,9 @@ namespace Diary
             Init(harmony);
 
             if (ModLister.GetActiveModWithIdentifier("neptimus7.progressrenderer") != null)
-            {
                 InitWithProgressRenderer(harmony);
-            }
+
+            if (ModLister.GetActiveModWithIdentifier("Torann.RimWar") != null) InitWithRimWar(harmony);
         }
 
         public void Init(Harmony harmony)
@@ -30,7 +31,7 @@ namespace Diary
 
         public void InitWithProgressRenderer(Harmony harmony)
         {
-            var PR_RenderManager = System.Type.GetType(
+            var PR_RenderManager = Type.GetType(
                 "ProgressRenderer.MapComponent_RenderManager, Progress-Renderer"
             );
 
@@ -50,6 +51,14 @@ namespace Diary
 
                 settings.ConnectedToProgressRenderer = true;
             }
+        }
+
+        public void InitWithRimWar(Harmony harmony)
+        {
+            var RW_Letter = Type.GetType(
+                "RimWar.History.RW_Letter, RimWar");
+
+            if (RW_Letter != null) settings.AddIgnoreArchivableClass(RW_Letter);
         }
 
         public override void DoSettingsWindowContents(Rect inRect)

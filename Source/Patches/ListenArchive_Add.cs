@@ -9,13 +9,16 @@ namespace Diary
     {
         private static void Prefix(IArchivable archivable)
         {
-            var currentFilter = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().LogWriterFilter;
+            var settings = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>();
+            var currentFilter = settings.LogWriterFilter;
 
             if (currentFilter != LogWriterFilter.All && currentFilter != LogWriterFilter.Events) return;
 
+            if (settings.ArchivableShouldBeIgnored(archivable)) return;
+
             var stringToWrite = archivable.ArchivedLabel.StripTags();
 
-            if (LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().AreDescriptionExportedWithEvents)
+            if (settings.AreDescriptionExportedWithEvents)
                 stringToWrite += $"\n\n{archivable.ArchivedTooltip.StripTags()}\n";
 
             Current.Game.GetComponent<DiaryService>().AppendEntryNow(stringToWrite);

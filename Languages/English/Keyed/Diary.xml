@@ -10,7 +10,7 @@
     </Diary_Directory_Not_Found>
     <Diary_Error_During_Export>Error during export : an error happened.
 
-        Please check write access to the folder are correct au dossier or edit folder path in mod settings.
+        Please check write access to the folder are correct or edit folder path in mod settings.
     </Diary_Error_During_Export>
     <Diary_Export_Format>Export file format</Diary_Export_Format>
     <Diary_Format_Text>Text (.txt)</Diary_Format_Text>

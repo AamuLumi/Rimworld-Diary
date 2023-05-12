@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -17,6 +18,7 @@ namespace Diary
         private DefaultMessage defaultMessage;
         private ExportFormat exportFormat;
         private string folderPath;
+        private List<Type> ignoredArchivableClasses;
         private LogWriterFilter logWriterFilter;
 
         public string FolderPath => folderPath;
@@ -41,6 +43,8 @@ namespace Diary
 
             ConnectedToProgressRenderer = false;
 
+            ignoredArchivableClasses = new List<Type>();
+
             Scribe_Values.Look(ref folderPath, "folderPath", Application.dataPath);
             Scribe_Values.Look(ref exportFormat, "exportFormat");
             Scribe_Values.Look(ref defaultMessage, "defaultMessage", DefaultMessage.Empty);
@@ -49,6 +53,21 @@ namespace Diary
             Scribe_Values.Look(ref automaticExportEnabled, "automaticExportEnabled");
             Scribe_Values.Look(ref automaticExportPeriod, "automaticExportPeriod");
             Scribe_Values.Look(ref areDescriptionExportedWithEvents, "areDescriptionExportedWithEvents");
+        }
+
+        public void AddIgnoreArchivableClass(Type t)
+        {
+            Log.Message($"Class added ${t}");
+            ignoredArchivableClasses.Add(t);
+        }
+
+        public bool ArchivableShouldBeIgnored(IArchivable a)
+        {
+            foreach (var type in ignoredArchivableClasses)
+                if (a.GetType() == type)
+                    return true;
+
+            return false;
         }
 
         public void SetFormat(ExportFormat f)
