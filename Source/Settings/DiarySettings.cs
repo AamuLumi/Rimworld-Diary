@@ -169,8 +169,6 @@ namespace Diary
                 Find.WindowStack.Add(new FloatMenu(list));
             }
 
-            listingStandard.CheckboxLabeled("Diary_Export_Description_With_Events".Translate(),
-                ref areDescriptionExportedWithEvents);
 
             listingStandard.Gap();
 
@@ -188,6 +186,9 @@ namespace Diary
 
                 Find.WindowStack.Add(new FloatMenu(list));
             }
+
+            listingStandard.CheckboxLabeled("Diary_Export_Description_With_Events".Translate(),
+                ref areDescriptionExportedWithEvents);
 
             listingStandard.GapLine();
 

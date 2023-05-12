@@ -26,7 +26,6 @@ namespace Diary
 
     public enum LogWriterFilter
     {
-        AllWithEventDescription,
         All,
         Events,
         Chats,
@@ -89,8 +88,6 @@ namespace Diary
         {
             switch (f)
             {
-                case LogWriterFilter.AllWithEventDescription:
-                    return "Diary_AllWithEventDescription".Translate();
                 case LogWriterFilter.All:
                     return "Diary_All".Translate();
                 case LogWriterFilter.Chats:
