@@ -7,7 +7,8 @@ namespace Diary
     public enum ExportFormat
     {
         Text,
-        RTF
+        RTF,
+        HTML
     }
 
     public enum DefaultMessage
@@ -48,6 +49,8 @@ namespace Diary
                     return "Diary_Format_Text".Translate();
                 case ExportFormat.RTF:
                     return "Diary_Format_RTF".Translate();
+                case ExportFormat.HTML:
+                    return "Diary_Format_HTML".Translate();
                 default:
                     return "";
             }
@@ -122,7 +125,9 @@ namespace Diary
         public Quadrum Quadrum;
         public int Year;
 
-        public DiaryImageEntry() { }
+        public DiaryImageEntry()
+        {
+        }
 
         public DiaryImageEntry(string path, int hours, int day, Quadrum quadrum, int year)
         {
@@ -145,23 +150,16 @@ namespace Diary
 
     public class PawnStatus
     {
-        private bool _dead;
-        private bool _downed;
-        private Pawn _pawn;
         private Job _currentJob;
         private JobDriver _currentJobDriver;
-
+        private readonly bool _dead;
+        private readonly bool _downed;
+        private Pawn _pawn;
+        
         public PawnStatus(bool downed, bool dead)
         {
             _downed = downed;
             _dead = dead;
-        }
-
-        public void SavePawnStatus(Pawn p)
-        {
-            _pawn = p;
-            _currentJob = p.CurJob;
-            _currentJobDriver = p.CurJob.GetCachedDriver(p);
         }
 
         public bool Downed { get; }
@@ -170,9 +168,17 @@ namespace Diary
         public Job CurrentJob { get; }
         public JobDriver CurrentJobDriver { get; }
 
+        public void SavePawnStatus(Pawn p)
+        {
+            _pawn = p;
+            _currentJob = p.CurJob;
+            _currentJobDriver = p.CurJob.GetCachedDriver(p);
+        }
+
         public override string ToString()
         {
-            return $"PawnStatus dead:{_dead} downed:{_downed} _pawn:{_pawn} currentJob:{_currentJob} currentJobDriver:{_currentJobDriver}";
+            return
+                $"PawnStatus dead:{_dead} downed:{_downed} _pawn:{_pawn} currentJob:{_currentJob} currentJobDriver:{_currentJobDriver}";
         }
     }
 }

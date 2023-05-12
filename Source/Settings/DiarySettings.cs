@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -8,52 +7,30 @@ namespace Diary
 {
     public class DiarySettings : ModSettings
     {
-        private string folderPath;
-        private ExportFormat exportFormat;
-        private DefaultMessage defaultMessage;
-        private LogWriterFilter logWriterFilter;
-        private LogFilter defaultLogFilter;
+        private bool _previousAutomaticExportEnabled;
         private bool automaticExportEnabled;
         private AutomaticExportPeriod automaticExportPeriod;
 
-        private bool _previousAutomaticExportEnabled;
-
         public bool ConnectedToProgressRenderer;
+        private LogFilter defaultLogFilter;
+        private DefaultMessage defaultMessage;
+        private ExportFormat exportFormat;
+        private string folderPath;
+        private LogWriterFilter logWriterFilter;
 
-        public string FolderPath
-        {
-            get { return folderPath; }
-        }
+        public string FolderPath => folderPath;
 
-        public ExportFormat ExportFormat
-        {
-            get { return exportFormat; }
-        }
+        public ExportFormat ExportFormat => exportFormat;
 
-        public DefaultMessage DefaultMessage
-        {
-            get { return defaultMessage; }
-        }
+        public DefaultMessage DefaultMessage => defaultMessage;
 
-        public LogWriterFilter LogWriterFilter
-        {
-            get { return logWriterFilter; }
-        }
+        public LogWriterFilter LogWriterFilter => logWriterFilter;
 
-        public LogFilter DefaultLogFilter
-        {
-            get { return defaultLogFilter; }
-        }
+        public LogFilter DefaultLogFilter => defaultLogFilter;
 
-        public bool AutomaticExportEnabled
-        {
-            get { return automaticExportEnabled; }
-        }
+        public bool AutomaticExportEnabled => automaticExportEnabled;
 
-        public AutomaticExportPeriod AutomaticExportPeriod
-        {
-            get { return automaticExportPeriod; }
-        }
+        public AutomaticExportPeriod AutomaticExportPeriod => automaticExportPeriod;
 
         public override void ExposeData()
         {
@@ -62,12 +39,12 @@ namespace Diary
             ConnectedToProgressRenderer = false;
 
             Scribe_Values.Look(ref folderPath, "folderPath", Application.dataPath);
-            Scribe_Values.Look(ref exportFormat, "exportFormat", ExportFormat.Text);
+            Scribe_Values.Look(ref exportFormat, "exportFormat");
             Scribe_Values.Look(ref defaultMessage, "defaultMessage", DefaultMessage.Empty);
             Scribe_Values.Look(ref logWriterFilter, "logWriterFilter", LogWriterFilter.None);
             Scribe_Values.Look(ref defaultLogFilter, "defaultLogFilter", LogFilter.Events);
-            Scribe_Values.Look(ref automaticExportEnabled, "automaticExportEnabled", false);
-            Scribe_Values.Look(ref automaticExportPeriod, "automaticExportPeriod", AutomaticExportPeriod.Day);
+            Scribe_Values.Look(ref automaticExportEnabled, "automaticExportEnabled");
+            Scribe_Values.Look(ref automaticExportPeriod, "automaticExportPeriod");
         }
 
         public void SetFormat(ExportFormat f)
@@ -79,6 +56,7 @@ namespace Diary
         {
             defaultMessage = m;
         }
+
         public void SetDefaultLogFilter(LogFilter f)
         {
             defaultLogFilter = f;
@@ -102,12 +80,10 @@ namespace Diary
             {
                 var gameComponent = Current.Game.GetComponent<GameComponent_AutomaticExport>();
 
-                if (gameComponent != null)
-                {
-                    gameComponent.OnSettingsUpdate(automaticExportEnabled, automaticExportPeriod);
-                }
+
+                gameComponent?.OnSettingsUpdate(automaticExportEnabled, automaticExportPeriod);
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
                 // Do nothing, gameComponent is not loaded
             }
@@ -122,39 +98,33 @@ namespace Diary
 
         public void DoSettingsWindowContents(Rect inRect)
         {
-            if (automaticExportEnabled != _previousAutomaticExportEnabled)
-            {
-                UpdateGameComponent();
-            }
+            if (automaticExportEnabled != _previousAutomaticExportEnabled) UpdateGameComponent();
 
             _previousAutomaticExportEnabled = automaticExportEnabled;
 
 
-            Listing_Standard listingStandard = new Listing_Standard();
+            var listingStandard = new Listing_Standard();
             listingStandard.Begin(inRect);
 
             listingStandard.Label("Diary_Export_Folder_Path".Translate());
             folderPath = listingStandard.TextEntry(folderPath);
 
             if (listingStandard.ButtonText("Diary_Reset_To_Default_Path".Translate()))
-            {
                 folderPath = Application.dataPath;
-            }
 
             listingStandard.GapLine();
 
             listingStandard.Label("Diary_Export_Format".Translate());
             if (listingStandard.ButtonText(DiaryTypeTools.GetFormatName(exportFormat)))
             {
-                List<FloatMenuOption> list = new List<FloatMenuOption>();
+                var list = new List<FloatMenuOption>();
                 foreach (int i in Enum.GetValues(typeof(ExportFormat)))
                 {
-                    int current = i;
-                    list.Add(new FloatMenuOption(DiaryTypeTools.GetFormatName((ExportFormat)i), delegate
-                    {
-                        SetFormat((ExportFormat)current);
-                    }));
+                    var current = i;
+                    list.Add(new FloatMenuOption(DiaryTypeTools.GetFormatName((ExportFormat)i),
+                        delegate { SetFormat((ExportFormat)current); }));
                 }
+
                 Find.WindowStack.Add(new FloatMenu(list));
             }
 
@@ -168,15 +138,14 @@ namespace Diary
 
             if (listingStandard.ButtonText(DiaryTypeTools.GetAutomaticExportPeriodName(automaticExportPeriod)))
             {
-                List<FloatMenuOption> list = new List<FloatMenuOption>();
+                var list = new List<FloatMenuOption>();
                 foreach (int i in Enum.GetValues(typeof(AutomaticExportPeriod)))
                 {
-                    int current = i;
-                    list.Add(new FloatMenuOption(DiaryTypeTools.GetAutomaticExportPeriodName((AutomaticExportPeriod)i), delegate
-                    {
-                        SetAutomaticExportPeriod((AutomaticExportPeriod)current);
-                    }));
+                    var current = i;
+                    list.Add(new FloatMenuOption(DiaryTypeTools.GetAutomaticExportPeriodName((AutomaticExportPeriod)i),
+                        delegate { SetAutomaticExportPeriod((AutomaticExportPeriod)current); }));
                 }
+
                 Find.WindowStack.Add(new FloatMenu(list));
             }
 
@@ -185,15 +154,14 @@ namespace Diary
             listingStandard.Label("Diary_Default_Log_Filter".Translate());
             if (listingStandard.ButtonText(DiaryTypeTools.GetLogFilterName(defaultLogFilter)))
             {
-                List<FloatMenuOption> list = new List<FloatMenuOption>();
+                var list = new List<FloatMenuOption>();
                 foreach (int i in Enum.GetValues(typeof(LogFilter)))
                 {
-                    int current = i;
-                    list.Add(new FloatMenuOption(DiaryTypeTools.GetLogFilterName((LogFilter)i), delegate
-                    {
-                        SetDefaultLogFilter((LogFilter)current);
-                    }));
+                    var current = i;
+                    list.Add(new FloatMenuOption(DiaryTypeTools.GetLogFilterName((LogFilter)i),
+                        delegate { SetDefaultLogFilter((LogFilter)current); }));
                 }
+
                 Find.WindowStack.Add(new FloatMenu(list));
             }
 
@@ -203,28 +171,23 @@ namespace Diary
             listingStandard.Label("Diary_Log_Writer_Filter_Explanation".Translate());
             if (listingStandard.ButtonText(DiaryTypeTools.GetLogWriterFilterName(logWriterFilter)))
             {
-                List<FloatMenuOption> list = new List<FloatMenuOption>();
+                var list = new List<FloatMenuOption>();
                 foreach (int i in Enum.GetValues(typeof(LogWriterFilter)))
                 {
-                    int current = i;
-                    list.Add(new FloatMenuOption(DiaryTypeTools.GetLogWriterFilterName((LogWriterFilter)i), delegate
-                    {
-                        SetLogWriterFilter((LogWriterFilter)current);
-                    }));
+                    var current = i;
+                    list.Add(new FloatMenuOption(DiaryTypeTools.GetLogWriterFilterName((LogWriterFilter)i),
+                        delegate { SetLogWriterFilter((LogWriterFilter)current); }));
                 }
+
                 Find.WindowStack.Add(new FloatMenu(list));
             }
 
             listingStandard.GapLine();
 
             if (ConnectedToProgressRenderer)
-            {
                 listingStandard.Label("Diary_Connected_To_Progress_Renderer".Translate());
-            }
             else
-            {
                 listingStandard.Label("Diary_Not_Connected_To_Progress_Renderer".Translate());
-            }
 
             listingStandard.End();
         }

@@ -106,7 +106,13 @@ namespace RTFExporter
         /// <param name="height">the height of the page</param>
         /// <param name="orientation">the page orientation</param>
         /// <param name="units">the measure units of the page</param>
-        public RTFDocument(string path, float width = 8, float height = 11, Orientation orientation = Orientation.Portrait, Units units = Units.Inch)
+        public RTFDocument(
+            string path,
+            float width = 8,
+            float height = 11,
+            Orientation orientation = Orientation.Portrait,
+            Units units = Units.Inch
+        )
         {
             SetFile(path);
             Init(width, height, orientation, units);
@@ -122,7 +128,13 @@ namespace RTFExporter
         /// <param name="height">the height of the page</param>
         /// <param name="orientation">the page orientation</param>
         /// <param name="units">the measure units of the page</param>
-        public RTFDocument(FileStream fileStream, float width = 8, float height = 11, Orientation orientation = Orientation.Portrait, Units units = Units.Inch)
+        public RTFDocument(
+            FileStream fileStream,
+            float width = 8,
+            float height = 11,
+            Orientation orientation = Orientation.Portrait,
+            Units units = Units.Inch
+        )
         {
             SetStream(fileStream);
             Init(width, height, orientation, units);
@@ -137,7 +149,12 @@ namespace RTFExporter
         /// <param name="height">the height of the page</param>
         /// <param name="orientation">the page orientation</param>
         /// <param name="units">the measure units of the page</param>
-        public RTFDocument(float width = 8, float height = 11, Orientation orientation = Orientation.Portrait, Units units = Units.Inch)
+        public RTFDocument(
+            float width = 8,
+            float height = 11,
+            Orientation orientation = Orientation.Portrait,
+            Units units = Units.Inch
+        )
         {
             Init(width, height, orientation, units);
         }
@@ -259,7 +276,7 @@ namespace RTFExporter
         }
 
         /// <summary>
-        /// 
+        ///
         /// <seealso cref="RTFExporter.RTFParagraph">
         /// <seealso cref="RTFExporter.Alignment">
         /// <seealso cref="RTFExporter.Indent">
@@ -285,7 +302,12 @@ namespace RTFExporter
         /// <param name="spaceBefore">The value of the vertical space before the paragraph</param>
         /// <param name="spaceAfter">The value of the vertical space after the paragraph</param>
         /// <returns>The appended paragraph</returns>
-        public RTFParagraph AppendParagraph(Alignment alignment, Indent indent, int spaceBefore, int spaceAfter)
+        public RTFParagraph AppendParagraph(
+            Alignment alignment,
+            Indent indent,
+            int spaceBefore,
+            int spaceAfter
+        )
         {
             RTFParagraph paragraph = new RTFParagraph(this);
             paragraph.style = new RTFParagraphStyle(alignment, indent, spaceBefore, spaceAfter);

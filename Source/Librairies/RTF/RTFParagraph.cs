@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Diary.RTF;
 
 namespace RTFExporter
 {
@@ -7,7 +8,7 @@ namespace RTFExporter
     /// </summary>
     public class RTFParagraph
     {
-        public List<RTFText> text = new List<RTFText>();
+        public List<RTFElement> elements = new List<RTFElement>();
         public RTFParagraphStyle style;
 
         /// <summary>
@@ -29,7 +30,9 @@ namespace RTFExporter
         /// <returns>Return the text instantiated with the content</returns>
         public RTFText AppendText(string content)
         {
-            RTFText text = new RTFText(this, content);
+            RTFText text = new RTFText(content);
+            RTFElement element = new RTFElement(this, text);
+
             return text;
         }
 
@@ -43,8 +46,18 @@ namespace RTFExporter
         /// <returns>Return the text instantiated with the content and the style</returns>
         public RTFText AppendText(string content, RTFTextStyle style)
         {
-            RTFText text = new RTFText(this, content, style);
+            RTFText text = new RTFText(content, style);
+            RTFElement element = new RTFElement(this, text);
+
             return text;
+        }
+
+        public RTFImage AppendImage(string url)
+        {
+            RTFImage img = new RTFImage(url);
+            RTFElement element = new RTFElement(this, img);
+
+            return img;
         }
     }
 }
