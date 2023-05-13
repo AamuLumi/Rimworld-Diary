@@ -316,9 +316,22 @@ namespace Diary
             {
                 var entryToAdd = archivable.ArchivedLabel.StripTags();
 
-                if (LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>()
-                    .AreDescriptionExportedWithEvents)
-                    entryToAdd += $"\n\n{archivable.ArchivedTooltip.StripTags()}\n";
+                if (settings.AreDescriptionExportedWithEvents)
+                {
+                    if (archivable is ChoiceLetter)
+                    {
+                        var letter = (ChoiceLetter)archivable;
+
+                        if (letter.quest != null)
+                            entryToAdd += $"\n{letter.quest.description.ToString().StripTags()}\n";
+                        else
+                            entryToAdd += $"\n{archivable.ArchivedTooltip.StripTags()}\n";
+                    }
+                    else
+                    {
+                        entryToAdd += $"\n{archivable.ArchivedTooltip.StripTags()}\n";
+                    }
+                }
 
                 Current.Game.GetComponent<DiaryService>().AppendEntry(entryToAdd, day, quadrum, year);
                 GUI.FocusControl("DiaryTextArea");
@@ -625,6 +638,14 @@ namespace Diary
                     var archivable = (IArchivable)logToDisplay[displayedMessageIndex];
                     TaggedString label = archivable.ArchivedTooltip.TruncateHeight(messageDetailsRect.width - 10f,
                         messageDetailsRect.height - 10f, truncationCache);
+
+                    if (archivable is ChoiceLetter)
+                    {
+                        var letter = (ChoiceLetter)archivable;
+
+                        if (letter.quest != null) label = letter.quest.description;
+                    }
+
                     Widgets.Label(messageDetailsRect.ContractedBy(5f), label);
                 }
                 else if (logToDisplay[displayedMessageIndex] is LogEntry)

@@ -19,7 +19,20 @@ namespace Diary
             var stringToWrite = archivable.ArchivedLabel.StripTags();
 
             if (settings.AreDescriptionExportedWithEvents)
-                stringToWrite += $"\n\n{archivable.ArchivedTooltip.StripTags()}\n";
+            {
+                if (archivable is ChoiceLetter)
+                {
+                    var letter = (ChoiceLetter)archivable;
+
+                    if (letter.quest != null) stringToWrite += $"\n{letter.quest.description.ToString().StripTags()}\n";
+                    else
+                        stringToWrite += $"\n{archivable.ArchivedTooltip.StripTags()}\n";
+                }
+                else
+                {
+                    stringToWrite += $"\n{archivable.ArchivedTooltip.StripTags()}\n";
+                }
+            }
 
             Current.Game.GetComponent<DiaryService>().AppendEntryNow(stringToWrite);
         }
