@@ -8,6 +8,7 @@ namespace Diary
 {
     public class DiarySettings : ModSettings
     {
+        private readonly List<Type> ignoredArchivableClasses;
         private bool _previousAutomaticExportEnabled;
         private bool areDescriptionExportedWithEvents;
         private bool automaticExportEnabled;
@@ -18,8 +19,12 @@ namespace Diary
         private DefaultMessage defaultMessage;
         private ExportFormat exportFormat;
         private string folderPath;
-        private List<Type> ignoredArchivableClasses;
         private LogWriterFilter logWriterFilter;
+
+        public DiarySettings()
+        {
+            ignoredArchivableClasses = new List<Type>();
+        }
 
         public string FolderPath => folderPath;
 
@@ -43,8 +48,6 @@ namespace Diary
 
             ConnectedToProgressRenderer = false;
 
-            ignoredArchivableClasses = new List<Type>();
-
             Scribe_Values.Look(ref folderPath, "folderPath", Application.dataPath);
             Scribe_Values.Look(ref exportFormat, "exportFormat");
             Scribe_Values.Look(ref defaultMessage, "defaultMessage", DefaultMessage.Empty);
@@ -57,12 +60,13 @@ namespace Diary
 
         public void AddIgnoreArchivableClass(Type t)
         {
-            Log.Message($"Class added ${t}");
             ignoredArchivableClasses.Add(t);
         }
 
         public bool ArchivableShouldBeIgnored(IArchivable a)
         {
+            if (ignoredArchivableClasses == null) return false;
+
             foreach (var type in ignoredArchivableClasses)
                 if (a.GetType() == type)
                     return true;
