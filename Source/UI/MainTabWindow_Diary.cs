@@ -12,6 +12,7 @@ namespace Diary
         private readonly List<DiaryImageEntry> allImages;
         private readonly GUIDraggableTexture draggableImage;
         private readonly List<string> fastHourStrings;
+        private readonly DiarySettings settings;
         private readonly Dictionary<string, string> truncationCache = new Dictionary<string, string>();
         private TextEditor currentTextEditor;
         private int day;
@@ -71,8 +72,7 @@ namespace Diary
 
             closeOnAccept = false;
 
-            var settings = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>();
-
+            settings = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>();
             imageDisplayMode = false;
             logFilter = settings.DefaultLogFilter;
             draggableImage = new GUIDraggableTexture();
@@ -589,6 +589,9 @@ namespace Diary
                 if (message is IArchivable)
                 {
                     var archivable = (IArchivable)message;
+
+                    if (settings.ArchivableShouldBeIgnored(archivable)) continue;
+
                     if (!IsCurrentDate(archivable.CreatedTicksGame, true)) continue;
 
                     if (num2 > displayedMessageIndex && displayedMessageIndex == -1) displayedMessageIndex = num2;
