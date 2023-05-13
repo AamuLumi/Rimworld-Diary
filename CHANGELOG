@@ -1,3 +1,10 @@
+# 1.1.5 (05/13/2013)
+
+- Fix RimWar compatibility by removing all hidden messages from Diary
+- Fix export not sorting dates
+- Fix crash with Designer Shapes
+- Add quest description display for event when available
+
 # 1.1.4 (05/12/2024)
 
 - Add a new setting to add description with events in logs
