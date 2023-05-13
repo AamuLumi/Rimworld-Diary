@@ -22,10 +22,9 @@ namespace Diary
             allImages = new List<DiaryImageEntry>();
         }
 
-        private string[] GetTextEntriesToExport()
+        private List<(string, int, Quadrum, int)> GetEntriesKeySorted()
         {
-            var currentItem = 0;
-            var entriesToExport = new string[entries.Count];
+            var sortedKeys = new List<(string, int, Quadrum, int)>();
 
             foreach (var item in entries)
             {
@@ -34,8 +33,42 @@ namespace Diary
                 var quadrum = (Quadrum)Enum.Parse(typeof(Quadrum), strings[1]);
                 var year = int.Parse(strings[2]);
 
+                var entryToAdd = (item.Key, day, quadrum, year);
+                var isEntryAdded = false;
+
+                for (var i = 0; i < sortedKeys.Count; i++)
+                {
+                    var currentEntry = sortedKeys[i];
+
+                    if (entryToAdd.Item4 <= currentEntry.Item4 && entryToAdd.Item3 <= currentEntry.Item3 &&
+                        entryToAdd.Item2 < currentEntry.Item2)
+                    {
+                        sortedKeys.Insert(i, entryToAdd);
+                        isEntryAdded = true;
+
+                        break;
+                    }
+                }
+
+                if (!isEntryAdded) sortedKeys.Add(entryToAdd);
+            }
+
+            return sortedKeys;
+        }
+
+        private string[] GetTextEntriesToExport()
+        {
+            var currentItem = 0;
+            var entriesToExport = new string[entries.Count];
+
+            var keysSortedByDates = GetEntriesKeySorted();
+
+            foreach (var keyObject in keysSortedByDates)
+            {
+                var (key, day, quadrum, year) = keyObject;
+
                 entriesToExport[currentItem] =
-                    $"{Find.ActiveLanguageWorker.OrdinalNumber(day + 1)} {quadrum.Label()} {year}\n\n{item.Value}\n";
+                    $"{Find.ActiveLanguageWorker.OrdinalNumber(day + 1)} {quadrum.Label()} {year}\n\n{entries[key]}\n";
 
                 currentItem++;
             }
@@ -64,12 +97,11 @@ namespace Diary
                 title.style.fontFamily = "Times New Roman";
                 title.style.fontSize = 18;
 
-                foreach (var item in entries)
+                var keysSortedByDates = GetEntriesKeySorted();
+
+                foreach (var keyObject in keysSortedByDates)
                 {
-                    var strings = item.Key.Split('-');
-                    var day = int.Parse(strings[0]);
-                    var quadrum = (Quadrum)Enum.Parse(typeof(Quadrum), strings[1]);
-                    var year = int.Parse(strings[2]);
+                    var (key, day, quadrum, year) = keyObject;
 
                     var entryParagraph = doc.AppendParagraph();
 
@@ -85,7 +117,7 @@ namespace Diary
                     t.style.fontFamily = "Times New Roman";
                     t.style.fontSize = 16;
 
-                    var t2 = entryParagraph.AppendText($"\n\n{item.Value}");
+                    var t2 = entryParagraph.AppendText($"\n\n{entries[key]}");
 
                     t2.style.fontFamily = "Times New Roman";
                     t2.style.fontSize = 12;
@@ -101,20 +133,18 @@ namespace Diary
 
             builder.SetTitle(Faction.OfPlayer.Name);
 
-            foreach (var item in entries)
-            {
-                var strings = item.Key.Split('-');
-                var day = int.Parse(strings[0]);
-                var quadrum = (Quadrum)Enum.Parse(typeof(Quadrum), strings[1]);
-                var year = int.Parse(strings[2]);
+            var keysSortedByDates = GetEntriesKeySorted();
 
+            foreach (var keyObject in keysSortedByDates)
+            {
+                var (key, day, quadrum, year) = keyObject;
                 builder.AddH2(
                     $"{Find.ActiveLanguageWorker.OrdinalNumber(day + 1)} {quadrum.Label()} {year}"
                 );
 
-                builder.AddParagraph($"{item.Value}");
+                builder.AddParagraph($"{entries[key]}");
 
-                var imagesForThisDay = imagesPerDay.TryGetValue(item.Key);
+                var imagesForThisDay = imagesPerDay.TryGetValue(key);
 
                 if (imagesForThisDay != null && imagesForThisDay.Count > 0)
                     foreach (var entry in imagesForThisDay)
