@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using RimWorld;
 using UnityEngine;
@@ -425,7 +426,7 @@ namespace Diary
             Text.Font = GameFont.Small;
             Widgets.BeginGroup(inRect);
 
-            if (allImages.Count > 0 &&
+            if (settings.ConnectedToProgressRenderer && allImages.Count > 0 &&
                 Widgets.ButtonText(new Rect(0.0f, dateRect.yMin, widthPerButton / 2, dateRect.yMax),
                     imageDisplayMode ? "Diary".Translate() : "Diary_Images".Translate()))
             {
@@ -506,6 +507,31 @@ namespace Diary
                     if (Widgets.ButtonText(
                             new Rect(widthPerButton * 4f, dateRect.yMin, widthPerButton / 2, dateRect.yMax), ">"))
                         SetCurrentDateToNextDay();
+            }
+
+
+            if (settings.ConnectedToProgressRenderer && Widgets.ButtonImage(new Rect(
+                    widthPerButton * 5f - dateRect.yMax, dateRect.yMin, dateRect.yMax,
+                    dateRect.yMax), ContentFinder<Texture2D>.Get("UI/Icons/Options/OptionsGeneral"), Color.white))
+            {
+                var list = new List<FloatMenuOption>();
+
+                list.Add(new FloatMenuOption("Diary_Open_Screenshot_Folder".Translate(),
+                    delegate
+                    {
+                        Process.Start(
+                            $"file://{Current.Game.GetComponent<DiaryService>().GetCurrentImageFolderPath()}");
+                    }));
+
+                list.Add(new FloatMenuOption("Diary_Edit_Screenshot_Folder".Translate(), delegate
+                {
+                    Find.WindowStack.Add(
+                        new Dialog_EditImagesPath(Current.Game.GetComponent<DiaryService>()
+                            .GetCurrentImageFolderPath())
+                    );
+                }));
+
+                Find.WindowStack.Add(new FloatMenu(list));
             }
 
 

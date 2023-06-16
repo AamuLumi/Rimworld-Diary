@@ -283,6 +283,27 @@ namespace Diary
             allImages.Add(entryToAdd);
         }
 
+        public void ChangeImagesFolder(string newFolderPath)
+        {
+            if (!Directory.Exists(newFolderPath)) Directory.CreateDirectory(newFolderPath);
+
+            foreach (var currentImage in allImages)
+            {
+                var newFilePath = Path.Combine(newFolderPath, Path.GetFileName(currentImage.Path));
+
+                if (File.Exists(currentImage.Path)) File.Move(currentImage.Path, newFilePath);
+
+                currentImage.Path = newFilePath;
+            }
+        }
+
+        public string GetCurrentImageFolderPath()
+        {
+            if (allImages.Count > 0) return Path.GetDirectoryName(allImages[0].Path);
+
+            return "";
+        }
+
         public void Export(bool silent = false)
         {
             var folder = Path.GetFullPath(
@@ -373,7 +394,6 @@ namespace Diary
                     if (currentImages == null) currentImages = new List<DiaryImageEntry>();
 
                     currentImages.Add(entry);
-
                     imagesPerDay.SetOrAdd(key, currentImages);
                 }
             }

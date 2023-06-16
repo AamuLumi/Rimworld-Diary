@@ -6,12 +6,11 @@
     <Diary_Export_Successful>Export réussi !</Diary_Export_Successful>
     <Diary_Directory_Not_Found>Erreur pendant l'export : le chemin du dossier n'existe pas.
 
-        Veuillez créer le dossier ou modifier le chemin dans les réglages du mod.
+Veuillez créer le dossier ou modifier le chemin dans les réglages du mod.
     </Diary_Directory_Not_Found>
     <Diary_Error_During_Export>Erreur pendant l'export : une erreur est survenue.
-
-        Veuillez vérifier que les droits d'accès au dossier sont corrects ou modifier le chemin dans les réglages du
-        mod.
+        
+Veuillez vérifier que les droits d'accès au dossier sont corrects ou modifier le chemin dans les réglages du mod.
     </Diary_Error_During_Export>
     <Diary_Export_Format>Format du fichier d'export</Diary_Export_Format>
     <Diary_Format_Text>Texte (.txt)</Diary_Format_Text>
@@ -29,16 +28,13 @@
     <Diary_None>Aucun</Diary_None>
     <Diary_Export_Description_With_Events>Exporter les descriptions avec les événements
     </Diary_Export_Description_With_Events>
-    <Diary_Log_Writer_Filter_Explanation>Diary peut écrire automatiquement les informations dans votre Journal. Vous
-        devez simplement sélectionner via la prochaine option ce que vous voulez que le mod écrive automatiquement.
+    <Diary_Log_Writer_Filter_Explanation>Diary peut écrire automatiquement les informations dans votre Journal. Vous devez simplement sélectionner via la prochaine option ce que vous voulez que le mod écrive automatiquement.
     </Diary_Log_Writer_Filter_Explanation>
     <Diary_Log_Writer_Filter>Filtre d'écriture automatique des informations</Diary_Log_Writer_Filter>
     <Diary>Journal</Diary>
     <Diary_Images>Images</Diary_Images>
-    <Diary_Connected_To_Progress_Renderer>Diary est correctement connecté à Progress Renderer.
-    </Diary_Connected_To_Progress_Renderer>
-    <Diary_Not_Connected_To_Progress_Renderer>Diary n'est pas connecté à Progress Renderer. Si Progress Renderer est
-        activé, veuillez le placer avant Diary.
+    <Diary_Connected_To_Progress_Renderer>Diary est correctement connecté à Progress Renderer.</Diary_Connected_To_Progress_Renderer>
+    <Diary_Not_Connected_To_Progress_Renderer>Diary n'est pas connecté à Progress Renderer. Si Progress Renderer est activé, veuillez le placer avant Diary.
     </Diary_Not_Connected_To_Progress_Renderer>
     <Diary_Automatic_Export>Export automatique du Journal</Diary_Automatic_Export>
     <Diary_Automatic_Export_Enabled>Export automatique activé</Diary_Automatic_Export_Enabled>
@@ -46,4 +42,11 @@
     <Diary_Every_Day>Tous les jours</Diary_Every_Day>
     <Diary_Every_Week>Toutes les semaines</Diary_Every_Week>
     <Diary_Every_Month>Tous les mois</Diary_Every_Month>
+    <Diary_Open_Screenshot_Folder>Ouvrir le dossier des images</Diary_Open_Screenshot_Folder>
+    <Diary_Edit_Screenshot_Folder>Modifier le dossier des images</Diary_Edit_Screenshot_Folder>
+    <Diary_Edit_Screenshot_Folder_Explanation>Vous pouvez modifier le dossier d'images utilisé par Diary.
+Les fichiers d'images seront déplacés s'ils existent. Dans le cas contraire, les chemins des fichiers en mémoire seront simplement modifiés.
+        
+Cette modification n'affecte que Diary. Vous devez donc aussi modifier la configuration de ProgressRenderer.
+    </Diary_Edit_Screenshot_Folder_Explanation>
 </LanguageData>

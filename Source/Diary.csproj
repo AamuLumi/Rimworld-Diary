@@ -122,6 +122,7 @@
     <Compile Include="Core\Types.cs" />
     <Compile Include="Core\TimeTools.cs" />
     <Compile Include="Patches\ActionTrackers\OnPawnDowned.cs" />
+    <Compile Include="UI\Dialog_EditImagesPath.cs" />
     <Compile Include="UI\GUIDraggableTexture.cs" />
     <Compile Include="Patches\ActionTrackers\OnPawnDie.cs" />
     <Compile Include="Patches\ListenArchive_Add.cs" />
