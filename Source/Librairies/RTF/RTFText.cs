@@ -1,29 +1,32 @@
+using System;
+using System.Text;
+
 namespace RTFExporter
 {
     /// <summary>
-    /// The RTF text class, any snippet of text of a paragraph, every text is appended to a paragraph
+    ///     The RTF text class, any snippet of text of a paragraph, every text is appended to a paragraph
     /// </summary>
     public class RTFText
     {
-        public RTFTextStyle style;
         public string content;
+        public RTFTextStyle style;
 
         /// <summary>
-        /// The text constructor
-        /// <seealso cref="RTFExporter.RTFParagraph"/>
+        ///     The text constructor
+        ///     <seealso cref="RTFExporter.RTFParagraph" />
         /// </summary>
         /// <param name="paragraph">The parent paragraph</param>
         /// <param name="content">The text content itself</param>
         public RTFText(string content)
         {
             style = new RTFTextStyle(false, false, 12, "Calibri", new Color(0, 0, 0));
-            this.content = content;
+            this.content = GetUnicodeStringForRTF(content);
         }
 
         /// <summary>
-        /// The text constructor
-        /// <seealso cref="RTFExporter.RTFParagraph"/>
-        /// <seealso cref="RTFExporter.RTFTextStyle"/>
+        ///     The text constructor
+        ///     <seealso cref="RTFExporter.RTFParagraph" />
+        ///     <seealso cref="RTFExporter.RTFTextStyle" />
         /// </summary>
         /// <param name="paragraph">The parent paragraph</param>
         /// <param name="content">The text content itself</param>
@@ -31,12 +34,12 @@ namespace RTFExporter
         public RTFText(string content, RTFTextStyle style)
         {
             this.style = style;
-            this.content = content;
+            this.content = GetUnicodeStringForRTF(content);
         }
 
         /// <summary>
-        /// Set a default style to the text (Calibri black 12pt)
-        /// <seealso cref="RTFExporter.RTFTextStyle"/>
+        ///     Set a default style to the text (Calibri black 12pt)
+        ///     <seealso cref="RTFExporter.RTFTextStyle" />
         /// </summary>
         /// <returns>The RTF text object after style setted</returns>
         public RTFText SetStyle()
@@ -57,9 +60,9 @@ namespace RTFExporter
         }
 
         /// <summary>
-        /// Set the basic style of the text
-        /// <seealso cref="RTFExporter.RTFTextStyle"/>
-        /// <seealso cref="RTFExporter.Color"/>
+        ///     Set the basic style of the text
+        ///     <seealso cref="RTFExporter.RTFTextStyle" />
+        ///     <seealso cref="RTFExporter.Color" />
         /// </summary>
         /// <param name="color">The text color</param>
         /// <param name="fontSize">The font size in pt, 12pt as default</param>
@@ -72,9 +75,9 @@ namespace RTFExporter
         }
 
         /// <summary>
-        /// Set the style of the text
-        /// <seealso cref="RTFExporter.RTFTextStyle"/>
-        /// <seealso cref="RTFExporter.Color"/>
+        ///     Set the style of the text
+        ///     <seealso cref="RTFExporter.RTFTextStyle" />
+        ///     <seealso cref="RTFExporter.Color" />
         /// </summary>
         /// <param name="color">The text color</param>
         /// <param name="italic">If the text is italic, false as default</param>
@@ -95,9 +98,9 @@ namespace RTFExporter
         }
 
         /// <summary>
-        /// Set the style of the text without color, font size and font family
-        /// <seealso cref="RTFExporter.RTFTextStyle"/>
-        /// <seealso cref="RTFExporter.Underline"/>
+        ///     Set the style of the text without color, font size and font family
+        ///     <seealso cref="RTFExporter.RTFTextStyle" />
+        ///     <seealso cref="RTFExporter.Underline" />
         /// </summary>
         /// <param name="italic">If the text is italic, false as default</param>
         /// <param name="bold">If the text is italic, false as default</param>
@@ -130,6 +133,21 @@ namespace RTFExporter
                 underline
             );
             return this;
+        }
+
+        private string GetUnicodeStringForRTF(string s)
+        {
+            var sb = new StringBuilder();
+
+            foreach (var c in s)
+                if (c == '\\' || c == '{' || c == '}')
+                    sb.Append(@"\" + c);
+                else if (c <= 0x7f)
+                    sb.Append(c);
+                else
+                    sb.Append("\\u" + Convert.ToUInt32(c) + "?");
+
+            return sb.ToString();
         }
     }
 }
