@@ -50,6 +50,7 @@
     <Compile Include="Patches\ListenArchive_Add.cs" />
     <Compile Include="Patches\ListenProgressRenderer_CreateFilePath.cs" />
     <Compile Include="Patches\ListenPlayLog_Add.cs" />
+    <Compile Include="UI\ImageLoader.cs" />
     <Compile Include="UI\MainButtonWorker_ToggleDiaryTab.cs" />
     <Compile Include="UI\MainTabWindow_Diary.cs" />
     <Compile Include="UI\Dialog_ExportDiary.cs" />

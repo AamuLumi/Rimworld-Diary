@@ -2,25 +2,24 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using Verse;
-using Rect = UnityEngine.Rect;
 
 namespace Diary
 {
     public class GUIDraggableTexture
     {
-        private float zoomRatio = 0.2f;
+        private Texture2D currentImageDisplayed;
         private float currentImageScale;
+        private bool firstLoading;
+        private int imageHeight;
+        private bool imageLoading;
+        private UnityWebRequest imageLoadRequest;
         private Rect imageRect;
         private int imageWidth;
-        private int imageHeight;
-        private Texture2D currentImageDisplayed;
-        private UnityWebRequest imageLoadRequest;
-        private bool imageLoading;
-        private Rect outerRect;
         private Rect initialOuterRect;
-        private bool mustRecomputeOuterRect;
-        private bool firstLoading;
         private float maxImageScale;
+        private bool mustRecomputeOuterRect;
+        private Rect outerRect;
+        private float zoomRatio = 0.2f;
 
         public GUIDraggableTexture()
         {
@@ -59,10 +58,7 @@ namespace Diary
                 Log.Message(maxImageScale.ToString());
 
                 imageLoading = false;
-                if (firstLoading)
-                {
-                    mustRecomputeOuterRect = true;
-                }
+                if (firstLoading) mustRecomputeOuterRect = true;
                 firstLoading = false;
             };
         }
@@ -71,14 +67,14 @@ namespace Diary
         {
             if (imageRect.xMin < 0f)
             {
-                float diff = imageRect.xMin;
+                var diff = imageRect.xMin;
 
                 imageRect.xMin -= diff;
                 imageRect.xMax -= diff;
             }
             else if (imageRect.xMax > 1.0f)
             {
-                float diff = imageRect.xMax - 1.0f;
+                var diff = imageRect.xMax - 1.0f;
 
                 imageRect.xMin -= diff;
                 imageRect.xMax -= diff;
@@ -86,14 +82,14 @@ namespace Diary
 
             if (imageRect.yMin < 0f)
             {
-                float diff = imageRect.yMin;
+                var diff = imageRect.yMin;
 
                 imageRect.yMin -= diff;
                 imageRect.yMax -= diff;
             }
             else if (imageRect.yMax > 1.0f)
             {
-                float diff = imageRect.yMax - 1.0f;
+                var diff = imageRect.yMax - 1.0f;
 
                 imageRect.yMin -= diff;
                 imageRect.yMax -= diff;
@@ -104,12 +100,11 @@ namespace Diary
         {
             Event.current.Use();
 
-            float xRatio = outerRect.width / (float)imageWidth;
-            float yRatio = outerRect.height / (float)imageHeight;
+            var xRatio = outerRect.width / imageWidth;
+            var yRatio = outerRect.height / imageHeight;
 
             if (Event.current.delta.y > 0 && currentImageScale > 1.00f)
             {
-
                 imageRect.xMin -= xRatio * zoomRatio;
                 imageRect.xMax += xRatio * zoomRatio;
                 imageRect.yMin -= yRatio * zoomRatio;
@@ -120,10 +115,8 @@ namespace Diary
             }
             else if (Event.current.delta.y < 0 && currentImageScale < 2.0f)
             {
-                if (imageRect.xMin + xRatio * zoomRatio > imageRect.xMax - xRatio * zoomRatio || imageRect.yMin + yRatio * zoomRatio > imageRect.yMax - yRatio * zoomRatio)
-                {
-                    return;
-                }
+                if (imageRect.xMin + xRatio * zoomRatio > imageRect.xMax - xRatio * zoomRatio ||
+                    imageRect.yMin + yRatio * zoomRatio > imageRect.yMax - yRatio * zoomRatio) return;
 
                 imageRect.xMin += xRatio * zoomRatio;
                 imageRect.xMax -= xRatio * zoomRatio;
@@ -139,19 +132,15 @@ namespace Diary
         {
             var currentCenter = imageRect.center;
 
-            float xDiff = Event.current.delta.x * -0.001f / currentImageScale / currentImageScale;
-            float yDiff = Event.current.delta.y * -0.001f / currentImageScale / currentImageScale;
+            var xDiff = Event.current.delta.x * -0.001f / currentImageScale / currentImageScale;
+            var yDiff = Event.current.delta.y * -0.001f / currentImageScale / currentImageScale;
 
             if ((xDiff > 0f && imageRect.xMax < 1.0f) || (xDiff < 0f && imageRect.xMin > 0.0f))
-            {
                 currentCenter.x += xDiff;
-            }
 
 
             if ((yDiff > 0f && imageRect.yMax < 1.0f) || (yDiff < 0f && imageRect.yMin > 0.0f))
-            {
                 currentCenter.y += yDiff;
-            }
 
             imageRect.center = currentCenter;
 
@@ -163,18 +152,18 @@ namespace Diary
             outerRect = new Rect(0.0f, inRect.yMin, inRect.width, inRect.height);
             initialOuterRect = new Rect(0.0f, inRect.yMin, inRect.width, inRect.height);
 
-            float displayRatio = inRect.width / inRect.height;
-            float imageRatio = (float)imageWidth / (float)imageHeight;
+            var displayRatio = inRect.width / inRect.height;
+            var imageRatio = imageWidth / (float)imageHeight;
 
             if (displayRatio > imageRatio)
             {
-                float updateRatio = imageRatio / displayRatio;
+                var updateRatio = imageRatio / displayRatio;
 
                 imageRect = new Rect(0f, (1f - updateRatio) * 0.5f, 1f, updateRatio);
             }
             else
             {
-                float updateRatio = displayRatio / imageRatio;
+                var updateRatio = displayRatio / imageRatio;
 
                 imageRect = new Rect(0.5f - updateRatio * 0.5f, 0f, updateRatio, 1f);
             }
@@ -186,25 +175,17 @@ namespace Diary
         {
             if (HasImageLoaded())
             {
-                if (mustRecomputeOuterRect)
-                {
-                    ComputeDefaultRects(inRect);
-                }
+                if (mustRecomputeOuterRect) ComputeDefaultRects(inRect);
 
 
                 Widgets.DrawTexturePart(outerRect, imageRect, currentImageDisplayed);
             }
+
             if (Mouse.IsOver(outerRect))
             {
-                if (Event.current.type == EventType.ScrollWheel)
-                {
-                    OnScrollWheel();
-                }
+                if (Event.current.type == EventType.ScrollWheel) OnScrollWheel();
 
-                if (Input.GetMouseButton(0) && Event.current.type == EventType.MouseDrag)
-                {
-                    OnDrag();
-                }
+                if (Input.GetMouseButton(0) && Event.current.type == EventType.MouseDrag) OnDrag();
             }
         }
     }
