@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-	<name>Diary</name>
-	<author>Aamu Lumi</author>
-	<packageId>aamu.diary</packageId>
-	<url>https://github.com/AamuLumi/Rimworld-Diary</url>
-	<supportedVersions>
-		<li>1.4</li>
-	</supportedVersions>
-	<description>Write, read and export your colony's tales.
-	
-Diary adds a new tab to keep a trace of each of your colony's days.
-You can write freely what happened during these days, and export the whole diary to a text file or a web page to share with anyone.</description>
-	<modDependencies>
-		<li>
-			<packageId>brrainz.harmony</packageId>
-			<displayName>Harmony</displayName>
-			<steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
-			<downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
-		</li>
-	</modDependencies>
+    <name>Diary</name>
+    <author>Aamu Lumi</author>
+    <packageId>aamu.diary</packageId>
+    <url>https://github.com/AamuLumi/Rimworld-Diary</url>
+    <supportedVersions>
+        <li>1.5</li>
+        <li>1.4</li>
+    </supportedVersions>
+    <description>Write, read and export your colony's tales.
 
-	<loadAfter>
-		<li>Ludeon.RimWorld</li>
-		<li>brrainz.harmony</li>
-	</loadAfter>
+        Diary adds a new tab to keep a trace of each of your colony's days.
+        You can write freely what happened during these days, and export the whole diary to a text file or a web page to
+        share with anyone.
+    </description>
+    <modDependencies>
+        <li>
+            <packageId>brrainz.harmony</packageId>
+            <displayName>Harmony</displayName>
+            <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+            <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+        </li>
+    </modDependencies>
+
+    <loadAfter>
+        <li>Ludeon.RimWorld</li>
+        <li>brrainz.harmony</li>
+    </loadAfter>
 </ModMetaData>
