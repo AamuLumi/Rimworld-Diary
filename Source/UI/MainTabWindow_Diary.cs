@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using RimWorld;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace Diary
         private readonly List<DiaryImageEntry> allImages;
         private readonly GUIDraggableTexture draggableImage;
         private readonly List<string> fastHourStrings;
+        private readonly DiarySettings settings;
         private readonly Dictionary<string, string> truncationCache = new Dictionary<string, string>();
         private TextEditor currentTextEditor;
         private int day;
@@ -71,11 +73,10 @@ namespace Diary
 
             closeOnAccept = false;
 
-            var settings = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>();
-
+            settings = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>();
             imageDisplayMode = false;
             logFilter = settings.DefaultLogFilter;
-            draggableImage = ImageLoader.CreateDraggableTexture();
+            draggableImage = new GUIDraggableTexture();
             selectedAllImagesIndex = -1;
             allImages = Current.Game.GetComponent<DiaryService>().GetAllImages();
             moveCursorToEndAtNextFrame = false;
@@ -314,7 +315,26 @@ namespace Diary
             var buttonRect = new Rect(rect2.xMax - 35f, rect2.y, 35f, rect2.height);
             if (Widgets.ButtonText(buttonRect, "+"))
             {
-                Current.Game.GetComponent<DiaryService>().AppendEntry(archivable.ArchivedLabel, day, quadrum, year);
+                var entryToAdd = archivable.ArchivedLabel.StripTags();
+
+                if (settings.AreDescriptionExportedWithEvents)
+                {
+                    if (archivable is ChoiceLetter)
+                    {
+                        var letter = (ChoiceLetter)archivable;
+
+                        if (letter.quest != null)
+                            entryToAdd += $"\n{letter.quest.description.ToString().StripTags()}\n";
+                        else
+                            entryToAdd += $"\n{archivable.ArchivedTooltip.StripTags()}\n";
+                    }
+                    else
+                    {
+                        entryToAdd += $"\n{archivable.ArchivedTooltip.StripTags()}\n";
+                    }
+                }
+
+                Current.Game.GetComponent<DiaryService>().AppendEntry(entryToAdd, day, quadrum, year);
                 GUI.FocusControl("DiaryTextArea");
                 // We need to wait the refresh of the area with the new text to move the cursor
                 moveCursorToEndAtNextFrame = true;
@@ -379,8 +399,9 @@ namespace Diary
             var buttonRect = new Rect(rect2.xMax - 35f, rect2.y, 35f, rect2.height);
             if (Widgets.ButtonText(buttonRect, "+"))
             {
-                Current.Game.GetComponent<DiaryService>().AppendEntry(
-                    logEntry.ToGameStringFromPOV(logEntry.GetConcerns().First()).StripTags(), day, quadrum, year);
+                var entryToAdd = logEntry.ToGameStringFromPOV(logEntry.GetConcerns().First()).StripTags();
+
+                Current.Game.GetComponent<DiaryService>().AppendEntry(entryToAdd, day, quadrum, year);
                 GUI.FocusControl("DiaryTextArea");
                 // We need to wait the refresh of the area with the new text to move the cursor
                 moveCursorToEndAtNextFrame = true;
@@ -405,7 +426,7 @@ namespace Diary
             Text.Font = GameFont.Small;
             Widgets.BeginGroup(inRect);
 
-            if (allImages.Count > 0 &&
+            if (settings.ConnectedToProgressRenderer && allImages.Count > 0 &&
                 Widgets.ButtonText(new Rect(0.0f, dateRect.yMin, widthPerButton / 2, dateRect.yMax),
                     imageDisplayMode ? "Diary".Translate() : "Diary_Images".Translate()))
             {
@@ -486,6 +507,31 @@ namespace Diary
                     if (Widgets.ButtonText(
                             new Rect(widthPerButton * 4f, dateRect.yMin, widthPerButton / 2, dateRect.yMax), ">"))
                         SetCurrentDateToNextDay();
+            }
+
+
+            if (settings.ConnectedToProgressRenderer && Widgets.ButtonImage(new Rect(
+                    widthPerButton * 5f - dateRect.yMax, dateRect.yMin, dateRect.yMax,
+                    dateRect.yMax), ContentFinder<Texture2D>.Get("UI/Icons/Options/OptionsGeneral"), Color.white))
+            {
+                var list = new List<FloatMenuOption>();
+
+                list.Add(new FloatMenuOption("Diary_Open_Screenshot_Folder".Translate(),
+                    delegate
+                    {
+                        Process.Start(
+                            $"file://{Current.Game.GetComponent<DiaryService>().GetCurrentImageFolderPath()}");
+                    }));
+
+                list.Add(new FloatMenuOption("Diary_Edit_Screenshot_Folder".Translate(), delegate
+                {
+                    Find.WindowStack.Add(
+                        new Dialog_EditImagesPath(Current.Game.GetComponent<DiaryService>()
+                            .GetCurrentImageFolderPath())
+                    );
+                }));
+
+                Find.WindowStack.Add(new FloatMenu(list));
             }
 
 
@@ -582,6 +628,9 @@ namespace Diary
                 if (message is IArchivable)
                 {
                     var archivable = (IArchivable)message;
+
+                    if (settings.ArchivableShouldBeIgnored(archivable)) continue;
+
                     if (!IsCurrentDate(archivable.CreatedTicksGame, true)) continue;
 
                     if (num2 > displayedMessageIndex && displayedMessageIndex == -1) displayedMessageIndex = num2;
@@ -615,6 +664,14 @@ namespace Diary
                     var archivable = (IArchivable)logToDisplay[displayedMessageIndex];
                     TaggedString label = archivable.ArchivedTooltip.TruncateHeight(messageDetailsRect.width - 10f,
                         messageDetailsRect.height - 10f, truncationCache);
+
+                    if (archivable is ChoiceLetter)
+                    {
+                        var letter = (ChoiceLetter)archivable;
+
+                        if (letter.quest != null) label = letter.quest.description;
+                    }
+
                     Widgets.Label(messageDetailsRect.ContractedBy(5f), label);
                 }
                 else if (logToDisplay[displayedMessageIndex] is LogEntry)

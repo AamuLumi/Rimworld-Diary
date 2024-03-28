@@ -133,3 +133,4 @@ $RECYCLE.BIN/
 _NCrunch*
 .vs
 Source/Properties
+/Source/.idea/

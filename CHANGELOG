@@ -1,4 +1,33 @@
-# 1.1.2 (14/03/2023)
+# 1.1.8 (03/27/2024)
+
+- Add 1.5 version
+
+# 1.1.7 (07/07/2023)
+
+- Fix RTF Exporter not supporting all Unicode characters
+
+# 1.1.6 (06/16/2023)
+
+- Add a button to open the images directory
+- Add a button to change the images directory
+
+# 1.1.5 (05/13/2013)
+
+- Fix RimWar compatibility by removing all hidden messages from Diary
+- Fix export not sorting dates
+- Fix crash with Designer Shapes
+- Add quest description display for event when available
+
+# 1.1.4 (05/12/2024)
+
+- Add a new setting to add description with events in logs
+- Add a system to remove hidden messages from RimWar
+
+# 1.1.3 (03/25/2023)
+
+- Add HTML file export with image integration
+
+# 1.1.2 (03/11/2023)
 
 - Fix zoom on Progress Renderer image in Diary
 

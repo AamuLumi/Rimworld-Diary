@@ -55,8 +55,6 @@ namespace Diary
                 maxImageScale = Math.Max(imageWidth, imageHeight) / 1500f;
                 zoomRatio = (maxImageScale - 1.0f) / 10;
 
-                Log.Message(maxImageScale.ToString());
-
                 imageLoading = false;
                 if (firstLoading) mustRecomputeOuterRect = true;
                 firstLoading = false;

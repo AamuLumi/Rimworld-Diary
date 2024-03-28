@@ -7,14 +7,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diary", "Diary.csproj", "{E
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+		1.5|Any CPU = 1.5|Any CPU
+		1.4|Any CPU = 1.4|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EFFDE9DB-2871-44B3-9A46-3932035EF692}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EFFDE9DB-2871-44B3-9A46-3932035EF692}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EFFDE9DB-2871-44B3-9A46-3932035EF692}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EFFDE9DB-2871-44B3-9A46-3932035EF692}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFFDE9DB-2871-44B3-9A46-3932035EF692}.1.5|Any CPU.ActiveCfg = 1.5|Any CPU
+		{EFFDE9DB-2871-44B3-9A46-3932035EF692}.1.5|Any CPU.Build.0 = 1.5|Any CPU
+		{EFFDE9DB-2871-44B3-9A46-3932035EF692}.1.4|Any CPU.ActiveCfg = 1.4|Any CPU
+		{EFFDE9DB-2871-44B3-9A46-3932035EF692}.1.4|Any CPU.Build.0 = 1.4|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

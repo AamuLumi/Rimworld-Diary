@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Manifest>
-  <identifier>aamu.diary</identifier>
-  <version>1.1.2</version>
-  <dependencies>
-	  <li>Ludeon.RimWorld</li>
-	  <li>brrainz.harmony</li>
-  </dependencies>
-  <loadAfter>
-    <li>Ludeon.RimWorld</li>
-	  <li>brrainz.harmony</li>
-	  <li>neptimus7.progressrenderer</li>
-  </loadAfter>
-  <showCrossPromotions>true</showCrossPromotions>
-  <downloadUri></downloadUri>
+    <identifier>aamu.diary</identifier>
+    <version>1.1.8</version>
+    <dependencies>
+        <li>Ludeon.RimWorld</li>
+        <li>brrainz.harmony</li>
+    </dependencies>
+    <loadAfter>
+        <li>Ludeon.RimWorld</li>
+        <li>brrainz.harmony</li>
+        <li>neptimus7.progressrenderer</li>
+    </loadAfter>
+    <showCrossPromotions>true</showCrossPromotions>
+    <downloadUri></downloadUri>
 </Manifest>
