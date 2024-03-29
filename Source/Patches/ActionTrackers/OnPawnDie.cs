@@ -10,14 +10,19 @@ namespace Diary
     {
         private static void Postfix(ref Pawn_HealthTracker __instance)
         {
+            Log.Message("Dead detected");
             var currentInstance = __instance;
             var pa = PawnsFinder.AllMapsCaravansAndTravelingTransportPods_Alive_Colonists.Find(
                 p => p.health == currentInstance
             );
 
+            Log.Message($"{pa} - ${currentInstance}");
+
             if (pa == null) return;
 
             var e = new Event_OnPawnDie(pa);
+
+            Log.Message($"Commit event = ${e}");
             e.CommitEntry();
         }
     }

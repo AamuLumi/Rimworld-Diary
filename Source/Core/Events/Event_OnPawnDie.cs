@@ -9,7 +9,7 @@ namespace Diary.Core.Events
         private static readonly RandomString _huntingSentences = new RandomString(
             "While hunting !VICTIM.NAME!, !HUNTER.NAME! got hit and died !ADV.DEATH_QUALIFICATION!.",
             "!HUNTER.NAME! runs after !VICTIM.NAME!, but the !NAME.FIGHT! ends to !HUNTER.ARTICLE! ?ADJ.DEATH_QUALIFICATION? death.",
-            "!HUNTER.NAME! tried to hunt !VICTIM.NAME!. !HUNTER.PRONOUN! fought like !NAME.ANIMAL/INDEF! but !VICTIM.NAME! got the victory and !HUNTER.NAME!'s life."
+            "!HUNTER.NAME! tried to hunt !VICTIM.NAME!. !HUNTER.PRONOUN! fought like !NAME.ANIMAL/UNDEF! but !VICTIM.NAME! got the victory and !HUNTER.NAME!'s life."
         );
 
         public Event_OnPawnDie(Pawn p)

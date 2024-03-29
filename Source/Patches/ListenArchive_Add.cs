@@ -20,10 +20,8 @@ namespace Diary
 
             if (settings.AreDescriptionExportedWithEvents)
             {
-                if (archivable is ChoiceLetter)
+                if (archivable is ChoiceLetter letter)
                 {
-                    var letter = (ChoiceLetter)archivable;
-
                     if (letter.quest != null) stringToWrite += $"\n{letter.quest.description.ToString().StripTags()}\n";
                     else
                         stringToWrite += $"\n{archivable.ArchivedTooltip.StripTags()}\n";

@@ -42,10 +42,9 @@ namespace Diary.Core.Text
             if (optionGroup != null)
                 option = optionGroup.Value;
 
-            TokenTranslation translations;
             RandomString associatedStr = null;
 
-            if (dict.TryGetValue(key1, out translations))
+            if (dict.TryGetValue(key1, out var translations))
                 translations.TryGetValue(key2, out associatedStr);
 
             if (associatedStr == null)
@@ -67,7 +66,7 @@ namespace Diary.Core.Text
             {
                 finalString = $"the ${finalString}";
             }
-            else if (option == "INDEF")
+            else if (option == "UNDEF")
             {
                 if (vowels.Any(vowel => finalString.StartsWith(vowel)))
                     finalString = $"an {finalString}";
@@ -128,13 +127,12 @@ namespace Diary.Core.Text
                 {
                     var currentChar = resultText[i];
 
-                    if (char.IsLetterOrDigit(currentChar))
-                    {
-                        if (char.IsLetter(currentChar) && char.IsLower(currentChar))
-                            resultText[i] = char.ToUpper(currentChar);
+                    if (!char.IsLetterOrDigit(currentChar)) continue;
 
-                        break;
-                    }
+                    if (char.IsLetter(currentChar) && char.IsLower(currentChar))
+                        resultText[i] = char.ToUpper(currentChar);
+
+                    break;
                 }
             }
 
