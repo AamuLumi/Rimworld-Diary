@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Verse;
 
-namespace Diary
+namespace DiaryMod
 {
     public class Dialog_EditImagesPath : Window
     {

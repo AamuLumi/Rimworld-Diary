@@ -19,7 +19,11 @@
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == '1.4|AnyCPU' ">
         <OutputPath>../1.4/Assemblies</OutputPath>
     </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == '1.6|AnyCPU' ">
+        <OutputPath>bin\1.6\</OutputPath>
+    </PropertyGroup>
     <ItemGroup>
+        <Compile Include="Core\Diary.cs"/>
         <Compile Include="HTML\FileTools.cs"/>
         <Compile Include="HTML\HTMLBuilder.cs"/>
         <Compile Include="Components\GameComponent_AutomaticExport.cs"/>
@@ -46,7 +50,7 @@
         <Compile Include="UI\MainTabWindow_Diary.cs"/>
         <Compile Include="UI\Dialog_ExportDiary.cs"/>
         <Compile Include="Settings\DiarySettings.cs"/>
-        <Compile Include="Diary.cs"/>
+        <Compile Include="DiaryMod.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
         <Compile Include="Librairies\RTF\RTFElement.cs"/>
         <Compile Include="Librairies\RTF\RTFImage.cs"/>

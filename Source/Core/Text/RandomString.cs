@@ -1,15 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace Diary.Core.Text
+namespace DiaryMod.Core.Text
 {
     internal class RandomString : List<string>
     {
         public RandomString(params string[] names)
         {
-            foreach (string name in names)
-            {
-                Add(name);
-            }
+            foreach (var name in names) Add(name);
         }
 
         public override string ToString()

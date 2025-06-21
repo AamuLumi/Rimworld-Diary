@@ -3,13 +3,13 @@ using HarmonyLib;
 using UnityEngine;
 using Verse;
 
-namespace Diary
+namespace DiaryMod
 {
-    public class Diary : Mod
+    public class DiaryMod : Mod
     {
         private DiarySettings settings;
 
-        public Diary(ModContentPack content)
+        public DiaryMod(ModContentPack content)
             : base(content)
         {
             var harmony = new Harmony("aamulumi.diary");

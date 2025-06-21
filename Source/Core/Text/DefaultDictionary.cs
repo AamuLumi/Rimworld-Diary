@@ -1,4 +1,4 @@
-﻿namespace Diary.Core.Text
+﻿namespace DiaryMod.Core.Text
 {
     internal class DefaultDictionary
     {

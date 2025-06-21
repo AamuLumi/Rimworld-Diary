@@ -2,7 +2,7 @@
 using Verse;
 using Verse.AI;
 
-namespace Diary
+namespace DiaryMod
 {
     public enum ExportFormat
     {

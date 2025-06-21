@@ -1,18 +1,18 @@
 ﻿using RimWorld;
 using Verse;
 
-namespace Diary
+namespace DiaryMod
 {
-    class GameComponent_AutomaticExport : GameComponent
+    internal class GameComponent_AutomaticExport : GameComponent
     {
         private bool enabled;
-        private AutomaticExportPeriod period;
         private int nbTicksForCurrentPeriod;
+        private AutomaticExportPeriod period;
 
         public GameComponent_AutomaticExport(Game g)
         {
-            enabled = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().AutomaticExportEnabled;
-            period = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().AutomaticExportPeriod;
+            enabled = LoadedModManager.GetMod<DiaryMod>().GetSettings<DiarySettings>().AutomaticExportEnabled;
+            period = LoadedModManager.GetMod<DiaryMod>().GetSettings<DiarySettings>().AutomaticExportPeriod;
             SetTicksNumberForCurrentPeriod();
         }
 
@@ -41,15 +41,10 @@ namespace Diary
 
         public override void GameComponentTick()
         {
-            if (!enabled)
-            {
-                return;
-            }
+            if (!enabled) return;
 
             if (Find.TickManager.TicksGame % nbTicksForCurrentPeriod == 0)
-            {
                 Current.Game.GetComponent<DiaryService>().Export(true);
-            }
         }
     }
 }

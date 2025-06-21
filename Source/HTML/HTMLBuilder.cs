@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
-namespace Diary.HTML
+namespace DiaryMod.HTML
 {
     internal class HTMLBuilder
     {
-        private StringBuilder _contentBuilder;
+        private readonly StringBuilder _contentBuilder;
+        private readonly Dictionary<string, string> _images;
+        private readonly string _outFolder;
+        private readonly string _templateFolder;
         private string _title;
-        private Dictionary<string, string> _images;
-        private string _templateFolder;
-        private string _outFolder;
 
         public HTMLBuilder(string templateFolder, string outFolder)
         {
@@ -28,17 +24,14 @@ namespace Diary.HTML
         {
             FileTools.CopyFilesRecursively(_templateFolder, _outFolder);
 
-            string htmlContent = File.ReadAllText($"{_outFolder}/index.html");
+            var htmlContent = File.ReadAllText($"{_outFolder}/index.html");
 
             htmlContent = htmlContent.Replace("{{title}}", _title);
             htmlContent = htmlContent.Replace("{{content}}", _contentBuilder.ToString());
 
             File.WriteAllText($"{_outFolder}/index.html", htmlContent);
 
-            foreach (var entry in _images)
-            {
-                File.Copy(entry.Value, $"{_outFolder}/{entry.Key}", true);
-            }
+            foreach (var entry in _images) File.Copy(entry.Value, $"{_outFolder}/{entry.Key}", true);
         }
 
         public void SetTitle(string title)
@@ -48,8 +41,8 @@ namespace Diary.HTML
 
         public void AddImage(string path)
         {
-            string ext = path.Substring(path.LastIndexOf('.'));
-            string key = $"img-{_images.Count}{ext}";
+            var ext = path.Substring(path.LastIndexOf('.'));
+            var key = $"img-{_images.Count}{ext}";
 
             _images.Add(key, path);
 

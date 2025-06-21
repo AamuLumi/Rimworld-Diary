@@ -1,8 +1,8 @@
-﻿using Diary.Core.Text;
+﻿using DiaryMod.Core.Text;
 using RimWorld;
 using Verse;
 
-namespace Diary.Core.Events
+namespace DiaryMod.Core.Events
 {
     internal class Event_OnPawnDowned : BaseEvent
     {

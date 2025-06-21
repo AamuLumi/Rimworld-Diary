@@ -4,7 +4,7 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace Diary
+namespace DiaryMod
 {
     public class DiarySettings : ModSettings
     {

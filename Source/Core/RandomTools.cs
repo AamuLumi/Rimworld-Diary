@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Diary.Core
+namespace DiaryMod.Core
 {
     internal class RandomTools
     {
-        private static Random _random = new Random();
+        private static readonly Random _random = new Random();
 
         public static T GetRandomItemFromList<T>(List<T> list)
         {
-            int index = _random.Next(list.Count);
+            var index = _random.Next(list.Count);
 
             return list[index];
         }

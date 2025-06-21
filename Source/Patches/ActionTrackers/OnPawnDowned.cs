@@ -2,7 +2,7 @@
 using HarmonyLib;
 using Verse;
 
-namespace Diary
+namespace DiaryMod
 {
     [HarmonyPatch]
     public static class AT_PawnDowned

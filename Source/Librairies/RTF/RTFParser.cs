@@ -1,26 +1,28 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
-using Diary.RTF;
 
 namespace RTFExporter
 {
     /// <summary>
-    /// The RTF parser class, it transform the RTFdocument into a file or string
+    ///     The RTF parser class, it transform the RTFdocument into a file or string
     /// </summary>
     public class RTFParser
     {
         private static readonly uint[] _lookup32 = CreateLookup32();
 
+        public static RTFDocument document;
+        private static readonly Dictionary<string, int> fontsIndex = new Dictionary<string, int>();
+
         private static uint[] CreateLookup32()
         {
             var result = new uint[256];
-            for (int i = 0; i < 256; i++)
+            for (var i = 0; i < 256; i++)
             {
-                string s = i.ToString("X2");
-                result[i] = ((uint)s[0]) + ((uint)s[1] << 16);
+                var s = i.ToString("X2");
+                result[i] = s[0] + ((uint)s[1] << 16);
             }
+
             return result;
         }
 
@@ -28,21 +30,19 @@ namespace RTFExporter
         {
             var lookup32 = _lookup32;
             var result = new char[bytes.Length * 2];
-            for (int i = 0; i < bytes.Length; i++)
+            for (var i = 0; i < bytes.Length; i++)
             {
                 var val = lookup32[bytes[i]];
                 result[2 * i] = (char)val;
                 result[2 * i + 1] = (char)(val >> 16);
             }
+
             return new string(result);
         }
 
-        public static RTFDocument document;
-        private static Dictionary<string, int> fontsIndex = new Dictionary<string, int>();
-
         /// <summary>
-        /// Create or rewrite a file with RTF content
-        /// <seealso cref="RTExporter.RTFDocument">
+        ///     Create or rewrite a file with RTF content
+        ///     <seealso cref="RTExporter.RTFDocument">
         /// </summary>
         /// <param name="path">The folder path with filename</param>
         /// <param name="document">The RTF document to save</param>
@@ -54,15 +54,15 @@ namespace RTFExporter
         }
 
         /// <summary>
-        /// Write a content straight to a file
+        ///     Write a content straight to a file
         /// </summary>
         /// <param name="path">The folder path with filename</param>
         /// <param name="document">The file content</param>
         public static void ToFile(string path, string content)
         {
-            using (FileStream fs = new FileStream(path, FileMode.Create))
+            using (var fs = new FileStream(path, FileMode.Create))
             {
-                using (StreamWriter writer = new StreamWriter(fs))
+                using (var writer = new StreamWriter(fs))
                 {
                     writer.Write(content);
                 }
@@ -70,8 +70,8 @@ namespace RTFExporter
         }
 
         /// <summary>
-        /// Return a rich text formatted string from a RTF document object
-        /// <seealso cref="RTExporter.RTFDocument">
+        ///     Return a rich text formatted string from a RTF document object
+        ///     <seealso cref="RTExporter.RTFDocument">
         /// </summary>
         /// <param name="document">The RTF document to be formatted</param>
         /// <returns>A rich text formatted string</returns>
@@ -79,29 +79,23 @@ namespace RTFExporter
         {
             RTFParser.document = document;
 
-            string str = "{\\rtf1\\ansi\\deff0";
+            var str = "{\\rtf1\\ansi\\deff0";
 
-            foreach (RTFParagraph paragraph in document.paragraphs)
-            {
-                foreach (var element in paragraph.elements)
+            foreach (var paragraph in document.paragraphs)
+            foreach (var element in paragraph.elements)
+                if (element.Text != null)
                 {
-                    if (element.Text != null)
-                    {
-                        document.colors.Add(element.Text.style.color);
+                    document.colors.Add(element.Text.style.color);
 
-                        if (element.Text.style.fontFamily != string.Empty)
-                        {
-                            document.fonts.Add(element.Text.style.fontFamily);
-                        }
-                    }
+                    if (element.Text.style.fontFamily != string.Empty)
+                        document.fonts.Add(element.Text.style.fontFamily);
                 }
-            }
 
             str += FontsParsing();
             str += ColorParsing();
 
             str += "{\\info {\\author " + document.author + "}";
-            DateTime date = DateTime.Now;
+            var date = DateTime.Now;
             str +=
                 "{\\creatim\\yr"
                 + date.Year
@@ -123,10 +117,7 @@ namespace RTFExporter
 
             str += "{\\keywords ";
 
-            foreach (string keyword in document.keywords)
-            {
-                str += keyword + " ";
-            }
+            foreach (var keyword in document.keywords) str += keyword + " ";
 
             str += "}";
 
@@ -163,30 +154,25 @@ namespace RTFExporter
 
         private static string FontsParsing()
         {
-            List<string> fonts = new List<string>();
+            var fonts = new List<string>();
 
-            foreach (string docFonts in document.fonts)
+            foreach (var docFonts in document.fonts)
             {
                 var add = true;
 
-                foreach (string font in fonts)
-                {
+                foreach (var font in fonts)
                     if (font == docFonts)
                     {
                         add = false;
                         break;
                     }
-                }
 
-                if (add)
-                {
-                    fonts.Add(docFonts);
-                }
+                if (add) fonts.Add(docFonts);
             }
 
-            string str = "{\\fonttbl";
+            var str = "{\\fonttbl";
 
-            for (int i = 0; i < fonts.Count; i++)
+            for (var i = 0; i < fonts.Count; i++)
             {
                 str += "{\\f" + i + " " + fonts[i] + ";}";
                 try
@@ -206,15 +192,14 @@ namespace RTFExporter
 
         private static string ColorParsing()
         {
-            List<Color> colors = new List<Color>();
-            int j = 1;
+            var colors = new List<Color>();
+            var j = 1;
 
-            for (int i = 0; i < document.colors.Count; i++)
+            for (var i = 0; i < document.colors.Count; i++)
             {
                 var add = true;
 
-                foreach (Color color in colors)
-                {
+                foreach (var color in colors)
                     if (
                         color.r == document.colors[i].r
                         && color.g == document.colors[i].g
@@ -224,7 +209,6 @@ namespace RTFExporter
                         add = false;
                         break;
                     }
-                }
 
                 if (add)
                 {
@@ -235,13 +219,11 @@ namespace RTFExporter
                 }
             }
 
-            string str = "{\\colortbl;";
+            var str = "{\\colortbl;";
 
-            for (int i = 0; i < colors.Count; i++)
-            {
+            for (var i = 0; i < colors.Count; i++)
                 str +=
                     "\\red" + colors[i].r + "\\green" + colors[i].g + "\\blue" + colors[i].b + ";";
-            }
 
             str += "}";
 
@@ -250,9 +232,9 @@ namespace RTFExporter
 
         private static string ParagraphParsing()
         {
-            string str = "";
+            var str = "";
 
-            foreach (RTFParagraph paragraph in document.paragraphs)
+            foreach (var paragraph in document.paragraphs)
             {
                 str += "\\pard";
                 str += "\\sb" + paragraph.style.spaceBefore;
@@ -278,7 +260,7 @@ namespace RTFExporter
                 str += "\\li" + value(paragraph.style.indent.left);
                 str += "\\ri" + value(paragraph.style.indent.right);
 
-                foreach (RTFElement element in paragraph.elements)
+                foreach (var element in paragraph.elements)
                 {
                     str += "\\plain ";
 
@@ -286,30 +268,12 @@ namespace RTFExporter
 
                     if (text != null)
                     {
-                        if (text.style.italic)
-                        {
-                            str += "\\i ";
-                        }
-                        if (text.style.bold)
-                        {
-                            str += "\\b ";
-                        }
-                        if (text.style.smallCaps)
-                        {
-                            str += "\\scaps ";
-                        }
-                        if (text.style.allCaps)
-                        {
-                            str += "\\caps ";
-                        }
-                        if (text.style.strikeThrough)
-                        {
-                            str += "\\strike ";
-                        }
-                        if (text.style.outline)
-                        {
-                            str += "\\outl ";
-                        }
+                        if (text.style.italic) str += "\\i ";
+                        if (text.style.bold) str += "\\b ";
+                        if (text.style.smallCaps) str += "\\scaps ";
+                        if (text.style.allCaps) str += "\\caps ";
+                        if (text.style.strikeThrough) str += "\\strike ";
+                        if (text.style.outline) str += "\\outl ";
 
                         switch (text.style.underline)
                         {
@@ -339,7 +303,7 @@ namespace RTFExporter
                                 break;
                         }
 
-                        str += "\\fs" + (2 * text.style.fontSize) + " ";
+                        str += "\\fs" + 2 * text.style.fontSize + " ";
                         str += "\\f" + fontsIndex[text.style.fontFamily] + " ";
                         str += "\\cf" + text.style.color.index + " ";
 
@@ -491,10 +455,10 @@ namespace RTFExporter
                     result = i * 1440;
                     break;
                 case Units.Millimeters:
-                    result = (i / 25.4f) * 1440;
+                    result = i / 25.4f * 1440;
                     break;
                 case Units.Centimeters:
-                    result = (i / 2.54f) * 1440;
+                    result = i / 2.54f * 1440;
                     break;
             }
 

@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 using Verse;
 using Rect = UnityEngine.Rect;
 
-namespace Diary
+namespace DiaryMod
 {
     public class GUIDraggableTexture
     {

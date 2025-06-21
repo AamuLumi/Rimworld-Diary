@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Diary.Core.Text
+namespace DiaryMod.Core.Text
 {
     internal class TextGenerator
     {

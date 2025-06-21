@@ -2,14 +2,14 @@
 using HarmonyLib;
 using Verse;
 
-namespace Diary
+namespace DiaryMod
 {
     [HarmonyPatch(typeof(PlayLog), nameof(PlayLog.Add))]
     public static class ListenPlayLog_Add
     {
         private static void Prefix(LogEntry entry)
         {
-            var currentFilter = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().LogWriterFilter;
+            var currentFilter = LoadedModManager.GetMod<DiaryMod>().GetSettings<DiarySettings>().LogWriterFilter;
 
             if (currentFilter != LogWriterFilter.All && currentFilter != LogWriterFilter.Chats) return;
 

@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using Verse;
 
-namespace Diary.Core.Text
+namespace DiaryMod.Core.Text
 {
     internal class TokenTranslation : Dictionary<string, RandomString>
     {
-        public TokenTranslation() { }
-
         public static TokenTranslation FromPawn(Pawn p)
         {
             Log.Message("token translation");

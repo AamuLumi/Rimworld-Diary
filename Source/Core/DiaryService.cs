@@ -2,17 +2,24 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Diary.HTML;
+using DiaryMod.Core.Diary;
+using DiaryMod.HTML;
 using RimWorld;
 using RTFExporter;
 using Verse;
 
-namespace Diary
+namespace DiaryMod
 {
     public class DiaryService : GameComponent
     {
+        private static string COLONY_DIARY = "colony";
+
         private List<DiaryImageEntry> allImages;
+        private Dictionary<string, Diary> diaries;
+
+        [Obsolete("entries is only kept for compatibility with old versions of the mod")]
         private Dictionary<string, string> entries;
+
         private Dictionary<string, List<DiaryImageEntry>> imagesPerDay;
 
         public DiaryService(Game game)
@@ -20,6 +27,7 @@ namespace Diary
             entries = new Dictionary<string, string>();
             imagesPerDay = new Dictionary<string, List<DiaryImageEntry>>();
             allImages = new List<DiaryImageEntry>();
+            diaries = new Dictionary<string, Diary>();
         }
 
         private List<(string, int, Quadrum, int)> GetEntriesKeySorted()
@@ -127,7 +135,7 @@ namespace Diary
 
         private void ExportToHTML(string outFolderPath)
         {
-            var projectPath = LoadedModManager.GetMod<Diary>().Content.RootDir;
+            var projectPath = LoadedModManager.GetMod<DiaryMod>().Content.RootDir;
             var templateFolder = Path.Combine(projectPath, "Assemblies", "HTML", "DiaryExport");
             var builder = new HTMLBuilder(templateFolder, outFolderPath);
 
@@ -156,39 +164,18 @@ namespace Diary
 
         private string GetDictionaryKey(int day, Quadrum quadrum, int year)
         {
-            return day.ToString() + '-' + quadrum + '-' + year;
         }
 
         public string ReadEntry(int day, Quadrum quadrum, int year)
         {
-            var defaultMessageSetting = LoadedModManager
-                .GetMod<Diary>()
-                .GetSettings<DiarySettings>()
-                .DefaultMessage;
-
-            var defaultMessage = "";
-
-            if (defaultMessageSetting == DefaultMessage.NoEntryFound)
-                defaultMessage = "Diary_No_Entry_Found".Translate();
-
-            return entries.TryGetValue(GetDictionaryKey(day, quadrum, year), defaultMessage);
         }
 
         public void WriteEntry(string data, int day, Quadrum quadrum, int year)
         {
-            entries.SetOrAdd(GetDictionaryKey(day, quadrum, year), data);
         }
 
         public void WriteEntryNow(string data)
         {
-            entries.SetOrAdd(
-                GetDictionaryKey(
-                    TimeTools.GetCurrentDay(),
-                    TimeTools.GetCurrentQuadrum(),
-                    TimeTools.GetCurrentYear()
-                ),
-                data
-            );
         }
 
         public void AppendEntry(
@@ -200,30 +187,10 @@ namespace Diary
             bool writeCurrentHour = true
         )
         {
-            var key = GetDictionaryKey(day, quadrum, year);
-            var currentEntry = entries.TryGetValue(key);
-
-            if (writeCurrentHour) data = $"[{TimeTools.GetCurrentHour()}{"LetterHour".Translate()}] {data}";
-            if (onNewLine) data = $"\n{data}";
-            if (currentEntry != null) data = $"{currentEntry}{data}";
-
-            entries.SetOrAdd(key, data);
         }
 
         public void AppendEntryNow(string data, bool onNewLine = true, bool writeCurrentHour = true)
         {
-            var key = GetDictionaryKey(
-                TimeTools.GetCurrentDay(),
-                TimeTools.GetCurrentQuadrum(),
-                TimeTools.GetCurrentYear()
-            );
-            var currentEntry = entries.TryGetValue(key);
-
-            if (writeCurrentHour) data = $"[{TimeTools.GetCurrentHour()}{"LetterHour".Translate()}] {data}";
-            if (onNewLine) data = $"\n{data}";
-            if (currentEntry != null) data = $"{currentEntry}{data}";
-
-            entries.SetOrAdd(key, data);
         }
 
         public List<DiaryImageEntry> GetAllImages()
@@ -307,10 +274,10 @@ namespace Diary
         public void Export(bool silent = false)
         {
             var folder = Path.GetFullPath(
-                LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().FolderPath
+                LoadedModManager.GetMod<DiaryMod>().GetSettings<DiarySettings>().FolderPath
             );
             var format = LoadedModManager
-                .GetMod<Diary>()
+                .GetMod<DiaryMod>()
                 .GetSettings<DiarySettings>()
                 .ExportFormat;
 
@@ -375,6 +342,7 @@ namespace Diary
 
             Scribe_Collections.Look(ref entries, "entries", LookMode.Value, LookMode.Value);
             Scribe_Collections.Look(ref allImages, "allImages", LookMode.Deep);
+            Scribe_Collections.Look(ref diaries, "diaries", LookMode.Deep);
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {

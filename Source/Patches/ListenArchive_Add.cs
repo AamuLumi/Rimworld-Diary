@@ -2,14 +2,14 @@
 using RimWorld;
 using Verse;
 
-namespace Diary
+namespace DiaryMod
 {
     [HarmonyPatch(typeof(Archive), nameof(Archive.Add))]
     public static class ListenArchive_Add
     {
         private static void Prefix(IArchivable archivable)
         {
-            var settings = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>();
+            var settings = LoadedModManager.GetMod<DiaryMod>().GetSettings<DiarySettings>();
             var currentFilter = settings.LogWriterFilter;
 
             if (currentFilter != LogWriterFilter.All && currentFilter != LogWriterFilter.Events) return;

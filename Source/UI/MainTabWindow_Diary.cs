@@ -6,7 +6,7 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace Diary
+namespace DiaryMod
 {
     public class MainTabWindow_Diary : MainTabWindow
     {
@@ -73,7 +73,7 @@ namespace Diary
 
             closeOnAccept = false;
 
-            settings = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>();
+            settings = LoadedModManager.GetMod<DiaryMod>().GetSettings<DiarySettings>();
             imageDisplayMode = false;
             logFilter = settings.DefaultLogFilter;
             draggableImage = new GUIDraggableTexture();
