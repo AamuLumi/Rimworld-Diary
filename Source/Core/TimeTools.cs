@@ -21,10 +21,7 @@ namespace Diary
             }
             else
             {
-                if (Find.CurrentMap == null)
-                {
-                    return new Vector2();
-                }
+                if (Find.CurrentMap == null) return new Vector2();
                 vector = Find.WorldGrid.LongLatOf(Find.CurrentMap.Tile);
             }
 
@@ -38,7 +35,7 @@ namespace Diary
 
         public static int GetCurrentHour()
         {
-            return GenDate.HourOfDay(Find.TickManager.TicksAbs, TimeTools.GetCurrentLocation().x);
+            return GenDate.HourOfDay(Find.TickManager.TicksAbs, GetCurrentLocation().x);
         }
 
         public static int GetCurrentDay()
@@ -58,20 +55,15 @@ namespace Diary
 
         public static int GetMinimumDay(Quadrum quadrum, int year)
         {
-            if (quadrum != GenDate.Quadrum(Find.TickManager.gameStartAbsTick, GetCurrentLocation().x) || year != GenDate.Year(Find.TickManager.gameStartAbsTick, GetCurrentLocation().x))
-            {
-                return 0;
-            }
+            if (quadrum != GenDate.Quadrum(Find.TickManager.gameStartAbsTick, GetCurrentLocation().x) ||
+                year != GenDate.Year(Find.TickManager.gameStartAbsTick, GetCurrentLocation().x)) return 0;
 
             return GenDate.DayOfQuadrum(Find.TickManager.gameStartAbsTick, GetCurrentLocation().x);
         }
 
         public static Quadrum GetMinimumQuadrum(int year)
         {
-            if (year != GenDate.Year(Find.TickManager.gameStartAbsTick, GetCurrentLocation().x))
-            {
-                return Quadrum.Aprimay;
-            }
+            if (year != GenDate.Year(Find.TickManager.gameStartAbsTick, GetCurrentLocation().x)) return Quadrum.Aprimay;
 
             return GenDate.Quadrum(Find.TickManager.gameStartAbsTick, GetCurrentLocation().x);
         }
@@ -83,20 +75,14 @@ namespace Diary
 
         public static int GetMaximumDay(Quadrum quadrum, int year)
         {
-            if (quadrum != GetCurrentQuadrum() || year != GetCurrentYear())
-            {
-                return GenDate.DaysPerQuadrum - 1;
-            }
+            if (quadrum != GetCurrentQuadrum() || year != GetCurrentYear()) return GenDate.DaysPerQuadrum - 1;
 
             return GetCurrentDay();
         }
 
         public static Quadrum GetMaximumQuadrum(int year)
         {
-            if (year != GetCurrentYear())
-            {
-                return Quadrum.Undefined - 1;
-            }
+            if (year != GetCurrentYear()) return Quadrum.Undefined - 1;
 
             return GetCurrentQuadrum();
         }
@@ -104,6 +90,15 @@ namespace Diary
         public static int GetMaximumYear()
         {
             return GetCurrentYear();
+        }
+
+        public static int GetHourFromTicks(int ticks, bool startingFromStartHourOfDay = false)
+        {
+            if (startingFromStartHourOfDay)
+                return (GenDate.GameStartHourOfDay +
+                        GenDate.HourOfDay(ticks, GetCurrentLocation().x)) % GenDate.HoursPerDay;
+
+            return GenDate.HourOfDay(ticks, GetCurrentLocation().x) % GenDate.HoursPerDay;
         }
     }
 }

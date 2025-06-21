@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Diary.HTML;
 using RimWorld;
 using RTFExporter;
@@ -127,8 +128,8 @@ namespace Diary
 
         private void ExportToHTML(string outFolderPath)
         {
-            var projectPath = LoadedModManager.GetMod<Diary>().Content.RootDir;
-            var templateFolder = Path.Combine(projectPath, "Assemblies", "HTML", "DiaryExport");
+            var projectPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var templateFolder = Path.Combine(projectPath, "HTML", "DiaryExport");
             var builder = new HTMLBuilder(templateFolder, outFolderPath);
 
             builder.SetTitle(Faction.OfPlayer.Name);
@@ -197,13 +198,19 @@ namespace Diary
             Quadrum quadrum,
             int year,
             bool onNewLine = true,
-            bool writeCurrentHour = true
+            bool writeCurrentHour = true,
+            int replacementHour = 0
         )
         {
             var key = GetDictionaryKey(day, quadrum, year);
             var currentEntry = entries.TryGetValue(key);
+            var hourToUse = LoadedModManager
+                .GetMod<Diary>()
+                .GetSettings<DiarySettings>().IsEventAddedWithCurrentHour
+                ? TimeTools.GetCurrentHour()
+                : replacementHour;
 
-            if (writeCurrentHour) data = $"[{TimeTools.GetCurrentHour()}{"LetterHour".Translate()}] {data}";
+            if (writeCurrentHour) data = $"[{hourToUse}{"LetterHour".Translate()}] {data}";
             if (onNewLine) data = $"\n{data}";
             if (currentEntry != null) data = $"{currentEntry}{data}";
 

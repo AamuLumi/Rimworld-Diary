@@ -315,6 +315,7 @@ namespace Diary
             var buttonRect = new Rect(rect2.xMax - 35f, rect2.y, 35f, rect2.height);
             if (Widgets.ButtonText(buttonRect, "+"))
             {
+                var hour = archivable.CreatedTicksGame;
                 var entryToAdd = archivable.ArchivedLabel.StripTags();
 
                 if (settings.AreDescriptionExportedWithEvents)
@@ -334,7 +335,8 @@ namespace Diary
                     }
                 }
 
-                Current.Game.GetComponent<DiaryService>().AppendEntry(entryToAdd, day, quadrum, year);
+                Current.Game.GetComponent<DiaryService>()
+                    .AppendEntry(entryToAdd, day, quadrum, year, true, true, TimeTools.GetHourFromTicks(hour, true));
                 GUI.FocusControl("DiaryTextArea");
                 // We need to wait the refresh of the area with the new text to move the cursor
                 moveCursorToEndAtNextFrame = true;
@@ -401,7 +403,8 @@ namespace Diary
             {
                 var entryToAdd = logEntry.ToGameStringFromPOV(logEntry.GetConcerns().First()).StripTags();
 
-                Current.Game.GetComponent<DiaryService>().AppendEntry(entryToAdd, day, quadrum, year);
+                Current.Game.GetComponent<DiaryService>().AppendEntry(entryToAdd, day, quadrum, year, true, true,
+                    TimeTools.GetHourFromTicks(logEntry.Tick));
                 GUI.FocusControl("DiaryTextArea");
                 // We need to wait the refresh of the area with the new text to move the cursor
                 moveCursorToEndAtNextFrame = true;

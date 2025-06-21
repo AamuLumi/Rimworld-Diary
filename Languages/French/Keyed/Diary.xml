@@ -6,11 +6,11 @@
     <Diary_Export_Successful>Export réussi !</Diary_Export_Successful>
     <Diary_Directory_Not_Found>Erreur pendant l'export : le chemin du dossier n'existe pas.
 
-Veuillez créer le dossier ou modifier le chemin dans les réglages du mod.
+        Veuillez créer le dossier ou modifier le chemin dans les réglages du mod.
     </Diary_Directory_Not_Found>
     <Diary_Error_During_Export>Erreur pendant l'export : une erreur est survenue.
-        
-Veuillez vérifier que les droits d'accès au dossier sont corrects ou modifier le chemin dans les réglages du mod.
+
+        Veuillez vérifier que les droits d'accès au dossier sont corrects ou modifier le chemin dans les réglages du mod.
     </Diary_Error_During_Export>
     <Diary_Export_Format>Format du fichier d'export</Diary_Export_Format>
     <Diary_Format_Text>Texte (.txt)</Diary_Format_Text>
@@ -45,8 +45,9 @@ Veuillez vérifier que les droits d'accès au dossier sont corrects ou modifier 
     <Diary_Open_Screenshot_Folder>Ouvrir le dossier des images</Diary_Open_Screenshot_Folder>
     <Diary_Edit_Screenshot_Folder>Modifier le dossier des images</Diary_Edit_Screenshot_Folder>
     <Diary_Edit_Screenshot_Folder_Explanation>Vous pouvez modifier le dossier d'images utilisé par Diary.
-Les fichiers d'images seront déplacés s'ils existent. Dans le cas contraire, les chemins des fichiers en mémoire seront simplement modifiés.
-        
-Cette modification n'affecte que Diary. Vous devez donc aussi modifier la configuration de ProgressRenderer.
+        Les fichiers d'images seront déplacés s'ils existent. Dans le cas contraire, les chemins des fichiers en mémoire seront simplement modifiés.
+
+        Cette modification n'affecte que Diary. Vous devez donc aussi modifier la configuration de ProgressRenderer.
     </Diary_Edit_Screenshot_Folder_Explanation>
+    <Diary_Use_Current_Hour_When_Adding_Event_In_Diary>Utilisez l'heure actuelle du jeu quand un événement est ajouté dans le Journal</Diary_Use_Current_Hour_When_Adding_Event_In_Diary>
 </LanguageData>

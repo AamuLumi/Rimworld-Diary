@@ -14,11 +14,12 @@ namespace Diary
         private bool automaticExportEnabled;
         private AutomaticExportPeriod automaticExportPeriod;
 
-        public bool ConnectedToProgressRenderer;
+        public bool ConnectedToProgressRenderer = false;
         private LogFilter defaultLogFilter;
         private DefaultMessage defaultMessage;
         private ExportFormat exportFormat;
         private string folderPath;
+        private bool isEventAddedWithCurrentHour;
         private LogWriterFilter logWriterFilter;
 
         public DiarySettings()
@@ -42,11 +43,11 @@ namespace Diary
 
         public bool AreDescriptionExportedWithEvents => areDescriptionExportedWithEvents;
 
+        public bool IsEventAddedWithCurrentHour => isEventAddedWithCurrentHour;
+
         public override void ExposeData()
         {
             base.ExposeData();
-
-            ConnectedToProgressRenderer = false;
 
             Scribe_Values.Look(ref folderPath, "folderPath", Application.dataPath);
             Scribe_Values.Look(ref exportFormat, "exportFormat");
@@ -56,6 +57,7 @@ namespace Diary
             Scribe_Values.Look(ref automaticExportEnabled, "automaticExportEnabled");
             Scribe_Values.Look(ref automaticExportPeriod, "automaticExportPeriod");
             Scribe_Values.Look(ref areDescriptionExportedWithEvents, "areDescriptionExportedWithEvents");
+            Scribe_Values.Look(ref isEventAddedWithCurrentHour, "isEventAddedWithCurrentHour", true);
         }
 
         public void AddIgnoreArchivableClass(Type t)
@@ -99,6 +101,11 @@ namespace Diary
             automaticExportEnabled = b;
 
             UpdateGameComponent();
+        }
+
+        public void SetIsEventAddedWithCurrentHour(bool b)
+        {
+            isEventAddedWithCurrentHour = b;
         }
 
         private void UpdateGameComponent()
@@ -196,6 +203,9 @@ namespace Diary
                 ref areDescriptionExportedWithEvents);
 
             listingStandard.Gap();
+
+            listingStandard.CheckboxLabeled("Diary_Use_Current_Hour_When_Adding_Event_In_Diary".Translate(),
+                ref isEventAddedWithCurrentHour);
 
             listingStandard.Label("Diary_Log_Writer_Filter".Translate());
             listingStandard.Label("Diary_Log_Writer_Filter_Explanation".Translate());

@@ -63,10 +63,7 @@
         <None Include="Librairies\RTF\README.md"/>
     </ItemGroup>
     <ItemGroup>
-        <Content Include="HTML\DiaryExport\diary-default.css">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="HTML\DiaryExport\index.html">
+        <Content Include="HTML\DiaryExport\*.*">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Reference Include="0Harmony">

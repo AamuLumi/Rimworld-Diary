@@ -6,11 +6,11 @@
     <Diary_Export_Successful>Export successful!</Diary_Export_Successful>
     <Diary_Directory_Not_Found>Error during export : folder path doesn't exist.
 
-Please create the folder or edit folder path in mod settings.
+        Please create the folder or edit folder path in mod settings.
     </Diary_Directory_Not_Found>
     <Diary_Error_During_Export>Error during export : an error happened.
 
-Please check write access to the folder are correct or edit folder path in mod settings.
+        Please check write access to the folder are correct or edit folder path in mod settings.
     </Diary_Error_During_Export>
     <Diary_Export_Format>Export file format</Diary_Export_Format>
     <Diary_Format_Text>Text (.txt)</Diary_Format_Text>
@@ -42,8 +42,9 @@ Please check write access to the folder are correct or edit folder path in mod s
     <Diary_Open_Screenshot_Folder>Open screenshot folder</Diary_Open_Screenshot_Folder>
     <Diary_Edit_Screenshot_Folder>Edit screenshot folder</Diary_Edit_Screenshot_Folder>
     <Diary_Edit_Screenshot_Folder_Explanation>You can change the images folder used by Diary.
-It will move images files if exists, or simply edit paths in memory if not.
+        It will move images files if exists, or simply edit paths in memory if not.
 
-This is only a modification for Diary. You have also to edit mod configuration for ProgressRenderer.
+        This is only a modification for Diary. You have also to edit mod configuration for ProgressRenderer.
     </Diary_Edit_Screenshot_Folder_Explanation>
+    <Diary_Use_Current_Hour_When_Adding_Event_In_Diary>Use the current game hour when you add an event in the Diary.</Diary_Use_Current_Hour_When_Adding_Event_In_Diary>
 </LanguageData>
