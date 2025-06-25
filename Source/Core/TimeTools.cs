@@ -11,11 +11,11 @@ namespace Diary
         {
             Vector2 vector;
 
-            if (WorldRendererUtility.WorldRenderedNow && Find.WorldSelector.selectedTile >= 0)
+            if (WorldRendererUtility.WorldRendered && Find.WorldSelector.SelectedTile >= 0)
             {
-                vector = Find.WorldGrid.LongLatOf(Find.WorldSelector.selectedTile);
+                vector = Find.WorldGrid.LongLatOf(Find.WorldSelector.SelectedTile);
             }
-            else if (WorldRendererUtility.WorldRenderedNow && Find.WorldSelector.NumSelectedObjects > 0)
+            else if (WorldRendererUtility.WorldRendered && Find.WorldSelector.NumSelectedObjects > 0)
             {
                 vector = Find.WorldGrid.LongLatOf(Find.WorldSelector.FirstSelectedObject.Tile);
             }

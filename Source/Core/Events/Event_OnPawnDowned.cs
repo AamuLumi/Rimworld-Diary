@@ -14,7 +14,6 @@ namespace Diary.Core.Events
 
         public Event_OnPawnDowned(Pawn p)
         {
-            Log.Message($"{p} {p.jobs.curDriver} {p.jobs.jobQueue.Count}");
             if (p.jobs.curDriver is JobDriver_Hunt)
                 CreatePawnDownedDuringHuntingSentence(p);
         }

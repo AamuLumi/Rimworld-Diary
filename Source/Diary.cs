@@ -26,7 +26,7 @@ namespace Diary
         {
             settings = GetSettings<DiarySettings>();
 
-            harmony.PatchAll();
+            // harmony.PatchAll();
         }
 
         public void InitWithProgressRenderer(Harmony harmony)
