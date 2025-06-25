@@ -19,8 +19,9 @@ anyone.
 
 ## Compatibility
 
-- Rimworld 1.4 (should work for previous version, but not tested).
+- Rimworld 1.6, 1.5 and 1.4 (should work for previous version, but not tested).
 - Can be added to an existing save.
+- Optional : **Progress Renderer** : MUST BE PLACED BEFORE DIARY if you want to use it.
 - **For RimWar users** : if you want to have too much data in your Diary, you can place Diary after RimWar in the Mods
   window and Diary will ignore hidden events from RimWar.
 
