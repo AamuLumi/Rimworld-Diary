@@ -5,6 +5,7 @@
     <packageId>aamu.diary</packageId>
     <url>https://github.com/AamuLumi/Rimworld-Diary</url>
     <supportedVersions>
+        <li>1.6</li>
         <li>1.5</li>
         <li>1.4</li>
     </supportedVersions>
