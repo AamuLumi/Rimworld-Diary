@@ -1,3 +1,18 @@
+# 1.1.11 (08/10/2025)
+
+- Fix Diary tab not available when user doesn't have any colony (#25)
+
+# 1.1.10 (07/05/2025)
+
+- Recompile each version to avoid bugs
+
+# 1.1.9 (06/25/2025)
+
+- Add 1.6 version
+- Fix HTML export not working
+- Fix Progress Renderer state in mod options after a setting is changed
+- Add a new setting to use the event hour instead of the game hour when adding an event to the Diary
+
 # 1.1.8 (03/27/2024)
 
 - Add 1.5 version
