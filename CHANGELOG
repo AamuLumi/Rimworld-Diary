@@ -1,3 +1,7 @@
+# 1.2.1 (10/26/2026)
+
+- Fix bad defs for 1.6 and older versions
+
 # 1.2.0 (10/26/2026)
 
 - Update to Rimworld 1.7 + .NET 10
