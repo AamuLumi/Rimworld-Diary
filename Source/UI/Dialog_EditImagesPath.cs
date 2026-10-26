@@ -1,45 +1,45 @@
-﻿using UnityEngine;
+﻿using Diary.Core;
+using UnityEngine;
 using Verse;
 
-namespace Diary
+namespace Diary.UI;
+
+public class Dialog_EditImagesPath : Window
 {
-    public class Dialog_EditImagesPath : Window
+    private string _currentPath;
+
+    public Dialog_EditImagesPath(string currentPath)
     {
-        private string currentPath;
+        _currentPath = currentPath;
+        doCloseButton = false;
+        doCloseX = true;
+    }
 
-        public Dialog_EditImagesPath(string currentPath)
-        {
-            this.currentPath = currentPath;
-            doCloseButton = false;
-            doCloseX = true;
-        }
+    public override void OnAcceptKeyPressed()
+    {
+        var service = Current.Game.GetComponent<DiaryService>();
 
-        public override void OnAcceptKeyPressed()
-        {
-            var service = Current.Game.GetComponent<DiaryService>();
+        service.ChangeImagesFolder(_currentPath);
 
-            service.ChangeImagesFolder(currentPath);
+        base.OnAcceptKeyPressed();
+    }
 
-            base.OnAcceptKeyPressed();
-        }
+    public override void DoWindowContents(Rect inRect)
+    {
+        var listingStandard = new Listing_Standard();
+        listingStandard.Begin(inRect);
 
-        public override void DoWindowContents(Rect inRect)
-        {
-            var listingStandard = new Listing_Standard();
-            listingStandard.Begin(inRect);
+        listingStandard.Label("Diary_Edit_Screenshot_Folder_Explanation".Translate());
 
-            listingStandard.Label("Diary_Edit_Screenshot_Folder_Explanation".Translate());
+        _currentPath = listingStandard.TextEntry(_currentPath);
 
-            currentPath = listingStandard.TextEntry(currentPath);
+        listingStandard.End();
 
-            listingStandard.End();
+        if (!Widgets.ButtonText(
+                new Rect(15f, (float)(inRect.height - 35.0 - 15.0), (float)(inRect.width - 15.0 - 15.0), 35f),
+                "OK"))
+            return;
 
-            if (!Widgets.ButtonText(
-                    new Rect(15f, (float)(inRect.height - 35.0 - 15.0), (float)(inRect.width - 15.0 - 15.0), 35f),
-                    "OK"))
-                return;
-
-            OnAcceptKeyPressed();
-        }
+        OnAcceptKeyPressed();
     }
 }

@@ -1,3 +1,9 @@
+# 1.2.0 (10/26/2026)
+
+- Update to Rimworld 1.7 + .NET 10
+- Code refactoring according to .NET10 availability
+- Add a scrollbar next to the diary text area
+
 # 1.1.11 (08/10/2025)
 
 - Fix Diary tab not available when user doesn't have any colony (#25)

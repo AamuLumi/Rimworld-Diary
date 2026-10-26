@@ -1,144 +1,142 @@
-﻿using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Diary.Core.Text
+namespace Diary.Core.Text;
+
+internal class TextGenerator
 {
-    internal class TextGenerator
+    private static readonly Regex requiredTerm = new(
+        @"!(?<Key1>\w+)\.(?<Key2>\w+)(\/(?<Option>\w+))?!",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled
+    );
+
+    private static readonly Regex optionalTerm = new(
+        @"\?(?<Key1>\w+)\.(?<Key2>\w+)(\/(?<Option>\w+))?\?",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled
+    );
+
+    private static readonly Regex dotTerm = new(
+        @"\.",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled
+    );
+
+    private static Regex letterTerm = new(
+        @"\w",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled
+    );
+
+    private static readonly string[] vowels = { "a", "e", "i", "o", "u" };
+
+    private static string ComputeTranslation(
+        Match requiredMatch,
+        TokensDictionary dict,
+        TokensDictionary defaultDictionary
+    )
     {
-        private static readonly Regex requiredTerm = new Regex(
-            @"!(?<Key1>\w+)\.(?<Key2>\w+)(\/(?<Option>\w+))?!",
-            RegexOptions.IgnoreCase | RegexOptions.Compiled
-        );
+        var key1 = requiredMatch.Groups["Key1"].Value;
+        var key2 = requiredMatch.Groups["Key2"].Value;
+        var optionGroup = requiredMatch.Groups["Option"];
+        string option = null;
 
-        private static readonly Regex optionalTerm = new Regex(
-            @"\?(?<Key1>\w+)\.(?<Key2>\w+)(\/(?<Option>\w+))?\?",
-            RegexOptions.IgnoreCase | RegexOptions.Compiled
-        );
+        if (optionGroup != null)
+            option = optionGroup.Value;
 
-        private static readonly Regex dotTerm = new Regex(
-            @"\.",
-            RegexOptions.IgnoreCase | RegexOptions.Compiled
-        );
+        TokenTranslation translations;
+        RandomString associatedStr = null;
 
-        private static Regex letterTerm = new Regex(
-            @"\w",
-            RegexOptions.IgnoreCase | RegexOptions.Compiled
-        );
+        if (dict.TryGetValue(key1, out translations))
+            translations.TryGetValue(key2, out associatedStr);
 
-        private static readonly string[] vowels = { "a", "e", "i", "o", "u" };
-
-        private static string ComputeTranslation(
-            Match requiredMatch,
-            TokensDictionary dict,
-            TokensDictionary defaultDictionary
-        )
+        if (associatedStr == null)
         {
-            var key1 = requiredMatch.Groups["Key1"].Value;
-            var key2 = requiredMatch.Groups["Key2"].Value;
-            var optionGroup = requiredMatch.Groups["Option"];
-            string option = null;
-
-            if (optionGroup != null)
-                option = optionGroup.Value;
-
-            TokenTranslation translations;
-            RandomString associatedStr = null;
-
-            if (dict.TryGetValue(key1, out translations))
-                translations.TryGetValue(key2, out associatedStr);
-
-            if (associatedStr == null)
+            if (defaultDictionary.TryGetValue(key1, out translations))
             {
-                if (defaultDictionary.TryGetValue(key1, out translations))
-                {
-                    if (!translations.TryGetValue(key2, out associatedStr))
-                        associatedStr = new RandomString("__UNKNOWN__");
-                }
-                else
-                {
+                if (!translations.TryGetValue(key2, out associatedStr))
                     associatedStr = new RandomString("__UNKNOWN__");
-                }
             }
-
-            var finalString = associatedStr.ToString();
-
-            if (option == "DEF")
+            else
             {
-                finalString = $"the ${finalString}";
+                associatedStr = new RandomString("__UNKNOWN__");
             }
-            else if (option == "INDEF")
-            {
-                if (vowels.Any(vowel => finalString.StartsWith(vowel)))
-                    finalString = $"an {finalString}";
-                else
-                    finalString = $"a {finalString}";
-            }
-
-            return finalString;
         }
 
-        public static string Generate(string baseText, TokensDictionary dict)
+        var finalString = associatedStr.ToString();
+
+        if (option == "DEF")
         {
-            var defaultDictionary = DefaultDictionary.GetInstance().Dictionary;
-            var resultText = new StringBuilder(baseText);
+            finalString = $"the ${finalString}";
+        }
+        else if (option == "INDEF")
+        {
+            if (vowels.Any(vowel => finalString.StartsWith(vowel)))
+                finalString = $"an {finalString}";
+            else
+                finalString = $"a {finalString}";
+        }
 
-            var requiredMatches = requiredTerm.Matches(baseText);
+        return finalString;
+    }
 
-            foreach (Match requiredMatch in requiredMatches)
-            {
-                var term = requiredMatch.Value;
+    public static string Generate(string baseText, TokensDictionary dict)
+    {
+        var defaultDictionary = DefaultDictionary.GetInstance().Dictionary;
+        var resultText = new StringBuilder(baseText);
 
+        var requiredMatches = requiredTerm.Matches(baseText);
+
+        foreach (Match requiredMatch in requiredMatches)
+        {
+            var term = requiredMatch.Value;
+
+            resultText.Replace(
+                term,
+                ComputeTranslation(requiredMatch, dict, defaultDictionary)
+            );
+        }
+
+        var optionalMatches = optionalTerm.Matches(baseText);
+
+        foreach (Match optionalMatch in optionalMatches)
+        {
+            var term = optionalMatch.Value;
+
+            if (RandomTools.GetRandomBool())
                 resultText.Replace(
                     term,
-                    ComputeTranslation(requiredMatch, dict, defaultDictionary)
+                    ComputeTranslation(optionalMatch, dict, defaultDictionary)
                 );
-            }
+            else
+                resultText.Replace(term, "");
+        }
 
-            var optionalMatches = optionalTerm.Matches(baseText);
+        // Remove long whitespaces
+        for (var i = 0; i < resultText.Length - 1; i++)
+            while (
+                i < resultText.Length - 1 && resultText[i] == ' ' && resultText[i + 1] == ' '
+            )
+                resultText.Remove(i, 1);
 
-            foreach (Match optionalMatch in optionalMatches)
+        // Uppercase necessary letters
+        var dotMatches = dotTerm.Matches(resultText.ToString());
+
+        foreach (Match dotMatch in dotMatches)
+        {
+            var index = dotMatch.Index;
+
+            for (var i = index; i < resultText.Length; i++)
             {
-                var term = optionalMatch.Value;
+                var currentChar = resultText[i];
 
-                if (RandomTools.GetRandomBool())
-                    resultText.Replace(
-                        term,
-                        ComputeTranslation(optionalMatch, dict, defaultDictionary)
-                    );
-                else
-                    resultText.Replace(term, "");
-            }
-
-            // Remove long whitespaces
-            for (var i = 0; i < resultText.Length - 1; i++)
-                while (
-                    i < resultText.Length - 1 && resultText[i] == ' ' && resultText[i + 1] == ' '
-                )
-                    resultText.Remove(i, 1);
-
-            // Uppercase necessary letters
-            var dotMatches = dotTerm.Matches(resultText.ToString());
-
-            foreach (Match dotMatch in dotMatches)
-            {
-                var index = dotMatch.Index;
-
-                for (var i = index; i < resultText.Length; i++)
+                if (char.IsLetterOrDigit(currentChar))
                 {
-                    var currentChar = resultText[i];
+                    if (char.IsLetter(currentChar) && char.IsLower(currentChar))
+                        resultText[i] = char.ToUpper(currentChar);
 
-                    if (char.IsLetterOrDigit(currentChar))
-                    {
-                        if (char.IsLetter(currentChar) && char.IsLower(currentChar))
-                            resultText[i] = char.ToUpper(currentChar);
-
-                        break;
-                    }
+                    break;
                 }
             }
-
-            return resultText.ToString();
         }
+
+        return resultText.ToString();
     }
 }

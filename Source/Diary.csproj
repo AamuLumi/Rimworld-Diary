@@ -1,17 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
         <ProjectGuid>{EFFDE9DB-2871-44B3-9A46-3932035EF692}</ProjectGuid>
         <OutputType>Library</OutputType>
+        <ImplicitUsings>enable</ImplicitUsings>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>Diary</RootNamespace>
         <AssemblyName>Diary</AssemblyName>
-        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
-        <Deterministic>true</Deterministic>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>14</LangVersion>
+        <AssemblyVersion>1.1.6</AssemblyVersion>
+        <Configurations>1.4;1.5;1.6;1.7</Configurations>
+        <Platforms>AnyCPU</Platforms>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <GenerateDependencyFile>false</GenerateDependencyFile>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == '1.7|AnyCPU' ">
+        <OutputPath>../1.7/Assemblies/</OutputPath>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == '1.6|AnyCPU' ">
         <OutputPath>../1.6/Assemblies/</OutputPath>
@@ -23,357 +27,214 @@
         <OutputPath>../1.4/Assemblies</OutputPath>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="HTML\FileTools.cs"/>
-        <Compile Include="HTML\HTMLBuilder.cs"/>
-        <Compile Include="Components\GameComponent_AutomaticExport.cs"/>
-        <Compile Include="Core\DiaryService.cs"/>
-        <Compile Include="Core\Events\BaseEvent.cs"/>
-        <Compile Include="Core\Events\Event_OnPawnDie.cs"/>
-        <Compile Include="Core\Events\Event_OnPawnDowned.cs"/>
-        <Compile Include="Core\RandomTools.cs"/>
-        <Compile Include="Core\Text\DefaultDictionary.cs"/>
-        <Compile Include="Core\Text\RandomString.cs"/>
-        <Compile Include="Core\Text\TextGenerator.cs"/>
-        <Compile Include="Core\Text\TokenTranslation.cs"/>
-        <Compile Include="Core\Text\TokensDictionary.cs"/>
-        <Compile Include="Core\Types.cs"/>
-        <Compile Include="Core\TimeTools.cs"/>
-        <Compile Include="Patches\ActionTrackers\OnPawnDowned.cs"/>
-        <Compile Include="UI\Dialog_EditImagesPath.cs"/>
-        <Compile Include="UI\GUIDraggableTexture.cs"/>
-        <Compile Include="Patches\ActionTrackers\OnPawnDie.cs"/>
-        <Compile Include="Patches\ListenArchive_Add.cs"/>
-        <Compile Include="Patches\ListenProgressRenderer_CreateFilePath.cs"/>
-        <Compile Include="Patches\ListenPlayLog_Add.cs"/>
-        <Compile Include="UI\MainButtonWorker_ToggleDiaryTab.cs"/>
-        <Compile Include="UI\MainTabWindow_Diary.cs"/>
-        <Compile Include="UI\Dialog_ExportDiary.cs"/>
-        <Compile Include="Settings\DiarySettings.cs"/>
-        <Compile Include="Diary.cs"/>
-        <Compile Include="Properties\AssemblyInfo.cs"/>
-        <Compile Include="Librairies\RTF\RTFElement.cs"/>
-        <Compile Include="Librairies\RTF\RTFImage.cs"/>
-        <Compile Include="Librairies\RTF\RTFImageStyle.cs"/>
-        <Compile Include="Librairies\RTF\Color.cs"/>
-        <Compile Include="Librairies\RTF\RTFDocument.cs"/>
-        <Compile Include="Librairies\RTF\RTFParagraph.cs"/>
-        <Compile Include="Librairies\RTF\RTFParagraphStyle.cs"/>
-        <Compile Include="Librairies\RTF\RTFParser.cs"/>
-        <Compile Include="Librairies\RTF\RTFText.cs"/>
-        <Compile Include="Librairies\RTF\RTFTextStyle.cs"/>
-    </ItemGroup>
-    <ItemGroup>
         <None Include="Librairies\RTF\README.md"/>
+        <Compile Remove="obj/**"/>
+        <Compile Remove="WIP/**"/>
     </ItemGroup>
     <ItemGroup>
         <Content Include="HTML\DiaryExport\*.*">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+    </ItemGroup>
+    <ItemGroup>
         <Reference Include="0Harmony">
-            <HintPath>..\..\..\..\..\..\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll</HintPath>
+            <HintPath>..\..\..\..\..\workshop\content\294100\2009463077\1.7\Assemblies\0Harmony.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="Assembly-CSharp">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\Assembly-CSharp.dll</HintPath>
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Assembly-CSharp.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="Assembly-CSharp-firstpass">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+        <Reference Include="AssetRipper.TextureDecoder">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\AssetRipper.TextureDecoder.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="AssetsTools.NET">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\AssetsTools.NET.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="AssetsTools.NET.Texture">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\AssetsTools.NET.Texture.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Core.Collections">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Core.Collections.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Core.Common">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Core.Common.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Core.Logging">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Core.Logging.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Core.Maths">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Core.Maths.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Core.Memory">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Core.Memory.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Core.Numerics">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Core.Numerics.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Core.Package">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Core.Package.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Core.Strings">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Core.Strings.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.FreeType">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.FreeType.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Glfw">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Glfw.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Gli">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Gli.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Gltf">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Gltf.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.ImGui">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.ImGui.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Interop">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Interop.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Ktx">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Ktx.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Localization">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Localization.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Slang">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Slang.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Stb">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Stb.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Texture">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Texture.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Vulkan">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Vulkan.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Vulkan.Abstractions">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Vulkan.Abstractions.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.Vulkan.Vma">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.Vulkan.Vma.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Brutal.ZLib">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Brutal.ZLib.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="com.rlabrecque.steamworks.net">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\com.rlabrecque.steamworks.net.dll</HintPath>
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\com.rlabrecque.steamworks.net.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="CommunityToolkit.HighPerformance">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\CommunityToolkit.HighPerformance.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Fmod5Sharp">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Fmod5Sharp.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="HarmonyMod">
+            <HintPath>..\..\..\..\..\workshop\content\294100\2009463077\1.7\Assemblies\HarmonyMod.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="IndexRange">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\IndexRange.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="ISharpZipLib">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\ISharpZipLib.dll</HintPath>
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\ISharpZipLib.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="Mono.Posix">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\Mono.Posix.dll</HintPath>
+        <Reference Include="K4os.Compression.LZ4">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\K4os.Compression.LZ4.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="Mono.Security">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\Mono.Security.dll</HintPath>
+        <Reference Include="K4os.Compression.LZ4.Streams">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\K4os.Compression.LZ4.Streams.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="mscorlib">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\mscorlib.dll</HintPath>
+        <Reference Include="K4os.Hash.xxHash">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\K4os.Hash.xxHash.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="System"/>
-        <Reference Include="System.ComponentModel.Composition">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\System.ComponentModel.Composition.dll</HintPath>
+        <Reference Include="NAudio.Core">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\NAudio.Core.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="System.Configuration">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\System.Configuration.dll</HintPath>
+        <Reference Include="netstandard">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\netstandard.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="System.Core"/>
-        <Reference Include="System.Runtime">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\System.Runtime.dll</HintPath>
+        <Reference Include="OggVorbisEncoder">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\OggVorbisEncoder.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="System.Runtime.Serialization">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\System.Runtime.Serialization.dll</HintPath>
+        <Reference Include="PsdSharp">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\PsdSharp.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="System.Security">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\System.Security.dll</HintPath>
+        <Reference Include="RimWorld">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\RimWorld.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="System.ServiceModel.Internals">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\System.ServiceModel.Internals.dll</HintPath>
+        <Reference Include="UnityStubs">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\UnityStubs.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="System.Xml.Linq"/>
-        <Reference Include="System.Data.DataSetExtensions"/>
-        <Reference Include="Microsoft.CSharp"/>
-        <Reference Include="System.Data"/>
-        <Reference Include="System.Net.Http"/>
-        <Reference Include="System.Xml"/>
-        <Reference Include="Unity.TextMeshPro">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\Unity.TextMeshPro.dll</HintPath>
+        <Reference Include="Waylith">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Waylith.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="UnityEngine">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.dll</HintPath>
+        <Reference Include="Waylith.AssetBake">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Waylith.AssetBake.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="UnityEngine.AccessibilityModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.AccessibilityModule.dll</HintPath>
+        <Reference Include="Waylith.UnityCompat">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Waylith.UnityCompat.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="UnityEngine.AIModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.AIModule.dll</HintPath>
+        <Reference Include="Waylith.VideoDecode">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\Waylith.VideoDecode.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="UnityEngine.AndroidJNIModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.AndroidJNIModule.dll</HintPath>
+        <Reference Include="WindowsBase">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\WindowsBase.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="UnityEngine.AnimationModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+        <Reference Include="ZstdSharp">
+            <HintPath>..\..\..\RimWorld.app\Contents\MacOS\ZstdSharp.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="UnityEngine.ARModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.ARModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.AssetBundleModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.AudioModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.AudioModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.ClothModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.ClothModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.ClusterInputModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.ClusterInputModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.ClusterRendererModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.ClusterRendererModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.CoreModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.CrashReportingModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.CrashReportingModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.DirectorModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.DirectorModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.DSPGraphModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.DSPGraphModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.GameCenterModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.GameCenterModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.GridModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.GridModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.HotReloadModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.HotReloadModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.ImageConversionModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.IMGUIModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.InputLegacyModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.InputModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.InputModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.JSONSerializeModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.JSONSerializeModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.LocalizationModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.LocalizationModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.ParticleSystemModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.PerformanceReportingModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.PerformanceReportingModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.Physics2DModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.PhysicsModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.ProfilerModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.ProfilerModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.ScreenCaptureModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.ScreenCaptureModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.SharedInternalsModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.SharedInternalsModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.SpriteMaskModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.SpriteMaskModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.SpriteShapeModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.SpriteShapeModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.StreamingModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.StreamingModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.SubstanceModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.SubstanceModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.SubsystemsModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.SubsystemsModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.TerrainModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.TerrainModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.TerrainPhysicsModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.TerrainPhysicsModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.TextRenderingModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.TilemapModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.TilemapModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.TLSModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.TLSModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.UI">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.UI.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.UIElementsModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.UIElementsModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.UIModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.UIModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.UmbraModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.UmbraModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.UnityAnalyticsModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.UnityAnalyticsModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.UnityConnectModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.UnityConnectModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.UnityTestProtocolModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.UnityTestProtocolModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.UnityWebRequestAudioModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.UnityWebRequestModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.UnityWebRequestTextureModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.UnityWebRequestWWWModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.VehiclesModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.VehiclesModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.VFXModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.VFXModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.VideoModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.VideoModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.VRModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.VRModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.WindModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.WindModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.XRModule">
-            <HintPath>..\..\..\Contents\Resources\Data\Managed\UnityEngine.XRModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="WindowsBase"/>
     </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
+    <ItemGroup>
+        <Folder Include="WIP\"/>
+    </ItemGroup>
 </Project>

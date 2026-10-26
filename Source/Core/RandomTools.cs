@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace Diary.Core;
 
-namespace Diary.Core
+internal static class RandomTools
 {
-    internal class RandomTools
+    private static readonly Random Random = new();
+
+    public static T GetRandomItemFromList<T>(List<T> list)
     {
-        private static Random _random = new Random();
+        var index = Random.Next(list.Count);
 
-        public static T GetRandomItemFromList<T>(List<T> list)
-        {
-            int index = _random.Next(list.Count);
+        return list[index];
+    }
 
-            return list[index];
-        }
-
-        public static bool GetRandomBool()
-        {
-            return _random.Next(1) == 1;
-        }
+    public static bool GetRandomBool()
+    {
+        return Random.Next(1) == 1;
     }
 }

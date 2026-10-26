@@ -1,55 +1,52 @@
-﻿using RimWorld;
+﻿using Diary.Core;
+using Diary.Settings;
+using RimWorld;
 using Verse;
 
-namespace Diary
+// Don't change the namespace for compatibility with old versions
+namespace Diary;
+
+internal class GameComponent_AutomaticExport : GameComponent
 {
-    class GameComponent_AutomaticExport : GameComponent
+    private bool _enabled;
+    private int _nbTicksForCurrentPeriod;
+    private AutomaticExportPeriod _period;
+
+    public GameComponent_AutomaticExport(Game g)
     {
-        private bool enabled;
-        private AutomaticExportPeriod period;
-        private int nbTicksForCurrentPeriod;
+        _enabled = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().AutomaticExportEnabled;
+        _period = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().AutomaticExportPeriod;
+        SetTicksNumberForCurrentPeriod();
+    }
 
-        public GameComponent_AutomaticExport(Game g)
+    private void SetTicksNumberForCurrentPeriod()
+    {
+        switch (_period)
         {
-            enabled = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().AutomaticExportEnabled;
-            period = LoadedModManager.GetMod<Diary>().GetSettings<DiarySettings>().AutomaticExportPeriod;
-            SetTicksNumberForCurrentPeriod();
+            case AutomaticExportPeriod.Day:
+                _nbTicksForCurrentPeriod = GenDate.TicksPerDay;
+                break;
+            case AutomaticExportPeriod.Month:
+                _nbTicksForCurrentPeriod = GenDate.TicksPerQuadrum;
+                break;
+            case AutomaticExportPeriod.Week:
+                _nbTicksForCurrentPeriod = GenDate.TicksPerDay * 7;
+                break;
         }
+    }
 
-        private void SetTicksNumberForCurrentPeriod()
-        {
-            switch (period)
-            {
-                case AutomaticExportPeriod.Day:
-                    nbTicksForCurrentPeriod = GenDate.TicksPerDay;
-                    break;
-                case AutomaticExportPeriod.Month:
-                    nbTicksForCurrentPeriod = GenDate.TicksPerQuadrum;
-                    break;
-                case AutomaticExportPeriod.Week:
-                    nbTicksForCurrentPeriod = GenDate.TicksPerDay * 7;
-                    break;
-            }
-        }
+    public void OnSettingsUpdate(bool enabled, AutomaticExportPeriod period)
+    {
+        _enabled = enabled;
+        _period = period;
+        SetTicksNumberForCurrentPeriod();
+    }
 
-        public void OnSettingsUpdate(bool enabled, AutomaticExportPeriod period)
-        {
-            this.enabled = enabled;
-            this.period = period;
-            SetTicksNumberForCurrentPeriod();
-        }
+    public override void GameComponentTick()
+    {
+        if (!_enabled) return;
 
-        public override void GameComponentTick()
-        {
-            if (!enabled)
-            {
-                return;
-            }
-
-            if (Find.TickManager.TicksGame % nbTicksForCurrentPeriod == 0)
-            {
-                Current.Game.GetComponent<DiaryService>().Export(true);
-            }
-        }
+        if (Find.TickManager.TicksGame % _nbTicksForCurrentPeriod == 0)
+            Current.Game.GetComponent<DiaryService>().Export(true);
     }
 }

@@ -1,191 +1,187 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 using Verse;
 using Rect = UnityEngine.Rect;
 
-namespace Diary
+namespace Diary.UI;
+
+public class GUIDraggableTexture
 {
-    public class GUIDraggableTexture
+    private Texture2D _currentImageDisplayed;
+    private float _currentImageScale;
+    private bool _firstLoading;
+    private int _imageHeight;
+    private UnityWebRequest _imageLoadRequest;
+    private bool _imageLoading;
+    private Rect _imageRect;
+    private int _imageWidth;
+    private float _maxImageScale;
+    private bool _mustRecomputeOuterRect;
+    private Rect _outerRect;
+    private float _zoomRatio = 0.2f;
+
+    public GUIDraggableTexture()
     {
-        private Texture2D currentImageDisplayed;
-        private float currentImageScale;
-        private bool firstLoading;
-        private int imageHeight;
-        private bool imageLoading;
-        private UnityWebRequest imageLoadRequest;
-        private Rect imageRect;
-        private int imageWidth;
-        private Rect initialOuterRect;
-        private float maxImageScale;
-        private bool mustRecomputeOuterRect;
-        private Rect outerRect;
-        private float zoomRatio = 0.2f;
+        _currentImageScale = 1.0f;
 
-        public GUIDraggableTexture()
+        _imageRect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
+        _mustRecomputeOuterRect = false;
+        _firstLoading = true;
+    }
+
+    public bool HasImageLoaded()
+    {
+        return _currentImageDisplayed != null;
+    }
+
+    public bool IsLoading()
+    {
+        return _imageLoading;
+    }
+
+    public void LoadTexture(string path)
+    {
+        _imageLoading = true;
+        _imageLoadRequest = UnityWebRequestTexture.GetTexture($"file://{path}");
+
+        _imageLoadRequest.SendWebRequest().completed += delegate
         {
-            currentImageScale = 1.0f;
+            _currentImageDisplayed = DownloadHandlerTexture.GetContent(_imageLoadRequest);
 
-            imageRect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
-            mustRecomputeOuterRect = false;
-            firstLoading = true;
+            _imageWidth = _currentImageDisplayed.width;
+            _imageHeight = _currentImageDisplayed.height;
+
+            _maxImageScale = Math.Max(_imageWidth, _imageHeight) / 1500f;
+            _zoomRatio = (_maxImageScale - 1.0f) / 10;
+
+            _imageLoading = false;
+            if (_firstLoading) _mustRecomputeOuterRect = true;
+            _firstLoading = false;
+        };
+    }
+
+    private void TryFixImageCoordinates()
+    {
+        if (_imageRect.xMin < 0f)
+        {
+            var diff = _imageRect.xMin;
+
+            _imageRect.xMin -= diff;
+            _imageRect.xMax -= diff;
+        }
+        else if (_imageRect.xMax > 1.0f)
+        {
+            var diff = _imageRect.xMax - 1.0f;
+
+            _imageRect.xMin -= diff;
+            _imageRect.xMax -= diff;
         }
 
-        public bool HasImageLoaded()
+        if (_imageRect.yMin < 0f)
         {
-            return currentImageDisplayed != null;
+            var diff = _imageRect.yMin;
+
+            _imageRect.yMin -= diff;
+            _imageRect.yMax -= diff;
         }
-
-        public bool IsLoading()
+        else if (_imageRect.yMax > 1.0f)
         {
-            return imageLoading;
+            var diff = _imageRect.yMax - 1.0f;
+
+            _imageRect.yMin -= diff;
+            _imageRect.yMax -= diff;
         }
+    }
 
-        public void LoadTexture(string path)
+    private void OnScrollWheel()
+    {
+        Event.current.Use();
+
+        var xRatio = _outerRect.width / _imageWidth;
+        var yRatio = _outerRect.height / _imageHeight;
+
+        if (Event.current.delta.y > 0 && _currentImageScale > 1.00f)
         {
-            imageLoading = true;
-            imageLoadRequest = UnityWebRequestTexture.GetTexture($"file://{path}");
-
-            imageLoadRequest.SendWebRequest().completed += delegate
-            {
-                currentImageDisplayed = DownloadHandlerTexture.GetContent(imageLoadRequest);
-
-                imageWidth = currentImageDisplayed.width;
-                imageHeight = currentImageDisplayed.height;
-
-                maxImageScale = Math.Max(imageWidth, imageHeight) / 1500f;
-                zoomRatio = (maxImageScale - 1.0f) / 10;
-
-                imageLoading = false;
-                if (firstLoading) mustRecomputeOuterRect = true;
-                firstLoading = false;
-            };
-        }
-
-        private void TryFixImageCoordinates()
-        {
-            if (imageRect.xMin < 0f)
-            {
-                var diff = imageRect.xMin;
-
-                imageRect.xMin -= diff;
-                imageRect.xMax -= diff;
-            }
-            else if (imageRect.xMax > 1.0f)
-            {
-                var diff = imageRect.xMax - 1.0f;
-
-                imageRect.xMin -= diff;
-                imageRect.xMax -= diff;
-            }
-
-            if (imageRect.yMin < 0f)
-            {
-                var diff = imageRect.yMin;
-
-                imageRect.yMin -= diff;
-                imageRect.yMax -= diff;
-            }
-            else if (imageRect.yMax > 1.0f)
-            {
-                var diff = imageRect.yMax - 1.0f;
-
-                imageRect.yMin -= diff;
-                imageRect.yMax -= diff;
-            }
-        }
-
-        private void OnScrollWheel()
-        {
-            Event.current.Use();
-
-            var xRatio = outerRect.width / imageWidth;
-            var yRatio = outerRect.height / imageHeight;
-
-            if (Event.current.delta.y > 0 && currentImageScale > 1.00f)
-            {
-                imageRect.xMin -= xRatio * zoomRatio;
-                imageRect.xMax += xRatio * zoomRatio;
-                imageRect.yMin -= yRatio * zoomRatio;
-                imageRect.yMax += yRatio * zoomRatio;
-                currentImageScale -= 0.1f;
-
-                TryFixImageCoordinates();
-            }
-            else if (Event.current.delta.y < 0 && currentImageScale < 2.0f)
-            {
-                if (imageRect.xMin + xRatio * zoomRatio > imageRect.xMax - xRatio * zoomRatio ||
-                    imageRect.yMin + yRatio * zoomRatio > imageRect.yMax - yRatio * zoomRatio) return;
-
-                imageRect.xMin += xRatio * zoomRatio;
-                imageRect.xMax -= xRatio * zoomRatio;
-                imageRect.yMin += yRatio * zoomRatio;
-                imageRect.yMax -= yRatio * zoomRatio;
-                currentImageScale += 0.1f;
-
-                TryFixImageCoordinates();
-            }
-        }
-
-        private void OnDrag()
-        {
-            var currentCenter = imageRect.center;
-
-            var xDiff = Event.current.delta.x * -0.001f / currentImageScale / currentImageScale;
-            var yDiff = Event.current.delta.y * -0.001f / currentImageScale / currentImageScale;
-
-            if ((xDiff > 0f && imageRect.xMax < 1.0f) || (xDiff < 0f && imageRect.xMin > 0.0f))
-                currentCenter.x += xDiff;
-
-
-            if ((yDiff > 0f && imageRect.yMax < 1.0f) || (yDiff < 0f && imageRect.yMin > 0.0f))
-                currentCenter.y += yDiff;
-
-            imageRect.center = currentCenter;
+            _imageRect.xMin -= xRatio * _zoomRatio;
+            _imageRect.xMax += xRatio * _zoomRatio;
+            _imageRect.yMin -= yRatio * _zoomRatio;
+            _imageRect.yMax += yRatio * _zoomRatio;
+            _currentImageScale -= 0.1f;
 
             TryFixImageCoordinates();
         }
-
-        private void ComputeDefaultRects(Rect inRect)
+        else if (Event.current.delta.y < 0 && _currentImageScale < 2.0f)
         {
-            outerRect = new Rect(0.0f, inRect.yMin, inRect.width, inRect.height);
-            initialOuterRect = new Rect(0.0f, inRect.yMin, inRect.width, inRect.height);
+            if (_imageRect.xMin + xRatio * _zoomRatio > _imageRect.xMax - xRatio * _zoomRatio ||
+                _imageRect.yMin + yRatio * _zoomRatio > _imageRect.yMax - yRatio * _zoomRatio) return;
 
-            var displayRatio = inRect.width / inRect.height;
-            var imageRatio = imageWidth / (float)imageHeight;
+            _imageRect.xMin += xRatio * _zoomRatio;
+            _imageRect.xMax -= xRatio * _zoomRatio;
+            _imageRect.yMin += yRatio * _zoomRatio;
+            _imageRect.yMax -= yRatio * _zoomRatio;
+            _currentImageScale += 0.1f;
 
-            if (displayRatio > imageRatio)
-            {
-                var updateRatio = imageRatio / displayRatio;
+            TryFixImageCoordinates();
+        }
+    }
 
-                imageRect = new Rect(0f, (1f - updateRatio) * 0.5f, 1f, updateRatio);
-            }
-            else
-            {
-                var updateRatio = displayRatio / imageRatio;
+    private void OnDrag()
+    {
+        var currentCenter = _imageRect.center;
 
-                imageRect = new Rect(0.5f - updateRatio * 0.5f, 0f, updateRatio, 1f);
-            }
+        var xDiff = Event.current.delta.x * -0.001f / _currentImageScale / _currentImageScale;
+        var yDiff = Event.current.delta.y * -0.001f / _currentImageScale / _currentImageScale;
 
-            mustRecomputeOuterRect = false;
+        if ((xDiff > 0f && _imageRect.xMax < 1.0f) || (xDiff < 0f && _imageRect.xMin > 0.0f))
+            currentCenter.x += xDiff;
+
+
+        if ((yDiff > 0f && _imageRect.yMax < 1.0f) || (yDiff < 0f && _imageRect.yMin > 0.0f))
+            currentCenter.y += yDiff;
+
+        _imageRect.center = currentCenter;
+
+        TryFixImageCoordinates();
+    }
+
+    private void ComputeDefaultRects(Rect inRect)
+    {
+        _outerRect = new Rect(0.0f, inRect.yMin, inRect.width, inRect.height);
+
+        var displayRatio = inRect.width / inRect.height;
+        var imageRatio = _imageWidth / (float)_imageHeight;
+
+        if (displayRatio > imageRatio)
+        {
+            var updateRatio = imageRatio / displayRatio;
+
+            _imageRect = new Rect(0f, (1f - updateRatio) * 0.5f, 1f, updateRatio);
+        }
+        else
+        {
+            var updateRatio = displayRatio / imageRatio;
+
+            _imageRect = new Rect(0.5f - updateRatio * 0.5f, 0f, updateRatio, 1f);
         }
 
-        public void Draw(Rect inRect)
+        _mustRecomputeOuterRect = false;
+    }
+
+    public void Draw(Rect inRect)
+    {
+        if (HasImageLoaded())
         {
-            if (HasImageLoaded())
-            {
-                if (mustRecomputeOuterRect) ComputeDefaultRects(inRect);
+            if (_mustRecomputeOuterRect) ComputeDefaultRects(inRect);
 
 
-                Widgets.DrawTexturePart(outerRect, imageRect, currentImageDisplayed);
-            }
+            Widgets.DrawTexturePart(_outerRect, _imageRect, _currentImageDisplayed);
+        }
 
-            if (Mouse.IsOver(outerRect))
-            {
-                if (Event.current.type == EventType.ScrollWheel) OnScrollWheel();
+        if (Mouse.IsOver(_outerRect))
+        {
+            if (Event.current.type == EventType.ScrollWheel) OnScrollWheel();
 
-                if (Input.GetMouseButton(0) && Event.current.type == EventType.MouseDrag) OnDrag();
-            }
+            if (Input.GetMouseButton(0) && Event.current.type == EventType.MouseDrag) OnDrag();
         }
     }
 }

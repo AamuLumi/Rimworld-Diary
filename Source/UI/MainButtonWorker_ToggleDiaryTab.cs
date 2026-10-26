@@ -1,9 +1,7 @@
 ﻿using RimWorld;
 
-namespace Diary
-{
-    public class MainButtonWorker_ToggleDiaryTab : MainButtonWorker_ToggleTab
-    {
+namespace Diary.UI;
 
-    }
+public class MainButtonWorker_ToggleDiaryTab : MainButtonWorker_ToggleTab
+{
 }

@@ -1,24 +1,18 @@
 ﻿using Verse;
 
-namespace Diary.Core.Events
+namespace Diary.Core.Events;
+
+internal class BaseEvent
 {
-    internal class BaseEvent
+    protected string _diaryEntry;
+
+    public void CommitEntry()
     {
-        protected string _diaryEntry;
+        if (_diaryEntry != null) Current.Game.GetComponent<DiaryService>().AppendEntryNow(_diaryEntry);
+    }
 
-        public BaseEvent() { }
-
-        public void CommitEntry()
-        {
-            if (_diaryEntry != null)
-            {
-                Current.Game.GetComponent<DiaryService>().AppendEntryNow(_diaryEntry);
-            }
-        }
-
-        override public string ToString()
-        {
-            return _diaryEntry;
-        }
+    public override string ToString()
+    {
+        return _diaryEntry;
     }
 }

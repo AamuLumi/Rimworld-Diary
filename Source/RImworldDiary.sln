@@ -10,6 +10,7 @@ Global
 		1.5|Any CPU = 1.5|Any CPU
 		1.4|Any CPU = 1.4|Any CPU
 		1.6|Any CPU = 1.6|Any CPU
+		1.7|Any CPU = 1.7|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{EFFDE9DB-2871-44B3-9A46-3932035EF692}.1.5|Any CPU.ActiveCfg = 1.5|Any CPU
@@ -18,6 +19,8 @@ Global
 		{EFFDE9DB-2871-44B3-9A46-3932035EF692}.1.5|Any CPU.Build.0 = 1.5|Any CPU
 		{EFFDE9DB-2871-44B3-9A46-3932035EF692}.1.6|Any CPU.ActiveCfg = 1.6|Any CPU
 		{EFFDE9DB-2871-44B3-9A46-3932035EF692}.1.6|Any CPU.Build.0 = 1.6|Any CPU
+		{EFFDE9DB-2871-44B3-9A46-3932035EF692}.1.7|Any CPU.ActiveCfg = 1.7|Any CPU
+		{EFFDE9DB-2871-44B3-9A46-3932035EF692}.1.7|Any CPU.Build.0 = 1.7|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
