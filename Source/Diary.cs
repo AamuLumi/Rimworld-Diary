@@ -38,22 +38,42 @@ public class Diary : Mod
             "ProgressRenderer.MapComponent_RenderManager, Progress-Renderer"
         );
 
-        if (PR_RenderManager != null)
+        if (PR_RenderManager == null) return;
+
+        var captureSaved = PR_RenderManager.GetEvent("CaptureSaved", AccessTools.all);
+        if (captureSaved != null)
         {
-            var createFilePath = PR_RenderManager.GetMethod("CreateFilePath", AccessTools.all);
+            var infoType = captureSaved.EventHandlerType.GetGenericArguments()[0];
 
-            harmony.Patch(
-                createFilePath,
-                postfix: new HarmonyMethod(
-                    typeof(ListenProgressRenderer_CreateFilePath).GetMethod(
-                        "Postfix",
-                        AccessTools.all
-                    )
-                )
-            );
+            var handler = typeof(ListenProgressRenderer_CreateFilePath)
+                .GetMethod(nameof(ListenProgressRenderer_CreateFilePath.OnCaptureSaved))
+                .MakeGenericMethod(infoType);
 
+            captureSaved.AddEventHandler(null, Delegate.CreateDelegate(captureSaved.EventHandlerType, handler));
             _settings.isConnectedToProgressRenderer = true;
+            return;
         }
+
+        var createFilePath = PR_RenderManager.GetMethod("CreateFilePath", AccessTools.all);
+        if (createFilePath == null)
+        {
+            Log.Warning("[Diary] Progress Renderer detected but no compatible hook found.");
+            return;
+        }
+
+        Log.Warning($"[ListenProgressRenderer_CreateFilePath] {createFilePath}");
+
+        harmony.Patch(
+            createFilePath,
+            postfix: new HarmonyMethod(
+                typeof(ListenProgressRenderer_CreateFilePath).GetMethod(
+                    "Postfix",
+                    AccessTools.all
+                )
+            )
+        );
+
+        _settings.isConnectedToProgressRenderer = true;
     }
 
     public void InitWithRimWar(Harmony harmony)

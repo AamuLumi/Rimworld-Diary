@@ -407,10 +407,9 @@ public class MainTabWindow_Diary : MainTabWindow
 
         Widgets.BeginGroup(inRect);
 
-        if (_settings.isConnectedToProgressRenderer && _allImages.Count > 0) DrawDiarySwitchModeButton(dateRect);
-
         DrawDateButtons(dateRect);
 
+        if (_settings.isConnectedToProgressRenderer && _allImages.Count > 0) DrawDiarySwitchModeButton(dateRect);
         if (_settings.isConnectedToProgressRenderer) DrawScreenshotMenuButton(dateRect);
 
         if (_imageDisplayMode)
@@ -430,7 +429,7 @@ public class MainTabWindow_Diary : MainTabWindow
     public void DrawDiarySwitchModeButton(Rect dateRect)
     {
         if (
-            Widgets.ButtonText(new Rect(0.0f, dateRect.yMin, _widthPerButton / 2, dateRect.yMax),
+            Widgets.ButtonText(new Rect(_widthPerButton * 4.5f, dateRect.yMin, _widthPerButton / 4, dateRect.yMax),
                 _imageDisplayMode ? "Diary".Translate() : "Diary_Images".Translate()))
         {
             _imageDisplayMode = !_imageDisplayMode;

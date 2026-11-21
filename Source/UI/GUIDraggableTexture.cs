@@ -48,6 +48,12 @@ public class GUIDraggableTexture
         {
             _currentImageDisplayed = DownloadHandlerTexture.GetContent(_imageLoadRequest);
 
+            if (_currentImageDisplayed == null)
+            {
+                Log.Warning("Could not load image: " + _imageLoadRequest.error);
+                return;
+            }
+
             _imageWidth = _currentImageDisplayed.width;
             _imageHeight = _currentImageDisplayed.height;
 
@@ -172,7 +178,6 @@ public class GUIDraggableTexture
         if (HasImageLoaded())
         {
             if (_mustRecomputeOuterRect) ComputeDefaultRects(inRect);
-
 
             Widgets.DrawTexturePart(_outerRect, _imageRect, _currentImageDisplayed);
         }

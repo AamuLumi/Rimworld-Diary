@@ -1,3 +1,8 @@
+# 1.2.2 (11/21/2026)
+
+- Fix ProgressRenderer integration crashing the 1.7 mod
+- Fix image not found crashing Diary in the game
+
 # 1.2.1 (10/26/2026)
 
 - Fix bad defs for 1.6 and older versions
